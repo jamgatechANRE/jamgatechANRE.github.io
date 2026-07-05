@@ -9,7 +9,7 @@
 // ============================================================
 
 (function () {
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = false;
   const GOLD = "#f2b134", CYAN = "#5fd0f5";
 
   let scrollY = window.scrollY;
@@ -230,7 +230,7 @@
       const c = document.createElement("canvas");
       c.width = c.height = size;
       const g = c.getContext("2d");
-      const gr = g.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+      const gr = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
       gr.addColorStop(0, `rgba(${rgb},1)`);
       gr.addColorStop(0.25, `rgba(${rgb},0.5)`);
       gr.addColorStop(0.6, `rgba(${rgb},0.12)`);
@@ -240,13 +240,13 @@
       return c;
     }
     const S_BLUE = sprite("110,160,255"), S_PINK = sprite("255,95,205"),
-          S_WHITE = sprite("235,242,255"), S_RED = sprite("255,80,90"), S_AZUL = sprite("90,150,255");
-    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s/2, y - s/2, s, s); };
+      S_WHITE = sprite("235,242,255"), S_RED = sprite("255,80,90"), S_AZUL = sprite("90,150,255");
+    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s / 2, y - s / 2, s, s); };
 
     // swirling current filaments racing around the ring
     const swirls = [
-      { sp: S_RED,  w:  0.00115, ph: 0.0 },
-      { sp: S_RED,  w:  0.00085, ph: 2.6 },
+      { sp: S_RED, w: 0.00115, ph: 0.0 },
+      { sp: S_RED, w: 0.00085, ph: 2.6 },
       { sp: S_AZUL, w: -0.00135, ph: 1.2 },
       { sp: S_AZUL, w: -0.00090, ph: 4.4 }
     ];
@@ -259,8 +259,8 @@
         const a = (i / 60) * Math.PI * 2;
         if ((Math.sin(a) > 0) !== front) continue;
         const [x, y, depth] = ringPos(a);
-        put(S_BLUE,  x, y, (48 + 14 * depth) * pulse, 0.05 + 0.05 * depth);
-        put(S_PINK,  x, y, (26 + 10 * depth) * pulse, 0.10 + 0.10 * depth);
+        put(S_BLUE, x, y, (48 + 14 * depth) * pulse, 0.05 + 0.05 * depth);
+        put(S_PINK, x, y, (26 + 10 * depth) * pulse, 0.10 + 0.10 * depth);
         put(S_WHITE, x, y, (9 + 5 * depth) * pulse, 0.05 + 0.10 * depth);
       }
       // swirling red / blue lights with fading tails
@@ -315,7 +315,7 @@
       const c = document.createElement("canvas");
       c.width = c.height = size;
       const g = c.getContext("2d");
-      const gr = g.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+      const gr = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
       gr.addColorStop(0, `rgba(${rgb},1)`);
       gr.addColorStop(0.25, `rgba(${rgb},0.5)`);
       gr.addColorStop(0.6, `rgba(${rgb},0.12)`);
@@ -325,7 +325,7 @@
       return c;
     }
     const S_CY = sprite("120,215,255"), S_BL = sprite("110,160,255"), S_WH = sprite("235,242,255");
-    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s/2, y - s/2, s, s); };
+    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s / 2, y - s / 2, s, s); };
 
     const streams = Array.from({ length: 60 }, () => ({
       u: Math.random(), shell: SHELLS[Math.random() * SHELLS.length | 0],

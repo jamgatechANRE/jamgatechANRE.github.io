@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 750" font-family="Georgia, 'Times New Roman', serif">
+  <rect width="1000" height="750" fill="#f4f1ea"/>
+  <rect x="150" y="30" width="700" height="906" fill="#ffffff" stroke="#d8d4c8" stroke-width="1"/>
+  <g text-anchor="middle" fill="#222222">
+    <text x="500" y="90" font-size="15" fill="#666666" font-style="italic">39th International Electric Propulsion Conference, London, UK · IEPC-2025-559</text>
+    <text x="500" y="150" font-size="27" font-weight="bold">Performance Comparison and Analysis of</text>
+    <text x="500" y="185" font-size="27" font-weight="bold">Low Power Hall Thruster Operation on</text>
+    <text x="500" y="220" font-size="27" font-weight="bold">Inert and Molecular Propellants</text>
+    <text x="500" y="275" font-size="17">J. Moskovitz, W. Brabston, D. Lev, M. L. R. Walker,</text>
+    <text x="500" y="300" font-size="17">M. Rubanovych, V. Balabanov</text>
+    <text x="500" y="330" font-size="14" font-style="italic" fill="#555555">Georgia Institute of Technology · Technion — Israel Institute of Technology</text>
+  </g>
+  <line x1="230" y1="365" x2="770" y2="365" stroke="#999999" stroke-width="1"/>
+  <g fill="#8b8b8b">
+    <text x="500" y="400" font-size="16" text-anchor="middle" font-weight="bold" fill="#444444">Abstract</text>
+    <g font-size="12">
+      <rect x="230" y="420" width="540" height="7" rx="3.5"/>
+      <rect x="230" y="440" width="540" height="7" rx="3.5"/>
+      <rect x="230" y="460" width="540" height="7" rx="3.5"/>
+      <rect x="230" y="480" width="540" height="7" rx="3.5"/>
+      <rect x="230" y="500" width="480" height="7" rx="3.5"/>
+    </g>
+    <g opacity="0.75">
+      <rect x="230" y="545" width="255" height="6" rx="3"/>
+      <rect x="230" y="562" width="255" height="6" rx="3"/>
+      <rect x="230" y="579" width="255" height="6" rx="3"/>
+      <rect x="230" y="596" width="255" height="6" rx="3"/>
+      <rect x="230" y="613" width="255" height="6" rx="3"/>
+      <rect x="230" y="630" width="255" height="6" rx="3"/>
+      <rect x="230" y="647" width="210" height="6" rx="3"/>
+      <rect x="515" y="545" width="255" height="6" rx="3"/>
+      <rect x="515" y="562" width="255" height="6" rx="3"/>
+      <rect x="515" y="579" width="255" height="6" rx="3"/>
+      <rect x="515" y="596" width="255" height="6" rx="3"/>
+      <rect x="515" y="613" width="255" height="6" rx="3"/>
+      <rect x="515" y="630" width="255" height="6" rx="3"/>
+      <rect x="515" y="647" width="180" height="6" rx="3"/>
+      <rect x="230" y="680" width="255" height="6" rx="3"/>
+      <rect x="230" y="697" width="255" height="6" rx="3"/>
+      <rect x="230" y="714" width="255" height="6" rx="3"/>
+      <rect x="515" y="680" width="255" height="6" rx="3"/>
+      <rect x="515" y="697" width="255" height="6" rx="3"/>
+      <rect x="515" y="714" width="255" height="6" rx="3"/>
+    </g>
+  </g>
+</svg>

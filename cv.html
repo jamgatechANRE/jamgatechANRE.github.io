@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='10' fill='%23f2b134'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' opacity='0.7' transform='rotate(-30 32 32)'/%3E%3C/svg%3E">
+  <title>CV — Joseph Moskovitz</title>
+  <meta name="description" content="Curriculum vitae and coursework of Joseph Moskovitz, aerospace and nuclear engineer at Georgia Tech.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">Joseph Moskovitz<span class="dot">.</span></a>
+      <div class="links">
+        <a href="index.html">about</a>
+        <a href="work.html">work</a>
+        <a href="cv.html" class="active">cv</a>
+        <a href="news.html">news</a>
+        <a href="featured.html">featured</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <canvas class="page-anim" data-anim="torus" width="320" height="160" aria-hidden="true"></canvas>
+    <h1 class="page-heading">Curriculum vitae</h1>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="cv-pane" role="tab">cv</button>
+      <button class="tab-btn" data-tab="courses-pane" role="tab">coursework</button>
+    </div>
+
+    <!-- ---------------- CV tab ---------------- -->
+    <section id="cv-pane" class="tab-pane active">
+      <p class="page-sub" style="margin-top:24px">
+        <a class="btn" href="files/joseph-moskovitz-cv.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
+      </p>
+      <object class="pdf-frame" data="files/joseph-moskovitz-cv.pdf" type="application/pdf">
+        <p style="padding:24px">Your browser can't display embedded PDFs — <a href="files/joseph-moskovitz-cv.pdf" target="_blank" rel="noopener">download the CV here</a>.</p>
+      </object>
+    </section>
+
+    <!-- ---------------- Coursework tab ---------------- -->
+    <section id="courses-pane" class="tab-pane">
+      <p class="page-sub" style="margin-top:24px">Every course from my Georgia Tech undergraduate record — B.S. Aerospace Engineering, Highest Honor, <strong style="color:var(--gold)">4.00/4.00</strong>. Search, filter, or click a column header to sort. Course numbers link to the official syllabus where available, otherwise to the OSCAR catalog entry.</p>
+
+      <div class="course-stats" id="course-stats"></div>
+
+      <div class="course-controls">
+        <input type="search" id="course-search" placeholder="Search courses… (e.g. plasma, MATH, 4699)" aria-label="Search courses">
+        <select id="dept-filter" aria-label="Filter by department"><option value="">All departments</option></select>
+        <select id="sem-filter" aria-label="Filter by semester"><option value="">All semesters</option></select>
+        <div class="seg-toggle" id="ap-toggle" title="Show GT coursework or the AP exams behind the pre-college credit">
+          <button class="seg-btn active" data-mode="gt">gt credit</button>
+          <button class="seg-btn" data-mode="ap">ap exams</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="course-table" id="course-table">
+          <thead>
+            <tr>
+              <th data-key="ord">Semester</th>
+              <th data-key="subj">Dept</th>
+              <th data-key="num">Course</th>
+              <th data-key="title">Title</th>
+              <th data-key="cr" class="num-col">Credits</th>
+              <th data-key="grade">Grade</th>
+            </tr>
+          </thead>
+          <tbody id="course-body"></tbody>
+        </table>
+      </div>
+
+      <!-- SAT — standardized testing, appears below the AP list, AP view only -->
+      <div class="sat-strip" id="sat-strip">
+        <span class="sat-label">Standardized Testing</span>
+        <span class="sat-score"><strong>1560</strong><span class="sat-outof">/1600</span> SAT</span>
+        <span class="sat-detail">800 Reading &amp; Writing · 760 Math · December 2021</span>
+      </div>
+
+      <p class="muted" style="font-size:0.85rem; margin:18px 0 64px">
+        Grades: <strong>A</strong> letter grade · <strong>T</strong> AP/transfer credit · <strong>GT</strong> GT-approved transfer credit (exam or study abroad at UC3M Madrid) · <strong>V</strong> no grade (recitation). The <em>ap exams</em> toggle shows only the AP exams and scores behind the pre-college credit, plus standardized testing. Pre-registered courses are not shown.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="social">
+        <a href="mailto:jam.gatech.ae@gmail.com" target="_blank" rel="noopener" aria-label="Email" title="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+        <a href="https://www.linkedin.com/in/josephmoskovitz" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+        <a href="https://github.com/jamgatechANRE" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+        <a href="https://orcid.org/0009-0005-2993-5576" target="_blank" rel="noopener" aria-label="ORCID" title="ORCID"><svg viewBox="0 0 512 512"><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM175.23 368.83h-29.34V187.42h29.34zM160.56 162.52a19.57 19.57 0 1 1 19.57-19.57 19.56 19.56 0 0 1-19.57 19.57zM300 369h-81V162.5h80.6c76.73 0 110.44 54.83 110.44 103.26C410 318.39 368.38 369 300 369z"/></svg></a>
+      </div>
+      <div class="copyright">© 2026 Joseph Moskovitz</div>
+    </div>
+  </footer>
+
+  <script src="data/courses.js"></script>
+  <script>
+    // ---------- tabs ----------
+    const tabBtns = document.querySelectorAll(".tab-btn");
+    tabBtns.forEach(btn => btn.addEventListener("click", () => {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+    }));
+
+    // ---------- course table ----------
+    const body = document.getElementById("course-body");
+    const search = document.getElementById("course-search");
+    const deptSel = document.getElementById("dept-filter");
+    const semSel = document.getElementById("sem-filter");
+    const stats = document.getElementById("course-stats");
+    const satStrip = document.getElementById("sat-strip");
+    let sortKey = "ord", sortDir = 1, apMode = false;
+
+    // AP-exams view: ONLY the exams (no GT coursework)
+    const AP_ROWS = AP_EXAMS.map(e => ({
+      sem: "Pre-College", ord: 0, subj: "AP", num: "—",
+      title: e.exam, equiv: e.equiv, cr: e.cr, grade: e.score
+    }));
+
+    // populate filter dropdowns (GT view)
+    [...new Set(COURSES.map(c => c.subj))].sort().forEach(d => deptSel.add(new Option(d, d)));
+    [...new Map(COURSES.map(c => [c.sem, c.ord])).entries()]
+      .sort((a, b) => a[1] - b[1])
+      .forEach(([s]) => semSel.add(new Option(s, s)));
+
+    // Course links: official syllabus PDF when available, otherwise the
+    // OSCAR catalog entry for the term the course was taken.
+    const TERM = {
+      "Pre-College Credit": "202208", "Pre-College": "202208",
+      "Fall 2022": "202208", "Spring 2023": "202302", "Fall 2023": "202308",
+      "Spring 2024": "202402", "Fall 2024 (UC3M)": "202408",
+      "Spring 2025": "202502", "Fall 2025": "202508", "Spring 2026": "202602"
+    };
+    function courseCell(c) {
+      if (c.syl) {
+        return `<a class="course-link" href="${c.syl}" target="_blank" rel="noopener" title="View the ${c.subj} ${c.num} syllabus (PDF)">${c.num}</a>`;
+      }
+      if (/^\d{4}$/.test(c.num)) {
+        const term = TERM[c.sem] || "202502";
+        return `<a class="course-link" href="https://oscar.gatech.edu/bprod/bwckctlg.p_disp_course_detail?cat_term_in=${term}&subj_code_in=${c.subj}&crse_numb_in=${c.num}" target="_blank" rel="noopener" title="View ${c.subj} ${c.num} in the GT catalog (OSCAR)">${c.num}</a>`;
+      }
+      return c.num;
+    }
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      let rows = (apMode ? AP_ROWS : COURSES).filter(c =>
+        (apMode || !deptSel.value || c.subj === deptSel.value) &&
+        (apMode || !semSel.value || c.sem === semSel.value) &&
+        (!q || `${c.subj} ${c.num} ${c.title} ${c.equiv || ""} ${c.sem} ${c.grade}`.toLowerCase().includes(q))
+      );
+      rows.sort((a, b) => {
+        const va = a[sortKey], vb = b[sortKey];
+        const cmp = typeof va === "number" ? va - vb : String(va).localeCompare(String(vb));
+        return (cmp || a.ord - b.ord || a.subj.localeCompare(b.subj) || String(a.num).localeCompare(String(b.num))) * sortDir;
+      });
+      body.innerHTML = rows.map(c => `
+        <tr>
+          <td class="sem-cell">${c.sem}</td>
+          <td>${c.subj}</td>
+          <td>${courseCell(c)}</td>
+          <td class="title-cell">${c.title}${c.equiv ? ` <span class="equiv">→ ${c.equiv}</span>` : ""}</td>
+          <td class="num-col">${c.cr}</td>
+          <td><span class="grade grade-${String(c.grade).replace(/[^A-Za-z0-9]/g, "")}">${c.grade}</span></td>
+        </tr>`).join("");
+      const hours = rows.reduce((s, c) => s + c.cr, 0);
+      stats.innerHTML = apMode
+        ? `<span class="stat"><strong>${rows.length}</strong> exams shown</span>
+           <span class="stat"><strong>${hours}</strong> credit hours earned</span>
+           <span class="stat"><strong>9×5</strong> AP scores of 5</span>`
+        : `<span class="stat"><strong>${rows.length}</strong> courses shown</span>
+           <span class="stat"><strong>${hours}</strong> credit hours</span>
+           <span class="stat"><strong>4.00</strong> GPA</span>`;
+    }
+
+    document.querySelectorAll("#course-table th").forEach(th =>
+      th.addEventListener("click", () => {
+        const k = th.dataset.key;
+        if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = 1; }
+        document.querySelectorAll("#course-table th").forEach(h => h.classList.remove("sort-asc", "sort-desc"));
+        th.classList.add(sortDir === 1 ? "sort-asc" : "sort-desc");
+        render();
+      }));
+
+    // AP / GT segmented toggle — AP view shows only the exams + SAT strip
+    document.querySelectorAll("#ap-toggle .seg-btn").forEach(btn =>
+      btn.addEventListener("click", () => {
+        apMode = btn.dataset.mode === "ap";
+        document.querySelectorAll("#ap-toggle .seg-btn").forEach(b => b.classList.toggle("active", b === btn));
+        deptSel.disabled = apMode;
+        semSel.disabled = apMode;
+        if (apMode) { deptSel.value = ""; semSel.value = ""; }
+        satStrip.classList.toggle("show", apMode);
+        render();
+      }));
+
+    search.addEventListener("input", render);
+    deptSel.addEventListener("change", render);
+    semSel.addEventListener("change", render);
+    render();
+  </script>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='10' fill='%23f2b134'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' opacity='0.7' transform='rotate(-30 32 32)'/%3E%3C/svg%3E">
+  <title>Work — Joseph Moskovitz</title>
+  <meta name="description" content="Selected work products: publications, capstone projects, and coursework by Joseph Moskovitz.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">Joseph Moskovitz<span class="dot">.</span></a>
+      <div class="links">
+        <a href="index.html">about</a>
+        <a href="work.html" class="active">work</a>
+        <a href="cv.html">cv</a>
+        <a href="news.html">news</a>
+        <a href="featured.html">featured</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <canvas class="page-anim" data-anim="orbit" width="260" height="130" aria-hidden="true"></canvas>
+    <h1 class="page-heading">Selected work</h1>
+    <p class="page-sub">Publications, design projects, and coursework — everything below is available to read in full.</p>
+    <ul class="card-grid" id="work-list"></ul>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="social">
+        <a href="mailto:jam.gatech.ae@gmail.com" target="_blank" rel="noopener" aria-label="Email" title="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+        <a href="https://www.linkedin.com/in/josephmoskovitz" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+        <a href="https://github.com/jamgatechANRE" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+        <a href="https://orcid.org/0009-0005-2993-5576" target="_blank" rel="noopener" aria-label="ORCID" title="ORCID"><svg viewBox="0 0 512 512"><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM175.23 368.83h-29.34V187.42h29.34zM160.56 162.52a19.57 19.57 0 1 1 19.57-19.57 19.56 19.56 0 0 1-19.57 19.57zM300 369h-81V162.5h80.6c76.73 0 110.44 54.83 110.44 103.26C410 318.39 368.38 369 300 369z"/></svg></a>
+      </div>
+      <div class="copyright">© 2026 Joseph Moskovitz</div>
+    </div>
+  </footer>
+
+  <script src="data/works.js"></script>
+  <script>
+    const list = document.getElementById("work-list");
+    for (const w of WORKS) {
+      const li = document.createElement("li");
+      li.className = "card reveal";
+      const mainLink = (w.links && w.links[0]) ? w.links[0].url : "#";
+      const links = (w.links || []).map(l =>
+        `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`
+      ).join("");
+      const video = w.video
+        ? `<div class="video-embed" data-vid="${w.video}" role="button" tabindex="0" aria-label="Play mission video">
+             <img src="https://i.ytimg.com/vi/${w.video}/hqdefault.jpg" alt="Video preview" loading="lazy">
+             <span class="play-btn" aria-hidden="true"></span>
+           </div>`
+        : "";
+      li.innerHTML = `
+        <a class="thumb" href="${mainLink}" target="_blank" rel="noopener">
+          <img src="${w.preview}" alt="Preview of ${w.title}" loading="lazy">
+        </a>
+        <div class="card-body">
+          <span class="chip">${w.category}</span>
+          <div class="card-title">${w.title}</div>
+          <div class="card-meta">${w.meta}</div>
+          <p class="card-desc">${w.desc}</p>
+          ${video}
+          <div class="card-links">${links}</div>
+        </div>`;
+      list.appendChild(li);
+    }
+
+    // Click-to-play YouTube embeds — nothing loads or plays until clicked.
+    // Uses YouTube's official embed params; note embeds require an http(s)
+    // origin (localhost or the live site) — opening the file directly via
+    // file:// makes YouTube return "Error 153" (missing referer).
+    document.querySelectorAll(".video-embed").forEach(v => {
+      const play = () => {
+        const id = v.dataset.vid;
+        v.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>`;
+        v.classList.add("playing");
+      };
+      v.addEventListener("click", play, { once: true });
+      v.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); } }, { once: true });
+    });
+  </script>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='10' fill='%23f2b134'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' opacity='0.7' transform='rotate(-30 32 32)'/%3E%3C/svg%3E">
+<title>Animation Lab — candidates v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#060a14; --text:#e9eef8; --muted:#94a0b8; --rule:rgba(255,255,255,.1); }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:"Inter",sans-serif; }
+  header { text-align:center; padding:48px 20px 8px; }
+  h1 { font-family:"Space Grotesk",sans-serif; font-weight:700; margin:0 0 8px; }
+  header p { color:var(--muted); margin:0; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(540px,1fr)); gap:34px; max-width:1180px; margin:40px auto 80px; padding:0 24px; }
+  @media (max-width:600px){ .grid{ grid-template-columns:1fr; } }
+  .cell { background:rgba(16,26,46,.5); border:1px solid var(--rule); border-radius:16px; overflow:hidden; }
+  .cell canvas { display:block; width:100%; height:auto; }
+  .cell .cap { padding:16px 20px 18px; border-top:1px solid var(--rule); }
+  .cell .cap b { font-family:"Space Grotesk",sans-serif; font-size:1.05rem; }
+  .cell .cap span { display:block; color:var(--muted); font-size:.88rem; margin-top:4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Animation Lab · v2</h1>
+  <p>Continuous-light renderings — pick any to wire into the site.</p>
+</header>
+
+<div class="grid">
+  <div class="cell"><canvas id="magnetar" width="560" height="380"></canvas>
+    <div class="cap"><b>1 · Magnetar</b><span>Rotating tilted dipole; the beams flash as they sweep past the line of sight. (Now on the news page.)</span></div></div>
+  <div class="cell"><canvas id="gargantua" width="560" height="380"></canvas>
+    <div class="cap"><b>2 · Black hole (Gargantua)</b><span>Interstellar-style, viewed at an angle: the inclined accretion disk sweeps around and in front of the shadow, with the far side lensed into a halo over the poles.</span></div></div>
+  <div class="cell"><canvas id="torus" width="560" height="380"></canvas>
+    <div class="cap"><b>3 · Tokamak light torus</b><span>A continuous, pulsing ring of plasma light with red and blue current filaments swirling around it in both directions. (Now on the cv page.)</span></div></div>
+  <div class="cell"><canvas id="eclipse" width="560" height="380"></canvas>
+    <div class="cap"><b>4 · Eclipse corona</b><span>Total-eclipse style: dark disk, thin brilliant rim, and long feathery streamers drifting almost imperceptibly.</span></div></div>
+  <div class="cell"><canvas id="stellarator" width="560" height="380"></canvas>
+    <div class="cap"><b>5 · Stellarator</b><span>A twisted helical plasma ribbon threading tilted non-planar coils, W7-X style, breathing softly.</span></div></div>
+  <div class="cell"><canvas id="mirror" width="560" height="380"></canvas>
+    <div class="cap"><b>6 · Magnetic mirror</b><span>Realta-style: a continuous plasma column pinched between two mirror coils, with a bright slug of light bouncing end to end.</span></div></div>
+</div>
+
+<script>
+(function () {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function hidpi(cv) {
+    const dpr = Math.min(devicePixelRatio || 1, 2.5);
+    const w = cv.width, h = cv.height;
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    const fx = cv.getContext("2d");
+    fx.scale(dpr, dpr);
+    return [fx, w, h];
+  }
+
+  function sprite(rgb, size = 64) {
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const g = c.getContext("2d");
+    const gr = g.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+    gr.addColorStop(0,   `rgba(${rgb},1)`);
+    gr.addColorStop(0.25,`rgba(${rgb},0.5)`);
+    gr.addColorStop(0.6, `rgba(${rgb},0.12)`);
+    gr.addColorStop(1,   `rgba(${rgb},0)`);
+    g.fillStyle = gr;
+    g.fillRect(0, 0, size, size);
+    return c;
+  }
+  const S_CYAN  = sprite("120,215,255");
+  const S_BLUE  = sprite("110,160,255");
+  const S_GOLD  = sprite("255,190,90");
+  const S_WHITE = sprite("235,242,255");
+  const S_VIOLET= sprite("170,130,255");
+  const S_PINK  = sprite("255,95,205");
+
+  function put(fx, sp, x, y, s, a) {
+    fx.globalAlpha = a;
+    fx.drawImage(sp, x - s/2, y - s/2, s, s);
+  }
+
+  // =====================================================
+  // 1 · MAGNETAR
+  // =====================================================
+  (function () {
+    const cv = document.getElementById("magnetar");
+    const [fx, W, H] = hidpi(cv);
+    const cx = W/2, cy = H/2;
+    const ALPHA = 0.42, VIEW = 0.35;
+    const cV = Math.cos(VIEW), sV = Math.sin(VIEW);
+    const SHELLS = [44, 70, 98, 128];
+
+    const streams = Array.from({length: 130}, () => ({
+      u: Math.random(), shell: SHELLS[Math.random()*SHELLS.length|0],
+      phi: Math.random()*Math.PI*2, sp: 0.12 + Math.random()*0.25, pole: Math.random()<0.5?1:-1
+    }));
+
+    function toView(p, spin) {
+      let x =  p.x*Math.cos(ALPHA) + p.y*Math.sin(ALPHA);
+      let y = -p.x*Math.sin(ALPHA) + p.y*Math.cos(ALPHA);
+      let z =  p.z;
+      const c = Math.cos(spin), s = Math.sin(spin);
+      const x2 = x*c + z*s, z2 = -x*s + z*c;
+      const y3 = y*cV - z2*sV, z3 = y*sV + z2*cV;
+      return [cx + x2, cy - y3, z3];
+    }
+    function lp(L, th, phi) {
+      const r = L * Math.sin(th)**2 + 6;
+      return { x: r*Math.sin(th)*Math.cos(phi), y: r*Math.cos(th), z: r*Math.sin(th)*Math.sin(phi) };
+    }
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      const spin = reduced ? 0.7 : t*0.00035;
+      const mAxis = toView({x:0,y:1,z:0}, spin);
+      const pulse = 0.55 + 0.45*Math.pow(Math.abs(mAxis[2]), 3);
+
+      fx.globalCompositeOperation = "lighter";
+      for (const L of SHELLS) {
+        for (let k = 0; k < 10; k++) {
+          const phi = (k/10)*Math.PI*2;
+          fx.beginPath();
+          let za = 0;
+          for (let i = 0; i <= 42; i++) {
+            const th = 0.22 + (i/42)*(Math.PI - 0.44);
+            const [x, y, z] = toView(lp(L, th, phi), spin);
+            za += z;
+            i ? fx.lineTo(x, y) : fx.moveTo(x, y);
+          }
+          fx.strokeStyle = `rgba(120,215,255,${0.05 + 0.10*((za/43/L)+1)/2})`;
+          fx.lineWidth = 1;
+          fx.stroke();
+        }
+      }
+      for (const pole of [1, -1]) {
+        const base = toView({x:0, y: pole*14, z:0}, spin);
+        const tip  = toView({x:0, y: pole*150, z:0}, spin);
+        const g = fx.createLinearGradient(base[0], base[1], tip[0], tip[1]);
+        g.addColorStop(0, `rgba(235,242,255,${0.5*pulse})`);
+        g.addColorStop(0.4, `rgba(120,215,255,${0.16*pulse})`);
+        g.addColorStop(1, "rgba(120,215,255,0)");
+        fx.strokeStyle = g;
+        fx.lineCap = "round";
+        fx.lineWidth = 7;
+        fx.beginPath(); fx.moveTo(base[0], base[1]); fx.lineTo(tip[0], tip[1]); fx.stroke();
+        fx.lineWidth = 2.4;
+        fx.beginPath(); fx.moveTo(base[0], base[1]); fx.lineTo(tip[0], tip[1]); fx.stroke();
+      }
+      const T = reduced ? 0 : t*0.001;
+      for (const p of streams) {
+        p.u = (p.u + (reduced?0:p.sp*0.006)) % 1;
+        const th = p.pole > 0 ? 0.22 + p.u*1.2 : Math.PI - 0.22 - p.u*1.2;
+        const [x, y, z] = toView(lp(p.shell, th, p.phi + T*0.15), spin);
+        put(fx, S_CYAN, x, y, 5.5, 0.22 + 0.28*((z/p.shell)+1)/2);
+      }
+      put(fx, S_WHITE, cx, cy, 26, 1);
+      put(fx, S_BLUE,  cx, cy, 60 + 14*pulse, 0.75*pulse);
+      put(fx, S_CYAN,  cx, cy, 120 + 30*pulse, 0.28*pulse);
+      fx.globalCompositeOperation = "source-over";
+      fx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  })();
+
+  // =====================================================
+  // 2 · GARGANTUA — inclined accretion disk + lensed halo
+  // =====================================================
+  (function () {
+    const cv = document.getElementById("gargantua");
+    const [fx, W, H] = hidpi(cv);
+    const cx = W/2, cy = H/2;
+    const RS = 28;                      // shadow radius
+    const R_IN = 40, R_OUT = 195;       // disk radii
+    const INCL = 0.30;                  // disk opening (0 = edge-on)
+
+    // disk particles on Keplerian orbits (texture riding on the glow band)
+    const disk = Array.from({length: 1300}, () => {
+      const r = R_IN + (R_OUT - R_IN)*Math.pow(Math.random(), 1.7);
+      return { r, th: Math.random()*Math.PI*2, j: (Math.random()-0.5)*5 };
+    });
+
+    const warm = (a) => `rgba(255,214,150,${a})`;
+
+    function diskPos(r, th) { return [cx + Math.cos(th)*r, cy + Math.sin(th)*r*INCL]; }
+
+    // continuous glow band along the disk ellipse
+    function band(front, flick) {
+      for (let i = 0; i < 88; i++) {
+        const th = (i/88)*Math.PI*2;
+        if ((Math.sin(th) > 0) !== front) continue;
+        for (const rr of [R_IN + 14, (R_IN + R_OUT)*0.45, R_OUT*0.8]) {
+          const [x, y] = diskPos(rr, th);
+          const heat = 1 - (rr - R_IN)/(R_OUT - R_IN);
+          const dop = 1 + 0.6*Math.cos(th + Math.PI/2);   // approaching side brighter
+          put(fx, heat > 0.6 ? S_WHITE : S_GOLD, x, y + (front ? 1 : -1),
+              (26 + 30*heat), (0.030 + 0.075*heat)*dop*flick);
+        }
+      }
+    }
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      const flick = reduced ? 1 : 0.92 + 0.08*Math.sin(t/530)*Math.sin(t/173);
+
+      fx.globalCompositeOperation = "lighter";
+      const amb = fx.createRadialGradient(cx, cy, 0, cx, cy, 200);
+      amb.addColorStop(0, warm(0.12*flick));
+      amb.addColorStop(0.5, warm(0.045*flick));
+      amb.addColorStop(1, warm(0));
+      fx.fillStyle = amb;
+      fx.fillRect(0, 0, W, H);
+
+      // ---- far side of the disk (behind the hole) ----
+      band(false, flick*0.75);
+      for (const p of disk) {
+        if (!reduced) p.th += 14 / Math.pow(p.r, 1.5);
+        if (Math.sin(p.th) > 0) continue;
+        const [x, y] = diskPos(p.r, p.th);
+        const heat = 1 - (p.r - R_IN)/(R_OUT - R_IN);
+        const dop = 1 + 0.6*Math.cos(p.th + Math.PI/2);
+        put(fx, heat > 0.65 ? S_WHITE : S_GOLD, x, y + p.j*0.4, 3.4 + 3*heat, (0.05 + 0.16*heat)*dop*flick*0.8);
+      }
+
+      // ---- gravitationally lensed image of the far side: halo over the poles ----
+      const lens = (up) => {
+        const g = fx.createLinearGradient(cx - RS*2.2, cy, cx + RS*2.2, cy);
+        g.addColorStop(0, warm(0.55*flick));
+        g.addColorStop(0.5, warm(0.95*flick));
+        g.addColorStop(1, warm(0.4*flick));
+        fx.strokeStyle = g;
+        fx.lineCap = "round";
+        for (const [lw, aa] of [[7, 0.5], [2.6, 0.95]]) {
+          fx.globalAlpha = aa;
+          fx.lineWidth = lw;
+          fx.beginPath();
+          fx.ellipse(cx, cy, RS*2.05, RS*(up ? 1.75 : 1.45), 0, up ? Math.PI : 0, up ? Math.PI*2 : Math.PI);
+          fx.stroke();
+        }
+        fx.globalAlpha = 1;
+      };
+      lens(true);          // bright arc standing over the top
+      lens(false);         // dimmer arc below
+
+      // ---- shadow + photon ring ----
+      fx.globalCompositeOperation = "source-over";
+      fx.fillStyle = "#03050a";
+      fx.beginPath(); fx.arc(cx, cy, RS, 0, Math.PI*2); fx.fill();
+      fx.globalCompositeOperation = "lighter";
+      const pr = fx.createRadialGradient(cx, cy, RS - 1, cx, cy, RS + 6);
+      pr.addColorStop(0, "rgba(255,240,210,0)");
+      pr.addColorStop(0.45, `rgba(255,240,210,${0.95*flick})`);
+      pr.addColorStop(1, "rgba(255,240,210,0)");
+      fx.fillStyle = pr;
+      fx.beginPath(); fx.arc(cx, cy, RS + 6, 0, Math.PI*2); fx.fill();
+
+      // ---- near side of the disk (crosses in front of the shadow) ----
+      band(true, flick);
+      for (const p of disk) {
+        if (Math.sin(p.th) <= 0) continue;
+        const [x, y] = diskPos(p.r, p.th);
+        const heat = 1 - (p.r - R_IN)/(R_OUT - R_IN);
+        const dop = 1 + 0.6*Math.cos(p.th + Math.PI/2);
+        put(fx, heat > 0.65 ? S_WHITE : S_GOLD, x, y + p.j*0.4, 3.6 + 3.4*heat, (0.06 + 0.20*heat)*dop*flick);
+      }
+
+      fx.globalCompositeOperation = "source-over";
+      fx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  })();
+
+  // =====================================================
+  // 3 · TOKAMAK LIGHT TORUS — pulsing ring + swirling currents
+  // =====================================================
+  (function () {
+    const cv = document.getElementById("torus");
+    const [fx, W, H] = hidpi(cv);
+    const cx = W/2, cy = H/2 + 26;
+    const RX = 172, RY = 62;
+    const S_RED  = sprite("255,80,90");
+    const S_AZUL = sprite("90,150,255");
+
+    const swirls = [
+      { sp: S_RED,  w:  0.00115, ph: 0.0 },
+      { sp: S_RED,  w:  0.00080, ph: 2.6 },
+      { sp: S_RED,  w:  0.00140, ph: 4.1 },
+      { sp: S_AZUL, w: -0.00135, ph: 1.2 },
+      { sp: S_AZUL, w: -0.00090, ph: 4.4 },
+      { sp: S_AZUL, w: -0.00115, ph: 5.6 }
+    ];
+
+    function ringPos(a) { return [cx + Math.cos(a)*RX, cy + Math.sin(a)*RY, (Math.sin(a)+1)/2]; }
+
+    function ringPass(t, front) {
+      const pulse = reduced ? 1 : 0.86 + 0.14*Math.sin(t/1300) + 0.04*Math.sin(t/331);
+      for (let i = 0; i < 72; i++) {
+        const a = (i/72)*Math.PI*2;
+        if ((Math.sin(a) > 0) !== front) continue;
+        const [x, y, depth] = ringPos(a);
+        const drift = reduced ? 0 : 6*Math.sin(t/900 + a*3);
+        put(fx, S_BLUE,  x, y, (95 + 26*depth)*pulse, 0.05 + 0.05*depth);
+        put(fx, S_PINK,  x, y + drift*0.2, (52 + 18*depth)*pulse, 0.10 + 0.10*depth);
+        put(fx, S_WHITE, x, y, (17 + 9*depth)*pulse, 0.05 + 0.10*depth);
+      }
+      // swirling red / blue current filaments with fading tails
+      for (const s of swirls) {
+        const head = (reduced ? s.ph : t*s.w + s.ph);
+        for (let j = 0; j < 13; j++) {
+          const a = head - Math.sign(s.w)*j*0.06;
+          if ((Math.sin(a) > 0) !== front) continue;
+          const [x, y, depth] = ringPos(a);
+          const f = 1 - j/13;
+          put(fx, s.sp, x, y, (30 + 20*depth)*f + 8, (0.10 + 0.24*depth)*f);
+        }
+      }
+    }
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      fx.globalCompositeOperation = "lighter";
+
+      ringPass(t, false);
+
+      const col = fx.createLinearGradient(0, cy - 165, 0, cy + 40);
+      col.addColorStop(0, "rgba(120,215,255,0)");
+      col.addColorStop(0.45, "rgba(120,215,255,0.20)");
+      col.addColorStop(1, "rgba(160,120,255,0.10)");
+      fx.fillStyle = col;
+      const cw = 52 + (reduced?0:5*Math.sin(t/800));
+      fx.fillRect(cx - cw/2, cy - 165, cw, 205);
+      const colCore = fx.createLinearGradient(0, cy - 165, 0, cy + 40);
+      colCore.addColorStop(0, "rgba(235,242,255,0)");
+      colCore.addColorStop(0.5, "rgba(235,242,255,0.10)");
+      colCore.addColorStop(1, "rgba(235,242,255,0.05)");
+      fx.fillStyle = colCore;
+      fx.fillRect(cx - 14, cy - 165, 28, 205);
+
+      ringPass(t, true);
+
+      fx.globalCompositeOperation = "source-over";
+      fx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  })();
+
+  // =====================================================
+  // 4 · ECLIPSE CORONA — dark disk, feathery streamers
+  // =====================================================
+  (function () {
+    const cv = document.getElementById("eclipse");
+    const [fx, W, H] = hidpi(cv);
+    const cx = W/2, cy = H/2;
+    const R = 74;
+
+    const wisps = [];
+    for (let i = 0; i < 110; i++) {
+      const a = Math.random()*Math.PI*2;
+      const eq = Math.pow(Math.abs(Math.cos(a)), 1.3);
+      wisps.push({
+        a,
+        len: 34 + eq*(130 + Math.random()*60) + Math.random()*22,
+        curve: (Math.random()-0.5)*0.5,
+        w: 0.6 + Math.random()*1.5,
+        al: 0.04 + Math.random()*0.09,
+        ph: Math.random()*7
+      });
+    }
+    const proms = [[-0.9, 3.4], [2.4, 2.6], [3.6, 3.0]];
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      const drift = reduced ? 0 : t*0.000012;
+
+      fx.globalCompositeOperation = "lighter";
+      const ic = fx.createRadialGradient(cx, cy, R, cx, cy, R + 60);
+      ic.addColorStop(0, "rgba(225,235,250,0.5)");
+      ic.addColorStop(0.5, "rgba(200,215,240,0.12)");
+      ic.addColorStop(1, "rgba(200,215,240,0)");
+      fx.fillStyle = ic;
+      fx.beginPath(); fx.arc(cx, cy, R + 60, 0, Math.PI*2); fx.fill();
+
+      for (const s of wisps) {
+        const a = s.a + drift;
+        const shim = reduced ? 1 : 0.75 + 0.25*Math.sin(t/2300 + s.ph);
+        for (let k = -1; k <= 1; k++) {
+          const aa = a + k*0.012;
+          const x0 = cx + Math.cos(aa)*(R + 2), y0 = cy + Math.sin(aa)*(R + 2);
+          const x2 = cx + Math.cos(aa + s.curve*0.4)*(R + s.len), y2 = cy + Math.sin(aa + s.curve*0.4)*(R + s.len);
+          const xm = cx + Math.cos(aa + s.curve*0.15)*(R + s.len*0.5), ym = cy + Math.sin(aa + s.curve*0.15)*(R + s.len*0.5);
+          fx.strokeStyle = `rgba(215,228,246,${s.al*shim*(k===0?1:0.55)})`;
+          fx.lineWidth = s.w*(k===0?1:0.6);
+          fx.beginPath();
+          fx.moveTo(x0, y0);
+          fx.quadraticCurveTo(xm, ym, x2, y2);
+          fx.stroke();
+        }
+      }
+
+      fx.globalCompositeOperation = "source-over";
+      fx.fillStyle = "#04060b";
+      fx.beginPath(); fx.arc(cx, cy, R, 0, Math.PI*2); fx.fill();
+      fx.globalCompositeOperation = "lighter";
+      const rim = fx.createRadialGradient(cx, cy, R - 2, cx, cy, R + 4);
+      rim.addColorStop(0, "rgba(240,246,255,0)");
+      rim.addColorStop(0.55, "rgba(240,246,255,0.9)");
+      rim.addColorStop(1, "rgba(240,246,255,0)");
+      fx.fillStyle = rim;
+      fx.beginPath(); fx.arc(cx, cy, R + 4, 0, Math.PI*2); fx.fill();
+      for (const [pa, ps] of proms) {
+        put(fx, S_PINK, cx + Math.cos(pa)*R, cy + Math.sin(pa)*R, ps*2.6, 0.5);
+      }
+
+      fx.globalAlpha = 1;
+      fx.globalCompositeOperation = "source-over";
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  })();
+
+  // =====================================================
+  // 5 · STELLARATOR — twisted helical plasma ribbon + coils
+  // =====================================================
+  (function () {
+    const cv = document.getElementById("stellarator");
+    const [fx, W, H] = hidpi(cv);
+    const cx = W/2, cy = H/2 + 10;
+    const R0 = 150, A = 34, TWIST = 2.5;
+    const VIEW = 1.05, cV = Math.cos(VIEW), sV = Math.sin(VIEW);
+
+    function project(phi, th, ra) {
+      const r = R0 + A*ra*Math.cos(th);
+      const x = r*Math.cos(phi), z = r*Math.sin(phi), y = A*ra*Math.sin(th);
+      const y2 = y*cV - z*sV, z2 = y*sV + z*cV;
+      return [cx + x, cy - y2, z2];
+    }
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      const T = reduced ? 0 : t*0.00035;
+      const pulse = reduced ? 1 : 0.88 + 0.12*Math.sin(t/1400);
+
+      fx.globalCompositeOperation = "lighter";
+      for (const pass of [false, true]) {
+        for (let i = 0; i < 150; i++) {
+          const phi = (i/150)*Math.PI*2;
+          const near = Math.sin(phi) > 0;
+          if (near !== pass) continue;
+          const th = TWIST*phi + T*2;
+          const [x, y, z] = project(phi, th, 0.75);
+          const depth = (z/(R0+A) + 1)/2;
+          const hue = (Math.sin(phi*2 + T) + 1)/2;
+          put(fx, S_BLUE,   x, y, (58 + 20*depth)*pulse, 0.05 + 0.05*depth);
+          put(fx, hue < 0.5 ? S_CYAN : S_VIOLET, x, y, (30 + 14*depth)*pulse, 0.09 + 0.11*depth);
+          put(fx, S_WHITE,  x, y, (10 + 6*depth)*pulse, 0.04 + 0.08*depth);
+        }
+        if (!pass) {
+          for (let k = 0; k < 10; k++) {
+            const phi = (k/10)*Math.PI*2 + 0.31;
+            const tilt = 0.55*Math.sin(TWIST*phi);
+            const [px, py, pz] = project(phi, 0, 0);
+            const depth = (pz/(R0+A) + 1)/2;
+            fx.save();
+            fx.translate(px, py);
+            fx.rotate(phi + Math.PI/2 + tilt*0.5);
+            fx.strokeStyle = `rgba(242,177,52,${0.25 + 0.4*depth})`;
+            fx.lineWidth = 2.2 + 1.6*depth;
+            fx.beginPath();
+            fx.ellipse(0, 0, A*0.62*(0.8 + 0.4*Math.abs(Math.cos(phi))), A*1.18, tilt, 0, Math.PI*2);
+            fx.stroke();
+            fx.restore();
+          }
+        }
+      }
+      fx.globalCompositeOperation = "source-over";
+      fx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  })();
+
+  // =====================================================
+  // 6 · MAGNETIC MIRROR — pinched plasma column, bouncing light
+  // =====================================================
+  (function () {
+    const cv = document.getElementById("mirror");
+    const [fx, W, H] = hidpi(cv);
+    const cx = W/2, cy = H/2;
+    const AX = 168, RMAX = 62;
+
+    const pinch = (u) => 0.26 + 0.74*Math.pow(Math.cos(u*Math.PI/2), 1.4);
+
+    function coil(x, bright) {
+      const g = fx.createLinearGradient(x, cy - 84, x, cy + 84);
+      g.addColorStop(0, `rgba(242,177,52,${0.25*bright})`);
+      g.addColorStop(0.5, `rgba(242,177,52,${0.95*bright})`);
+      g.addColorStop(1, `rgba(242,177,52,${0.25*bright})`);
+      fx.strokeStyle = g;
+      fx.lineWidth = 5;
+      fx.beginPath();
+      fx.ellipse(x, cy, 8, 78, 0, 0, Math.PI*2);
+      fx.stroke();
+      fx.lineWidth = 1.6;
+      fx.strokeStyle = `rgba(255,225,160,${0.8*bright})`;
+      fx.beginPath();
+      fx.ellipse(x, cy, 8, 78, 0, 0, Math.PI*2);
+      fx.stroke();
+    }
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      const pulse = reduced ? 1 : 0.88 + 0.12*Math.sin(t/1500);
+      const su = reduced ? 0 : Math.sin(t/1100);
+
+      fx.globalCompositeOperation = "lighter";
+      fx.lineWidth = 1;
+      for (const f of [-1, -0.55, 0.55, 1]) {
+        fx.beginPath();
+        for (let i = 0; i <= 60; i++) {
+          const u = -1 + (i/60)*2;
+          const x = cx + u*AX;
+          const y = cy + f*RMAX*pinch(u);
+          i ? fx.lineTo(x, y) : fx.moveTo(x, y);
+        }
+        fx.strokeStyle = "rgba(148,160,184,0.14)";
+        fx.stroke();
+      }
+
+      for (let i = 0; i <= 84; i++) {
+        const u = -1 + (i/84)*2;
+        const x = cx + u*AX;
+        const r = RMAX*pinch(u);
+        const slug = Math.exp(-Math.pow((u - su*0.82)/0.22, 2));
+        const throat = Math.pow(Math.abs(u), 6)*0.5;
+        const b = (0.16 + 0.5*slug + throat)*pulse;
+        put(fx, S_BLUE,   x, cy, r*3.1, 0.09*b);
+        put(fx, S_VIOLET, x, cy, r*2.0, 0.135*b);
+        put(fx, S_CYAN,   x, cy, r*1.25, 0.18*b);
+        put(fx, S_WHITE,  x, cy, r*0.5, 0.15*b);
+      }
+
+      coil(cx - AX, 0.8 + 0.5*Math.exp(-Math.pow((su + 0.82)/0.2, 2)));
+      coil(cx + AX, 0.8 + 0.5*Math.exp(-Math.pow((su - 0.82)/0.2, 2)));
+
+      fx.globalCompositeOperation = "source-over";
+      fx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  })();
+})();
+</script>
+</body>
+</html>

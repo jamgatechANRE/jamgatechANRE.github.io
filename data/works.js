@@ -24,9 +24,20 @@
 const WORKS = [
   {
     category: "Publication",
+    title: "Performance comparison and analysis of low-power hall thruster operation on atomic and molecular propellants",
+    meta: "Journal of Electric Propulsion (2026) 5:32",
+    desc: "First-author journal article characterizing the Simplified CAMILA low-power Hall-effect thruster across Xe, Kr, Ar, CO₂, and N₂. Building on our earlier conference paper, this published manuscript shows significant improvements in analysis.",
+    preview: "assets/previews/jep-paper.svg",
+    links: [
+      { label: "Read Journal Article", url: "https://link.springer.com/article/10.1007/s44205-026-00199-5" },
+      { label: "Download Manuscript (PDF)", url: "files/jep-paper-2026.pdf" }
+    ]
+  },
+  {
+    category: "Publication",
     title: "Low Power Hall Thruster Operation on Inert and Molecular Propellants",
     meta: "39th International Electric Propulsion Conference (IEPC-2025-559) · London, UK · September 2025",
-    desc: "First-author conference paper characterizing the Simplified CAMILA low-power Hall-effect thruster across xenon, krypton, argon, CO₂, and N₂, evaluating alternative propellants to reduce industry reliance on xenon. Currently under peer review at the Journal of Electric Propulsion.",
+    desc: "First-author conference paper characterizing the Simplified CAMILA low-power Hall-effect thruster across Xe, Kr, Ar, CO₂, and N₂, evaluating alternative propellants to reduce industry reliance on Xe.",
     preview: "assets/previews/iepc-paper.svg",
     links: [
       { label: "Read the paper (PDF)", url: "https://hpepl.ae.gatech.edu/sites/default/files/Conference%20Papers/iepc-2025-559.pdf" }

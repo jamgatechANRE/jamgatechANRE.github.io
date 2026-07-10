@@ -34,16 +34,6 @@ const WORKS = [
     ]
   },
   {
-    category: "Publication",
-    title: "Low Power Hall Thruster Operation on Inert and Molecular Propellants",
-    meta: "39th International Electric Propulsion Conference (IEPC-2025-559) · London, UK · September 2025",
-    desc: "First-author conference paper characterizing the Simplified CAMILA low-power Hall-effect thruster across Xe, Kr, Ar, CO₂, and N₂, evaluating alternative propellants to reduce industry reliance on Xe.",
-    preview: "assets/previews/iepc-paper.svg",
-    links: [
-      { label: "Read the paper (PDF)", url: "https://hpepl.ae.gatech.edu/sites/default/files/Conference%20Papers/iepc-2025-559.pdf" }
-    ]
-  },
-  {
     category: "Capstone Project",
     title: "SCRAP — Satellite Control and Retrograde Acceleration Program",
     meta: "AE 4322 Space System Design II · Georgia Tech · Spring 2026",
@@ -74,6 +64,16 @@ const WORKS = [
     links: [
       { label: "View slides (PDF)", url: "files/golden-dome-slides.pdf" },
       { label: "Original slides (PPTX)", url: "files/golden-dome-slides.pptx" }
+    ]
+  },
+  {
+    category: "Publication",
+    title: "Low Power Hall Thruster Operation on Inert and Molecular Propellants",
+    meta: "39th International Electric Propulsion Conference (IEPC-2025-559) · London, UK · September 2025",
+    desc: "First-author conference paper characterizing the Simplified CAMILA low-power Hall-effect thruster across Xe, Kr, Ar, CO₂, and N₂, evaluating alternative propellants to reduce industry reliance on Xe.",
+    preview: "assets/previews/iepc-paper.svg",
+    links: [
+      { label: "Read the paper (PDF)", url: "https://hpepl.ae.gatech.edu/sites/default/files/Conference%20Papers/iepc-2025-559.pdf" }
     ]
   },
   {

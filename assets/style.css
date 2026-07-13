@@ -203,56 +203,6 @@ nav.site-nav .links a.active { color: var(--text); border-bottom-color: var(--go
   .portrait { width: min(240px, 70vw); }
 }
 
-/* affiliation logos under the portrait */
-.logo-strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 20px;
-}
-
-.logo-strip a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  padding: 12px 8px 10px;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.logo-strip a:hover { border-color: rgba(242, 177, 52, 0.45); transform: translateY(-2px); }
-
-.logo-strip img {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  border-radius: 6px;
-  filter: grayscale(1) brightness(1.15);
-  opacity: 0.85;
-  transition: filter 0.25s ease, opacity 0.25s ease;
-}
-
-.logo-strip a:hover img { filter: none; opacity: 1; }
-
-.logo-strip .logo-name {
-  font-family: var(--font-head);
-  font-size: 0.66rem;
-  letter-spacing: 0.05em;
-  text-align: center;
-  color: var(--muted);
-  line-height: 1.3;
-}
-
-.logo-strip a:hover .logo-name { color: var(--text); }
-
-@media (max-width: 720px) {
-  .logo-strip { grid-template-columns: repeat(4, 1fr); max-width: 400px; margin: 20px auto 0; }
-}
-
 /* page headings */
 h1.page-heading {
   font-family: var(--font-head);
@@ -548,16 +498,33 @@ main .prose a:hover { border-bottom-color: rgba(242, 177, 52, 0.6); }
 .btn.gold { background: linear-gradient(90deg, var(--gold), #f8cf74); }
 .btn.gold:hover { box-shadow: 0 8px 26px rgba(242, 177, 52, 0.3); }
 
-.pdf-frame {
-  width: 100%;
-  height: 900px;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  margin: 16px 0 40px;
-  background: #0d1526;
+/* CV pages rendered by pdf.js — each page is a canvas "sheet" */
+.pdf-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 16px 0 48px;
 }
 
-@media (max-width: 640px) { .pdf-frame { height: 520px; } }
+.pdf-pages canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.5);
+}
+
+.pdf-status {
+  color: var(--muted);
+  text-align: center;
+  padding: 42px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  margin: 0;
+}
 
 /* ---------- tabs (cv page) ---------- */
 .tabs {
@@ -748,6 +715,551 @@ main .prose a:hover { border-bottom-color: rgba(242, 177, 52, 0.6); }
 .grade-A, .grade-5 { color: var(--gold); background: rgba(242, 177, 52, 0.12); border: 1px solid rgba(242, 177, 52, 0.35); }
 .grade-T, .grade-GT, .grade-4, .grade-Pass { color: var(--cyan); background: rgba(95, 208, 245, 0.10); border: 1px solid rgba(95, 208, 245, 0.3); }
 .grade-V  { color: var(--muted); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--rule); }
+
+/* ============================================================
+   TIMELINE (timeline.html) — mission-log style vertical timeline.
+   Present at the top, past at the bottom. A glowing "comet"
+   descends the spine as you scroll; experience windows render
+   as orbit-track bars beside the spine; LinkedIn posts are
+   cards on the right. Geometry (x/y) is computed in the page
+   script; this file only styles the pieces.
+   ============================================================ */
+
+.tl-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 26px;
+  margin: -14px 0 30px;
+}
+
+.tl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.tl-legend .key.off { display: none; }
+
+.tl-legend .key { display: inline-flex; align-items: center; gap: 7px; }
+
+.tl-legend .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.tl-cat-research  { color: var(--cyan); }
+.tl-cat-industry  { color: var(--gold); }
+.tl-cat-education { color: #a88bfa; }
+.tl-cat-community { color: #f07fa8; }
+.tl-legend .swatch { background: currentColor; }
+
+.tl-wrap { position: relative; margin: 8px 0 90px; }
+
+/* spine: faint track + glowing progress line + comet head */
+.tl-track {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  background: rgba(148, 160, 184, 0.18);
+  border-radius: 2px;
+}
+
+/* the path already flown: from ignition (bottom) up to the comet */
+.tl-progress {
+  position: absolute;
+  width: 2px;
+  height: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--cyan) 45%, rgba(95, 208, 245, 0.12));
+  box-shadow: 0 0 12px rgba(242, 177, 52, 0.3);
+}
+
+.tl-comet {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -12px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.tl-comet::before {
+  /* exhaust plume pointing down — the comet is ascending from ignition */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 46px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(248, 207, 116, 0.9), rgba(248, 207, 116, 0));
+}
+
+.tl-comet::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7e0 0%, #f8cf74 40%, rgba(242, 177, 52, 0) 75%);
+  box-shadow: 0 0 18px rgba(242, 177, 52, 0.9), 0 0 40px rgba(242, 177, 52, 0.4);
+}
+
+/* "now" cap at the top and "launch" cap at the bottom of the spine */
+.tl-cap {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--bg);
+  border: 1px solid rgba(242, 177, 52, 0.5);
+  border-radius: 999px;
+  padding: 3px 12px;
+  white-space: nowrap;
+  z-index: 4;
+}
+
+.tl-cap.pulse { animation: tl-pulse 2.4s ease-in-out infinite; }
+
+/* dashed tail below the ignition node for pre-high-school items */
+.tl-track-pre {
+  position: absolute;
+  width: 0;
+  border-left: 2px dashed rgba(148, 160, 184, 0.35);
+}
+
+@keyframes tl-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(242, 177, 52, 0.0); }
+  50%      { box-shadow: 0 0 18px rgba(242, 177, 52, 0.45); }
+}
+
+/* year pills sitting on the spine */
+.tl-year-pill {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  background: #0d1526;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 2px 11px;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* chapter years: bigger gold pills + a caption underneath */
+.tl-chapter-pill {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  background: #0d1526;
+  border: 1px solid rgba(242, 177, 52, 0.55);
+  border-radius: 999px;
+  padding: 4px 16px;
+  white-space: nowrap;
+  z-index: 3;
+  box-shadow: 0 0 16px rgba(242, 177, 52, 0.25);
+}
+
+.tl-chapter-pill span {
+  background: linear-gradient(90deg, #f8cf74, var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tl-chapter-cap {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--font-head);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: rgba(6, 10, 20, 0.85);
+  border-radius: 8px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* semester boundaries: subtle dashed lines (May → summer, Aug → fall) */
+.tl-sem {
+  position: absolute;
+  height: 0;
+  border-top: 1px dashed rgba(148, 160, 184, 0.16);
+  pointer-events: none;
+}
+
+.tl-sem-label {
+  position: absolute;
+  z-index: 2;               /* connector lines pass behind the label */
+  transform: translateY(-50%);
+  font-family: var(--font-head);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(148, 160, 184, 0.42);
+  white-space: nowrap;
+  background: rgba(6, 10, 20, 0.9);
+  border-radius: 6px;
+  padding: 1px 6px;
+  pointer-events: none;
+}
+
+/* experience windows: vertical orbit-track bars */
+/* bars are OPAQUE (color pre-mixed with the page background instead of
+   translucent) so connector lines visually disconnect behind them */
+.tl-bar {
+  position: absolute;
+  z-index: 1;               /* above the connector lines */
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 34%, var(--bg));
+  box-shadow: 0 0 10px currentColor;
+  transition: background 0.3s ease;
+  cursor: default;
+}
+
+.tl-bar:hover { background: color-mix(in srgb, currentColor 80%, var(--bg)); }
+
+/* short stints (a summer at Realta / Allen / Technion…) get extra pop */
+.tl-bar.brief {
+  background: color-mix(in srgb, currentColor 55%, var(--bg));
+  box-shadow: 0 0 14px currentColor;
+}
+
+/* org logo riding the top of each bar */
+.tl-org-logo {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0d1526;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  z-index: 2;
+  font-family: var(--font-head);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  line-height: 20px;
+}
+
+.tl-org-logo img {
+  position: absolute;
+  inset: 3px;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  border-radius: 3px;
+  background: #0d1526;
+  filter: grayscale(1) brightness(1.2);
+  transition: filter 0.25s ease;
+}
+
+.tl-bar:hover .tl-org-logo img, .tl-chip:hover img { filter: none; }
+
+/* name chips in the label gutter — tall cards: big logo above the name,
+   outlined in the stint's category color */
+.tl-chip {
+  position: absolute;
+  transform: translateY(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-head);
+  font-size: 0.63rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  background: #0d1526;
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+  border-radius: 10px;
+  padding: 8px 10px 6px;
+  white-space: nowrap;
+  z-index: 2;
+  cursor: default;
+}
+
+.tl-chip span { color: var(--text); }
+
+.tl-chip img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+  padding: 2px;
+  flex: none;
+}
+
+.tl-bar .bar-label {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font-family: var(--font-head);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  color: var(--text);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* ongoing windows fade out at "now" (gradient, not mask — the logo must stay visible) */
+.tl-bar.ongoing {
+  background: linear-gradient(180deg, var(--bg), color-mix(in srgb, currentColor 34%, var(--bg)) 30px);
+}
+
+.tl-bar.brief.ongoing {
+  background: linear-gradient(180deg, var(--bg), color-mix(in srgb, currentColor 55%, var(--bg)) 30px);
+}
+
+/* shared tooltip (filled by script): pins in place on hover and stays
+   until you click elsewhere on the page */
+#tl-tip {
+  position: absolute;
+  z-index: 50;
+  max-width: 300px;
+  background: #0d1526;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+#tl-tip.show { opacity: 1; pointer-events: auto; }
+
+#tl-tip .tip-head { display: flex; align-items: center; gap: 8px; }
+
+#tl-tip .tip-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #fff;
+  padding: 1px;
+  flex: none;
+}
+
+#tl-tip .tip-dates { color: var(--muted); font-size: 0.72rem; font-family: var(--font-head); letter-spacing: 0.06em; }
+#tl-tip .tip-link { margin-top: 4px; font-family: var(--font-head); font-size: 0.76rem; }
+#tl-tip .tip-link a::after { content: " →"; }
+
+/* post nodes on the spine */
+.tl-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -4px;
+  border-radius: 50%;
+  background: #24344f;
+  border: 2px solid rgba(95, 208, 245, 0.5);
+  transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  z-index: 2;
+}
+
+.tl-dot.lit {
+  background: var(--cyan);
+  border-color: #bfeafc;
+  box-shadow: 0 0 12px rgba(95, 208, 245, 0.9);
+}
+
+/* dots + connector lines stay invisible until their card reveals,
+   so no lines dangle ahead of the scroll */
+.tl-dot { transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.7s ease; }
+.tl-dot.hid { opacity: 0; }
+.tl-connectors path, .tl-connectors circle { transition: opacity 0.7s ease; }
+.tl-connectors .hid { opacity: 0; }
+
+/* connector elbows from spine to card (SVG overlay) — kept at the very
+   bottom of the stack so lines run BEHIND bars, labels, and cards */
+.tl-connectors { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.tl-connectors path {
+  fill: none;
+  stroke: rgba(95, 208, 245, 0.28);
+  stroke-width: 1.5;
+}
+
+/* tethers from a bar to its label chip in the gutter */
+.tl-connectors path.lbl {
+  stroke: rgba(148, 160, 184, 0.4);
+  stroke-width: 1;
+}
+
+/* post cards: date chip + embedded LinkedIn post + footer link */
+.tl-card {
+  position: absolute;
+  z-index: 1;               /* above the connector lines */
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 12px 14px 11px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease,
+    opacity 0.7s ease;
+}
+
+.tl-card:hover {
+  border-color: rgba(95, 208, 245, 0.45);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45), 0 0 20px rgba(95, 208, 245, 0.07);
+}
+
+/* slide-in reveal, from the card's own side */
+.tl-card.tl-hidden.side-r { opacity: 0; transform: translateX(40px); }
+.tl-card.tl-hidden.side-l { opacity: 0; transform: translateX(-40px); }
+
+.tl-card .tl-date {
+  font-family: var(--font-head);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.tl-card .tl-date svg { width: 12px; height: 12px; fill: var(--gold); }
+
+.tl-embed {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: #0d1526;
+}
+
+/* ⚙ EMBED SIZE — the knob for the LinkedIn post embeds on the timeline.
+   Height: change the 190px below. Width: cards fill the space beside the
+   spine up to the Math.min(..., 280) caps in timeline.html's build(). */
+.tl-embed iframe { display: block; width: 100%; height: 190px; border: 0; }
+
+.tl-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 8px;
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+}
+
+.tl-card-foot .foot-title {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-card-foot a { white-space: nowrap; }
+.tl-card-foot a::after { content: " →"; }
+
+/* mini cards (service view): news + featured entries, compact rows
+   with a small thumb on the spine-facing side; the whole card links
+   back to the news page tab it lives on */
+.tl-card.mini {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tl-card.mini.side-l { flex-direction: row-reverse; }
+
+.tl-card.mini .mini-thumb {
+  flex: none;
+  display: block;
+  width: 84px;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: #0d1526;
+}
+
+.tl-card.mini .mini-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tl-card.mini .mini-body { display: block; min-width: 0; }
+
+.tl-card.mini .mini-title {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--text);
+  margin-bottom: 3px;
+  transition: color 0.2s ease;
+}
+
+.tl-card.mini:hover .mini-title { color: var(--cyan); }
+
+.tl-card.mini .mini-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.78rem;
+  color: #c4cdde;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+.tl-card.mini .mini-meta {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tl-card.mini .mini-meta .outlet { color: var(--gold); }
+
+@media (max-width: 660px) {
+  .tl-chapter-cap { display: none; }
+  .tl-card.mini .mini-thumb { width: 64px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-card.tl-hidden { opacity: 1; transform: none; }
+  .tl-comet { display: none; }
+  .tl-cap.pulse { animation: none; }
+}
 
 /* ---------- footer ---------- */
 footer {

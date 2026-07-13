@@ -13,8 +13,9 @@ personal-website/
 ├── index.html         # about page (hero + electron cloud + portrait)
 ├── work.html          # work products (from data/works.js, incl. video embeds)
 ├── cv.html            # CV tab + searchable coursework table (AP toggle + SAT)
-├── news.html          # media mentions (from data/news.js)
-├── featured.html      # "in the wild" — social media features (from data/featured.js)
+├── news.html          # media mentions + "featured" tab (data/news.js + data/featured.js)
+├── featured.html      # redirect stub → news.html#featured (featured now lives there)
+├── timeline.html      # scrolling mission timeline (from data/timeline.js)
 ├── assets/style.css   # all styling (theme colors/fonts in :root at top)
 ├── assets/site.js     # starfield, electron cloud, page animations, scroll effects
 ├── assets/photo.jpg   # profile photo (grayscaled by CSS)
@@ -23,6 +24,7 @@ personal-website/
 ├── data/works.js      # ← edit to add/remove work products
 ├── data/news.js       # ← edit to add/remove news articles
 ├── data/featured.js   # ← edit to add/remove social features
+├── data/timeline.js   # ← LinkedIn posts + experience windows for the timeline
 ├── data/courses.js    # ← coursework table data + AP exam mapping
 └── files/             # ← PDFs served by the site
 ```
@@ -45,9 +47,48 @@ personal-website/
 News works the same way via `data/news.js` — the optional `img` field
 hotlinks a thumbnail from the article (it hides itself if the link dies).
 
+## Timeline
+
+`timeline.html` renders a mission-log timeline (present at the top,
+ignition/2018 at the bottom) from `data/timeline.js`. The spine sits in
+the middle of the page; a gold comet climbs it from ignition toward
+"now" (its position maps to page scroll, so it reaches the bottom node
+at full scroll). `TL_POSTS` are my authored LinkedIn posts, shown as
+official LinkedIn embeds (first photo + opening lines) alternating
+left/right of the spine, each connected by a direct line to its date
+dot — dates are decoded from each post's URN, so they're exact.
+`TL_SPANS` are experiences drawn as color-coded window bars flanking
+the spine (education innermost on the right, the shared industry
+column outside it, research on the left), each topped with the org's
+logo; brief stints get a name chip in the label gutter to the right of
+the bars, tethered to its bar by a thin line. Hovering a bar or chip
+shows a tooltip (logo, role, dates, site link); clicking pins it until
+you click elsewhere. Connector lines render behind bars, labels, and
+cards, and both card columns share one width (the spine sits slightly
+off-center to absorb the label gutter). Embed size knob: `.tl-embed iframe` height in
+`assets/style.css`, width caps (`Math.min(..., 280)`) in
+timeline.html's `build()`. The
+professional ↔ service toggle switches everything: bars swap between
+career and community windows (Chabad, AEPi, Israel Learning Lab…),
+and the cards swap between LinkedIn embeds (professional) and compact
+news + featured entries (service) that link back to the news page's
+tabs — their dates come from the `d:` field in `data/news.js` /
+`data/featured.js`. Cards sit at their true date so connectors stay
+straight and horizontal; only dense clusters slide a card down, and
+those get a squared elbow in its own lane. The GT era (Aug 2022 →)
+runs at full resolution; earlier years are compressed (~4× tighter),
+and ignition is pinned to Aug 2018 — older items dock on a dashed tail
+below the node. Dashed lines mark semester boundaries (May → summer,
+Aug → fall). Spans with `col: "industry"` share the industry column
+regardless of their color/category; chapter pill captions live in
+`TL_CHAPTERS` (blank for now).
+To add a post: copy a `TL_POSTS` block, set `urn` (`urn:li:share:<id>`
+or `urn:li:ugcPost:<id>`) and the exact date.
+
 ## Featured / Instagram cards
 
-Instagram doesn't allow hotlinking its images, so each card in
+The featured grid lives on the news page (second tab, deep-linkable as
+`news.html#featured`). Instagram doesn't allow hotlinking its images, so each card in
 `data/featured.js` points to a local image — **you choose which image
 from a post's carousel is displayed**: open the post, navigate to the
 frame you want, save it, and drop it in `assets/featured/` under the
@@ -57,7 +98,10 @@ styled placeholder (links still work).
 ## Updating the CV or coursework
 
 - CV: replace `files/joseph-moskovitz-cv.pdf` with a new file of the
-  same name.
+  same name. The CV page renders the PDF's pages in-page with pdf.js
+  (loaded from cdnjs) instead of the browser's PDF plugin, so it works
+  on mobile; it picks up the new file automatically. If pdf.js ever
+  fails to load, the page falls back to a direct link.
 - Coursework: the transcript itself is NOT posted; instead
   `data/courses.js` holds one block per course rendered as the
   searchable/sortable table on the CV page. Add new semesters there
@@ -82,10 +126,9 @@ anytime, or ask to wire any exhibit into a page.
 
 ## Affiliation logos
 
-The about-page logo cards use Google's favicon service (Realta, GT)
-and logo.dev (UC3M, Technion). To use official brand marks instead,
-drop PNGs in `assets/logos/` and swap the `src` attributes in
-`index.html`.
+Org logos (timeline bars, chips, tooltips) come from Google's favicon
+service, logo.dev, or local files in `assets/logos/` — set per entry
+via the `logo:` field in `data/timeline.js` (`TL_LOGO` at the top).
 
 ## Deploying to GitHub Pages (free)
 

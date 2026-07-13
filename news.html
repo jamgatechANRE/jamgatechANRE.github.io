@@ -27,16 +27,31 @@
         <a href="work.html">work</a>
         <a href="cv.html">cv</a>
         <a href="news.html" class="active">news</a>
-        <a href="featured.html">featured</a>
+        <a href="timeline.html">timeline</a>
       </div>
     </div>
   </nav>
 
   <main class="container">
-    <canvas class="page-anim" data-anim="magnetar" width="260" height="130" aria-hidden="true"></canvas>
-    <h1 class="page-heading">In the news</h1>
-    <p class="page-sub">Media mentions and coverage, newest first</p>
-    <ul class="news-list" id="news-list"></ul>
+    <canvas class="page-anim" data-anim="magnetar" width="200" height="100" aria-hidden="true"></canvas>
+    <h1 class="page-heading" id="news-heading">In the news</h1>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="news-pane" role="tab">news</button>
+      <button class="tab-btn" data-tab="featured-pane" role="tab">featured</button>
+    </div>
+
+    <!-- ---------------- News tab ---------------- -->
+    <section id="news-pane" class="tab-pane active">
+      <p class="page-sub" style="margin-top:24px">Media mentions and coverage, newest first</p>
+      <ul class="news-list" id="news-list"></ul>
+    </section>
+
+    <!-- ---------------- Featured tab ---------------- -->
+    <section id="featured-pane" class="tab-pane">
+      <p class="page-sub" style="margin-top:24px">Less formal sightings, in the wild</p>
+      <ul class="featured-grid" id="featured-list"></ul>
+    </section>
   </main>
 
   <footer>
@@ -68,7 +83,23 @@
   </footer>
 
   <script src="data/news.js"></script>
+  <script src="data/featured.js"></script>
   <script>
+    // ---------- tabs (news ↔ featured), heading swaps to match ----------
+    const HEADINGS = { "news-pane": "In the news", "featured-pane": "In the wild" };
+    const tabBtns = document.querySelectorAll(".tab-btn");
+    function activateTab(btn) {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+      document.getElementById("news-heading").textContent = HEADINGS[btn.dataset.tab];
+    }
+    tabBtns.forEach(btn => btn.addEventListener("click", () => activateTab(btn)));
+    // deep link: news.html#featured opens the featured tab
+    if (location.hash === "#featured") activateTab(document.querySelector('[data-tab="featured-pane"]'));
+
+    // ---------- news list ----------
     const list = document.getElementById("news-list");
     for (const n of NEWS) {
       const li = document.createElement("li");
@@ -85,6 +116,30 @@
         </div>`;
       if (!n.img) li.classList.add("no-thumb");
       list.appendChild(li);
+    }
+
+    // ---------- featured grid ----------
+    const icons = {
+      "Instagram": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>`,
+      "X": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+    };
+    const featList = document.getElementById("featured-list");
+    for (const f of FEATURED) {
+      const icon = icons[f.platform] || icons["Instagram"];
+      const li = document.createElement("li");
+      li.className = "card reveal";
+      li.innerHTML = `
+        <a class="thumb feat-thumb" href="${f.url}" target="_blank" rel="noopener">
+          <img src="${f.img}" alt="${f.title}" loading="lazy" onerror="this.parentElement.classList.add('placeholder'); this.remove();">
+          <span class="feat-ph">${icon}<span>Add this post's image to<br>assets/featured/</span></span>
+        </a>
+        <div class="card-body">
+          <span class="chip ig-chip">${icon}${f.platform} · ${f.date}</span>
+          <div class="card-title">${f.title}</div>
+          <p class="card-desc">${f.desc}</p>
+          <div class="card-links"><a href="${f.url}" target="_blank" rel="noopener">View the post</a></div>
+        </div>`;
+      featList.appendChild(li);
     }
   </script>
   <script src="assets/site.js"></script>

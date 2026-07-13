@@ -28,7 +28,7 @@
         <a href="work.html">work</a>
         <a href="cv.html" class="active">cv</a>
         <a href="news.html">news</a>
-        <a href="featured.html">featured</a>
+        <a href="timeline.html">timeline</a>
       </div>
     </div>
   </nav>
@@ -47,10 +47,16 @@
       <p class="page-sub" style="margin-top:24px">
         <a class="btn" href="files/joseph-moskovitz-cv.pdf" target="_blank" rel="noopener">Download CV (PDF)</a>
       </p>
-      <object class="pdf-frame" data="files/joseph-moskovitz-cv.pdf" type="application/pdf">
-        <p style="padding:24px">Your browser can't display embedded PDFs — <a href="files/joseph-moskovitz-cv.pdf"
-            target="_blank" rel="noopener">download the CV here</a>.</p>
-      </object>
+      <!-- CV pages rendered in-page by pdf.js (works on mobile, unlike the
+           browser's <object> PDF plugin) — swap files/joseph-moskovitz-cv.pdf
+           and this picks up the new version automatically -->
+      <div class="pdf-pages" id="cv-pages" aria-label="CV preview">
+        <p class="pdf-status" id="cv-status">Loading the CV preview…</p>
+      </div>
+      <noscript>
+        <p style="padding:24px"><a href="files/joseph-moskovitz-cv.pdf" target="_blank" rel="noopener">Open the CV
+            (PDF)</a></p>
+      </noscript>
     </section>
 
     <!-- ---------------- Coursework tab ---------------- -->
@@ -137,7 +143,60 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="data/courses.js"></script>
+  <script>
+    // ---------- CV: render PDF pages in-page with pdf.js ----------
+    (function () {
+      const PDF_URL = "files/joseph-moskovitz-cv.pdf";
+      const holder = document.getElementById("cv-pages");
+      const status = document.getElementById("cv-status");
+      function fail() {
+        status.innerHTML = location.protocol === "file:"
+          ? `The preview can't load when the site is opened as a local file
+             (browsers block it) — it works on the live site, or locally via
+             <code>python -m http.server</code>. Meanwhile, <a href="${PDF_URL}"
+             target="_blank" rel="noopener">open the CV (PDF) directly</a>.`
+          : `Couldn't render the preview here — <a href="${PDF_URL}" target="_blank"
+             rel="noopener">open the CV (PDF) directly</a>.`;
+        holder.appendChild(status);
+      }
+      if (!window.pdfjsLib) { fail(); return; }
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      let pdfDoc = null, seq = 0;
+      async function render() {
+        const mySeq = ++seq;
+        if (!pdfDoc) pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
+        if (mySeq !== seq) return;
+        const cssW = holder.clientWidth;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        holder.innerHTML = "";
+        for (let p = 1; p <= pdfDoc.numPages; p++) {
+          const page = await pdfDoc.getPage(p);
+          if (mySeq !== seq) return;
+          const base = page.getViewport({ scale: 1 });
+          const vp = page.getViewport({ scale: (cssW / base.width) * dpr });
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(vp.width);
+          canvas.height = Math.round(vp.height);
+          holder.appendChild(canvas);
+          await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+        }
+      }
+      render().catch(fail);
+      let rw = null, lastW = holder.clientWidth;
+      window.addEventListener("resize", () => {
+        clearTimeout(rw);
+        rw = setTimeout(() => {
+          if (Math.abs(holder.clientWidth - lastW) < 40) return;   // ignore tiny jitters
+          lastW = holder.clientWidth;
+          render().catch(fail);
+        }, 250);
+      });
+    })();
+  </script>
   <script>
     // ---------- tabs ----------
     const tabBtns = document.querySelectorAll(".tab-btn");

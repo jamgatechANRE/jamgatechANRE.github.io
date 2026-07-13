@@ -18,10 +18,14 @@
 // img (the displayed image).
 // ============================================================
 
+// d: machine-readable date (decoded from the IG shortcode / tweet ID)
+// — used to place the entry on the timeline page's service view.
+
 const FEATURED = [
   {
     platform: "Instagram",
     date: "2024",
+    d: "2024-02-16",
     title: "@gtaepi",
     desc: "Brotherhood Spotlight: Joseph Moskovitz",
     url: "https://www.instagram.com/p/C3azWQ7PrUe/?hl=en&img_index=3",
@@ -30,6 +34,7 @@ const FEATURED = [
   {
     platform: "Instagram",
     date: "2024",
+    d: "2024-04-16",
     title: "@georgiatech",
     desc: "Celebrating on the slopes",
     url: "https://www.instagram.com/p/C50ztdduEnQ/?img_index=2&igsh=MWh3bnZwNWU2a241NA%3D%3D",
@@ -38,6 +43,8 @@ const FEATURED = [
   {
     platform: "X",
     date: "October 2021",
+    d: "2021-10-20",
+    g: "professional",
     title: "@RansomEverglade",
     desc: "Meet '22 Cum Laude inductees",
     url: "https://x.com/RansomEverglade/status/1450803328808591362",

@@ -1134,7 +1134,7 @@ main .prose a:hover { border-bottom-color: rgba(242, 177, 52, 0.6); }
 .tl-card.tl-hidden.side-r { opacity: 0; transform: translateX(40px); }
 .tl-card.tl-hidden.side-l { opacity: 0; transform: translateX(-40px); }
 
-.tl-card .tl-date {
+.tl-card .tl-date, .tl-modal-box .tl-date {
   font-family: var(--font-head);
   font-size: 0.68rem;
   font-weight: 500;
@@ -1147,7 +1147,7 @@ main .prose a:hover { border-bottom-color: rgba(242, 177, 52, 0.6); }
   gap: 7px;
 }
 
-.tl-card .tl-date svg { width: 12px; height: 12px; fill: var(--gold); }
+.tl-card .tl-date svg, .tl-modal-box .tl-date svg { width: 12px; height: 12px; fill: var(--gold); }
 
 .tl-embed {
   border-radius: 10px;

@@ -121,7 +121,10 @@
     (function () {
       const wrap = document.getElementById("tl-wrap");
       const tip = document.getElementById("tl-tip");
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // forced on, like the site-wide canvas animations in assets/site.js —
+      // Windows' "reduced motion" setting was silently disabling the comet
+      // and the scroll reveals
+      const reduced = false;
 
       const IN_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>`;
       const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -174,14 +177,14 @@
         const OLDEST_M = ym("2018-08");
 
         const PXM_OLD = mobile ? 7 : 9;     // px per month, pre-GT (compressed)
-        // estH tracks the embed height set in assets/style.css
-        // (.tl-embed iframe) — update it if you change that knob
-        const estH = mode === "professional" ? (mobile ? 290 : 275) : 128;
+        // estH tracks the post-card height (thumb aspect ratio is set in
+        // assets/style.css under .tl-post-thumb) — update it if you change it
+        const estH = mode === "professional" ? (mobile ? 265 : 245) : 128;
         let PXM = mobile ? 26 : (mode === "professional" ? 50 : 36);
         if (mobile) {
           // single-column cards are tall — stretch the spine so they
           // fit beside it instead of dangling past ignition
-          const need = rawItems.reduce((s, it) => s + (it.kind === "post" ? 308 : 146), 0) + 240;
+          const need = rawItems.reduce((s, it) => s + (it.kind === "post" ? 283 : 146), 0) + 240;
           PXM = Math.max(PXM, (need - (BREAK_M - OLDEST_M) * PXM_OLD - 150) / (NOW_M - BREAK_M));
         }
         const TOP_PAD = 56, BOT_PAD = 90;
@@ -392,10 +395,18 @@
         // down when its side is genuinely occupied (dense clusters) ----
         function cardHTML(it) {
           if (it.kind === "post") {
+            // card shows just the post's first photo (see data/timeline.js
+            // for where the image files live); clicking expands the full
+            // LinkedIn embed in a centered overlay
+            const img = it.p.img
+              ? `<img src="${it.p.img}" alt="" loading="lazy"
+                   onerror="this.parentElement.classList.add('placeholder'); this.remove();">`
+              : "";
             return `
               <div class="tl-date">${IN_ICON}${fmtDay(it.p.date)}</div>
-              <div class="tl-embed"><iframe src="https://www.linkedin.com/embed/feed/update/${it.p.urn}"
-                loading="lazy" title="LinkedIn post: ${it.p.title}" allowfullscreen></iframe></div>
+              <div class="tl-post-thumb${it.p.img ? "" : " placeholder"}">${img}
+                <span class="post-ph">${IN_ICON}<span>Add this post's photo to<br>assets/posts/</span></span>
+              </div>
               <div class="tl-card-foot"><span class="foot-title">${it.p.title}</span>
                 <a href="${it.p.url}" target="_blank" rel="noopener">open</a></div>`;
           }
@@ -524,11 +535,15 @@
 
         const frag = items.map((it, i) => {
           const side = sides[i], top = res.tops[i];
-          it.card.className = `tl-card${it.mini ? " mini" : ""} side-${side}` + (reduced ? "" : " tl-hidden");
+          it.card.className = `tl-card${it.mini ? " mini" : " post"} side-${side}` + (reduced ? "" : " tl-hidden");
           it.card.dataset.ci = i;   // links the card to its dot + connector
           it.card.style.left = (side === "r" ? cardXR : cardXL) + "px";
           it.card.style.width = (side === "r" ? cardWR : cardWL) + "px";
           it.card.style.top = top + "px";
+          if (!it.mini) it.card.addEventListener("click", e => {
+            if (e.target.closest("a")) return;      // let the footer link work
+            openPost(it.p, it.card);
+          });
           const dot = el(`tl-dot c${i}` + (reduced ? "" : " hid"), { left: spineX + "px", top: it.dotY + "px" });
           return { ...it, i, side, dot, anchorY: top + it.anchorOff };
         });
@@ -592,6 +607,58 @@
         wrap.querySelectorAll(".tl-card").forEach(n => io.observe(n));
 
         onScroll();
+      }
+
+      // ---- post modal: clicking a card expands the full LinkedIn embed
+      // from the card to the center of the screen; clicking the backdrop
+      // (or pressing Escape) animates it back away ----
+      let modalClose = null;
+      function openPost(p, cardEl) {
+        if (modalClose) modalClose(true);
+        const back = document.createElement("div");
+        back.className = "tl-modal-back";
+        const box = document.createElement("div");
+        box.className = "tl-modal-box";
+        box.innerHTML = `
+          <div class="tl-date">${IN_ICON}${fmtDay(p.date)}</div>
+          <div class="tl-modal-embed"><iframe src="https://www.linkedin.com/embed/feed/update/${p.urn}"
+            title="LinkedIn post: ${p.title}" allowfullscreen></iframe></div>
+          <div class="tl-card-foot"><span class="foot-title">${p.title}</span>
+            <a href="${p.url}" target="_blank" rel="noopener">open on LinkedIn</a></div>`;
+        document.body.append(back, box);
+
+        // FLIP: start at the card's on-screen rect, settle in the center
+        const MW = Math.min(620, window.innerWidth * 0.94);
+        const MH = Math.min(window.innerHeight * 0.88, 780);
+        box.style.width = MW + "px";
+        box.style.height = MH + "px";
+        box.style.left = (window.innerWidth - MW) / 2 + "px";
+        box.style.top = (window.innerHeight - MH) / 2 + "px";
+        const r = cardEl.getBoundingClientRect();
+        const fromT = `translate(${(r.left + r.width / 2) - window.innerWidth / 2}px,
+          ${(r.top + r.height / 2) - window.innerHeight / 2}px)
+          scale(${r.width / MW}, ${r.height / MH})`;
+        box.style.transform = fromT;
+        box.getBoundingClientRect();          // flush styles before animating
+        back.classList.add("open");
+        box.classList.add("open");
+        box.style.transform = "";
+        document.body.style.overflow = "hidden";
+
+        const onKey = e => { if (e.key === "Escape") close(); };
+        function close(instant) {
+          document.removeEventListener("keydown", onKey);
+          document.body.style.overflow = "";
+          modalClose = null;
+          if (instant) { back.remove(); box.remove(); return; }
+          box.style.transform = fromT;
+          box.classList.remove("open");
+          back.classList.remove("open");
+          setTimeout(() => { back.remove(); box.remove(); }, 340);
+        }
+        back.addEventListener("click", () => close());
+        document.addEventListener("keydown", onKey);
+        modalClose = close;
       }
 
       // ---- scroll-driven ascent ----

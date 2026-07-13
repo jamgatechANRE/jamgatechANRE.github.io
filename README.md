@@ -54,9 +54,14 @@ ignition/2018 at the bottom) from `data/timeline.js`. The spine sits in
 the middle of the page; a gold comet climbs it from ignition toward
 "now" (its position maps to page scroll, so it reaches the bottom node
 at full scroll). `TL_POSTS` are my authored LinkedIn posts, shown as
-official LinkedIn embeds (first photo + opening lines) alternating
-left/right of the spine, each connected by a direct line to its date
-dot — dates are decoded from each post's URN, so they're exact.
+photo cards (each displays the post's first image from `assets/posts/`
+— see the README.txt there; LinkedIn blocks hotlinking, so save each
+post's photo manually) alternating left/right of the spine, each
+connected by a direct line to its date dot — dates are decoded from
+each post's URN, so they're exact. Clicking a card expands the full
+official LinkedIn embed in a centered overlay (backdrop click or
+Escape closes it). The comet and scroll reveals are forced on even
+when the OS requests reduced motion, matching site.js.
 `TL_SPANS` are experiences drawn as color-coded window bars flanking
 the spine (education innermost on the right, the shared industry
 column outside it, research on the left), each topped with the org's

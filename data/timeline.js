@@ -5,8 +5,14 @@
 //
 // TL_POSTS: my LinkedIn posts (authored only, no reposts).
 //   date "YYYY-MM-DD" (exact, decoded from the post URN),
-//   urn  → rendered as an official LinkedIn embed (first photo +
-//          opening lines), title/url used for the footer link.
+//   img  → the card shows this image (LinkedIn blocks hotlinking, so
+//          save the post's first photo yourself — open the post,
+//          right-click the image → "Save image as…" — and drop it in
+//          assets/posts/ under the filename below). Until the file
+//          exists the card shows a styled placeholder.
+//   urn  → clicking the card expands the official LinkedIn embed
+//          (full post) in a centered overlay; title/url feed the
+//          footer link.
 //
 // TL_SPANS: experiences as windows of time.
 //   start/end "YYYY-MM"; end: null = ongoing, endFuture: printed
@@ -43,54 +49,63 @@ const TL_POSTS = [
   {
     date: "2026-07-10",
     urn: "urn:li:share:7481472276220243968",
+    img: "assets/posts/jep-paper.jpg",
     title: "Journal of Electric Propulsion paper",
     url: "https://www.linkedin.com/feed/update/urn:li:share:7481472276220243968/"
   },
   {
     date: "2026-05-11",
     urn: "urn:li:ugcPost:7459650882008297473",
+    img: "assets/posts/gt-graduation.jpg",
     title: "Graduated from Georgia Tech",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7459650882008297473/"
   },
   {
     date: "2026-05-02",
     urn: "urn:li:ugcPost:7456463817703677952",
+    img: "assets/posts/capstone-scrap.jpg",
     title: "SCRAP at the GT Capstone Expo",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7456463817703677952/"
   },
   {
     date: "2025-09-19",
     urn: "urn:li:ugcPost:7374849345180946432",
+    img: "assets/posts/iepc-2025.jpg",
     title: "IEPC 2025, London",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7374849345180946432/"
   },
   {
     date: "2025-07-25",
     urn: "urn:li:ugcPost:7354633383697600513",
+    img: "assets/posts/allen-summer.jpg",
     title: "Summer at Allen & Company",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7354633383697600513/"
   },
   {
     date: "2024-12-19",
     urn: "urn:li:ugcPost:7275564103799050240",
+    img: "assets/posts/uc3m-abroad.jpg",
     title: "Semester abroad at UC3M",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7275564103799050240/"
   },
   {
     date: "2024-07-24",
     urn: "urn:li:ugcPost:7221918863712493568",
+    img: "assets/posts/technion-epl.jpg",
     title: "Technion Electric Propulsion Lab",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7221918863712493568/"
   },
   {
     date: "2024-04-16",
     urn: "urn:li:share:7186090322471391232",
+    img: "assets/posts/ugrs-2024.jpg",
     title: "GT Undergraduate Research Symposium",
     url: "https://www.linkedin.com/feed/update/urn:li:share:7186090322471391232/"
   },
   {
     date: "2023-02-20",
     urn: "urn:li:share:7033249499904925696",
+    img: "assets/posts/deloitte-case.jpg",
     title: "Deloitte case competition",
     url: "https://www.linkedin.com/feed/update/urn:li:share:7033249499904925696/"
   }

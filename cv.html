@@ -181,6 +181,11 @@
           const canvas = document.createElement("canvas");
           canvas.width = Math.round(vp.width);
           canvas.height = Math.round(vp.height);
+          // display size pinned inline so the hi-DPI pixel buffer can never
+          // blow the page up wider than the screen (mobile)
+          canvas.style.width = "100%";
+          canvas.style.maxWidth = "100%";
+          canvas.style.height = "auto";
           holder.appendChild(canvas);
           await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
         }

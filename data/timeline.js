@@ -51,6 +51,7 @@ const TL_POSTS = [
     urn: "urn:li:share:7481472276220243968",
     img: "assets/posts/jep-paper.jpg",
     title: "Journal of Electric Propulsion paper",
+    cat: "research",
     url: "https://www.linkedin.com/feed/update/urn:li:share:7481472276220243968/"
   },
   {
@@ -58,6 +59,7 @@ const TL_POSTS = [
     urn: "urn:li:ugcPost:7459650882008297473",
     img: "assets/posts/gt-graduation.jpg",
     title: "Graduated from Georgia Tech",
+    cat: "education",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7459650882008297473/"
   },
   {
@@ -65,6 +67,7 @@ const TL_POSTS = [
     urn: "urn:li:ugcPost:7456463817703677952",
     img: "assets/posts/capstone-scrap.jpg",
     title: "SCRAP at the GT Capstone Expo",
+    cat: "education",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7456463817703677952/"
   },
   {
@@ -72,6 +75,7 @@ const TL_POSTS = [
     urn: "urn:li:ugcPost:7374849345180946432",
     img: "assets/posts/iepc-2025.jpg",
     title: "IEPC 2025, London",
+    cat: "research",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7374849345180946432/"
   },
   {
@@ -79,6 +83,7 @@ const TL_POSTS = [
     urn: "urn:li:ugcPost:7354633383697600513",
     img: "assets/posts/allen-summer.jpg",
     title: "Summer at Allen & Company",
+    cat: "industry",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7354633383697600513/"
   },
   {
@@ -86,6 +91,7 @@ const TL_POSTS = [
     urn: "urn:li:ugcPost:7275564103799050240",
     img: "assets/posts/uc3m-abroad.jpg",
     title: "Semester abroad at UC3M",
+    cat: "research",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7275564103799050240/"
   },
   {
@@ -93,6 +99,7 @@ const TL_POSTS = [
     urn: "urn:li:ugcPost:7221918863712493568",
     img: "assets/posts/technion-epl.jpg",
     title: "Technion Electric Propulsion Lab",
+    cat: "research",
     url: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7221918863712493568/"
   },
   {
@@ -100,6 +107,7 @@ const TL_POSTS = [
     urn: "urn:li:share:7186090322471391232",
     img: "assets/posts/ugrs-2024.jpg",
     title: "GT Undergraduate Research Symposium",
+    cat: "research",
     url: "https://www.linkedin.com/feed/update/urn:li:share:7186090322471391232/"
   },
   {
@@ -107,6 +115,7 @@ const TL_POSTS = [
     urn: "urn:li:share:7033249499904925696",
     img: "assets/posts/deloitte-case.jpg",
     title: "Deloitte case competition",
+    cat: "education",
     url: "https://www.linkedin.com/feed/update/urn:li:share:7033249499904925696/"
   }
 ];
@@ -122,7 +131,7 @@ const TL_SPANS = [
   { name: "GT COE TA", role: "Deformable Bodies Teaching Assistant, GT College of Engineering", start: "2024-01", end: "2024-05", cat: "industry", group: "professional", logo: TL_LOGO.gt, url: "https://coe.gatech.edu/" },
   { name: "Ulpan Bayit", role: "Hebrew studies, Ulpan Bayit (Tel Aviv)", start: "2023-06", end: "2023-08", cat: "education", col: "industry", group: "professional", logo: TL_LOGO.ulpan, url: "https://ulpan.co.il/" },
   { name: "GT B.S. AE", role: "B.S. Aerospace Engineering + NRE minor, Georgia Tech", start: "2022-08", end: "2026-05", cat: "education", group: "professional", logo: TL_LOGO.gt, url: "https://ae.gatech.edu/" },
-  { name: "Ransom Everglades", role: "High School Diploma, Ransom Everglades School", start: "2018-08", end: "2022-05", cat: "education", group: "professional", logo: TL_LOGO.ransom, url: "https://www.ransomeverglades.org/" },
+  { name: "Ransom Everglades", role: "High School Diploma, Ransom Everglades School", start: "2018-08", end: "2022-05", cat: "education", group: "professional", logo: TL_LOGO.ransom, url: "https://www.ransomeverglades.org/", logoOffset: 2 },
   // ---- service ----
   { name: "Chabad", role: "Executive Board, Chabad at Georgia Tech", start: "2024-01", end: null, cat: "community", group: "service", logo: TL_LOGO.chabad, url: "https://www.chabaddtu.com/" },
   { name: "AEPi", role: "Exchequer, Zeta Chapter of Alpha Epsilon Pi", start: "2023-04", end: "2025-04", cat: "community", group: "service", logo: TL_LOGO.aepi, url: "https://gtaepi.org/" },

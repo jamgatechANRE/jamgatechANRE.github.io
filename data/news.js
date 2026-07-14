@@ -18,6 +18,7 @@ const NEWS = [
     title: "Going nuclear",
     desc: "Isthmus profiles Realta Fusion and the WHAM experiment's race to turn plasma into clean energy — photographed in the lab during my internship (that's the back of my head).",
     url: "https://isthmus.com/news/news/going-nuclear/",
+    cat: "industry",
     img: "https://isthmus.com/downloads/75006/download/News-WHAM-Nuclear-Fusion_crTommyWashbush-07022026.jpg?cb=9456d722d7fb544b6ea9cf5b5212a2ec&w=600"
   },
   {
@@ -37,6 +38,7 @@ const NEWS = [
     title: "Thirty-five Ransom Everglades students earn National Merit recognition",
     desc: "Named a National Merit Semifinalist, a distinction achieved by less than one percent of high school seniors in the United States.",
     url: "https://communitynewspapers.com/biscayne-bay/thirty-five-ransom-everglades-students-earn-national-merit-recognition/",
+    cat: "education",
     img: "https://communitynewspapers.com/wp-content/uploads/2021/09/Capture-min-4.jpg"
   },
   {

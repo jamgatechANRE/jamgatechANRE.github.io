@@ -114,7 +114,18 @@ const AP_EXAMS = [
   { exam: "AP Physics 1", score: "5", cr: 3, equiv: "PHYS 2XXX" },
   { exam: "AP Physics C: Mechanics", score: "5", cr: 4, equiv: "PHYS 2211" },
   { exam: "AP Physics C: E&M", score: "5", cr: 4, equiv: "PHYS 2212" },
-  { exam: "AP Spanish Language & Culture", score: "5", cr: 9, equiv: "SPAN 2001 + 2002 + 3XXX" },
+  { exam: `AP Spanish Language & Culture ${flag}`, score: "5", cr: 9, equiv: "SPAN 2001 + 2002 + 3XXX" },
   { exam: "AP United States History", score: "4", cr: 3, equiv: "HIST 2111" },
   { exam: "GT Math Dept Exam [Linear Algebra]", score: "Pass", cr: 2, equiv: "MATH 1553" }
+];
+
+// ============================================================
+// UC3M Transfer Exams / Courses
+// Displayed under the Transfer tab, consolidating split GT credits.
+// ============================================================
+const UC3M_EXAMS = [
+  { subj: "UC3M", num: "15341", title: "Structural Analysis", cr: 4, equiv: "AE 3140 + 3XXX", syl: "https://aplicaciones.uc3m.es/cpa/cpa/generaFichaPDF?ano=2026&plan=421&asignatura=15341&idioma=2" },
+  { subj: "UC3M", num: "12766", title: `History of Aerospace Technology ${flag}`, cr: 2, equiv: "HTS 2XXX", syl: "https://aplicaciones.uc3m.es/cpa/cpa/generaFichaPDF?ano=2025&plan=442&asignatura=12766&idioma=1" },
+  { subj: "UC3M", num: "15328", title: "Statistics and Applications", cr: 4, equiv: "MATH 3670 + 3XXX", syl: "https://aplicaciones.uc3m.es/cpa/cpa/generaFichaPDF?ano=2026&plan=421&asignatura=15328&idioma=2" },
+  { subj: "UC3M", num: "15500", title: `Principles and Applications of Engineering Materials ${flag}`, cr: 4, equiv: "MSE 2001 + 2XXX", syl: "https://aplicaciones.uc3m.es/cpa/cpa/generaFichaPDF?ano=2026&plan=418&asignatura=15500&idioma=1" }
 ];

@@ -136,6 +136,10 @@
         const [y, m, d] = str.split("-").map(Number);
         return y * 12 + (m - 1) + (d ? (d - 1) / 30 : 0);
       };
+      const ymEnd = str => {
+        const [y, m, d] = str.split("-").map(Number);
+        return y * 12 + (m - 1) + (d ? (d - 1) / 30 : 1);
+      };
       const fmtDay = str => {
         const [y, m, d] = str.split("-").map(Number);
         return `${MONTHS[m - 1]} ${d}, ${y}`;
@@ -155,6 +159,7 @@
 
       let mode = "professional";
       let state = null;
+      let activeFilters = new Set(["research", "industry", "education", "community"]);
 
       function build() {
         wrap.innerHTML = "";
@@ -164,19 +169,26 @@
         // ---- items for this mode: LinkedIn embeds live on the professional
         // view, news + featured entries go wherever their g: field says
         // (default service); all link back to their tab on the news page ----
-        const extras = [...NEWS.map(n => ({ kind: "news", date: n.d, g: n.g, n })),
-          ...FEATURED.map(f => ({ kind: "feat", date: f.d, g: f.g, f }))].filter(it => it.date);
-        const rawItems = mode === "professional"
-          ? [...TL_POSTS.map(p => ({ kind: "post", date: p.date, p })),
-             ...extras.filter(it => it.g === "professional")]
+        const extras = [...NEWS.map(n => ({ kind: "news", date: n.d, g: n.g, cat: n.cat, n })),
+        ...FEATURED.map(f => ({ kind: "feat", date: f.d, g: f.g, cat: f.cat, f }))].filter(it => it.date);
+
+        let rawItems = mode === "professional"
+          ? [...TL_POSTS.map(p => ({ kind: "post", date: p.date, cat: p.cat, p })),
+          ...extras.filter(it => it.g === "professional")]
           : extras.filter(it => it.g !== "professional");
 
-        const activeSpans = TL_SPANS.filter(s => s.group === mode);
+        let activeSpans = TL_SPANS.filter(s => s.group === mode);
+
+        if (mode === "professional") {
+          rawItems = rawItems.filter(it => !it.cat || activeFilters.has(it.cat));
+          activeSpans = activeSpans.filter(s => activeFilters.has(s.cat));
+        }
+
         // ignition is fixed at the start of high school; anything older
         // (middle-school clippings…) docks on a dashed tail below the node
         const OLDEST_M = ym("2018-08");
 
-        const PXM_OLD = mobile ? 7 : 9;     // px per month, pre-GT (compressed)
+        const PXM_OLD = mobile ? 8 : 11;     // px per month, pre-GT (compressed)
         // estH tracks the post-card height (thumb aspect ratio is set in
         // assets/style.css under .tl-post-thumb) — update it if you change it
         const estH = mode === "professional" ? (mobile ? 265 : 245) : 128;
@@ -206,10 +218,11 @@
         for (const s of spans) {
           if (groupKey(s) !== curKey) { laneBase += catEnds.length; curKey = groupKey(s); catEnds = []; }
           s._sM = ym(s.start);
-          s._eM = s.end ? ym(s.end) : NOW_M;
+          s._eM = s.end ? ymEnd(s.end) : NOW_M;
+          const logicalEM = s.end ? ym(s.end) : NOW_M;
           let li = catEnds.findIndex(end => end <= s._sM);
           if (li === -1) { li = catEnds.length; catEnds.push(0); }
-          catEnds[li] = s._eM + 0.5;
+          catEnds[li] = logicalEM + 0.5;
           s._lane = laneBase + li;
           laneKeys[s._lane] = curKey;
         }
@@ -347,7 +360,7 @@
           n.dataset.tipUrl = s.url || "";
         };
         const chipQueue = [];
-        for (const s of spans) {
+        for (const s of [...spans].reverse()) {
           const yTop = s._yTop, h = s._h;
           const brief = h < 130;
           const x = laneX(s._lane);
@@ -357,8 +370,12 @@
           );
           const logoImg = s.logo ? `<img src="${s.logo}" alt="" loading="lazy" onerror="this.remove()">` : "";
           const wantChip = !mobile && (brief || s.chip);   // chip: true forces a gutter label
-          if (!mobile) bar.innerHTML = `<span class="tl-org-logo">${s.name[0]}${logoImg}</span>`;
-          if (!mobile && !brief && !wantChip) bar.innerHTML += `<span class="bar-label">${s.name}</span>`;
+          const logoOffset = s.logoOffset ? ` style="top: ${s.logoOffset}px"` : "";
+          if (!mobile) bar.innerHTML = `<span class="tl-org-logo"${logoOffset}>${s.name[0]}${logoImg}</span>`;
+          if (!mobile && !brief && !wantChip) {
+            const lblOffset = s.logoOffset ? ` style="top: ${s.logoOffset + 27}px"` : "";
+            bar.innerHTML += `<span class="bar-label"${lblOffset}>${s.name}</span>`;
+          }
           setTipData(bar, s);
           if (wantChip) chipQueue.push({ s, x, yTop, h, logoImg, right: x >= spineX });
         }
@@ -628,7 +645,7 @@
         document.body.append(back, box);
 
         // FLIP: start at the card's on-screen rect, settle in the center
-        const MW = Math.min(620, window.innerWidth * 0.94);
+        const MW = Math.min(780, window.innerWidth * 0.94);
         const MH = Math.min(window.innerHeight * 0.88, 780);
         box.style.width = MW + "px";
         box.style.height = MH + "px";
@@ -677,15 +694,33 @@
       }
 
       // ---- professional ↔ service toggle ----
-      document.querySelectorAll("#tl-mode .seg-btn").forEach(btn =>
-        btn.addEventListener("click", () => {
-          if (btn.dataset.mode === mode) return;
-          mode = btn.dataset.mode;
-          document.querySelectorAll("#tl-mode .seg-btn").forEach(b => b.classList.toggle("active", b === btn));
-          document.querySelectorAll("#tl-legend .key").forEach(k =>
-            k.classList.toggle("off", k.dataset.group !== mode));
+      document.querySelectorAll(".tl-controls .seg-btn").forEach(b => b.addEventListener("click", () => {
+        if (b.classList.contains("active")) return;
+        b.parentNode.querySelectorAll(".seg-btn").forEach(n => n.classList.remove("active"));
+        b.classList.add("active");
+        mode = b.dataset.mode;
+        document.querySelectorAll("#tl-legend .key").forEach(k => {
+          k.classList.toggle("off", k.dataset.group !== mode);
+          // reset filters when switching tabs
+          k.classList.remove("inactive");
+        });
+        activeFilters = new Set(["research", "industry", "education", "community"]);
+        build();
+      }));
+
+      document.querySelectorAll("#tl-legend .key").forEach(k => {
+        k.addEventListener("click", () => {
+          if (mode !== "professional") return; // feature not needed for service tab
+          k.classList.toggle("inactive");
+          const cat = k.className.match(/tl-cat-(\w+)/)[1];
+          if (k.classList.contains("inactive")) {
+            activeFilters.delete(cat);
+          } else {
+            activeFilters.add(cat);
+          }
           build();
-        }));
+        });
+      });
 
       // ---- tooltip for bars & chips (logo, role, dates, site link):
       // hover shows it and moving away hides it; CLICKING a bar or chip

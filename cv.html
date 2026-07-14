@@ -66,7 +66,14 @@
         click a column header to sort. Course numbers link to the official syllabus where available, otherwise to the
         OSCAR catalog entry.</p>
 
-      <div class="course-stats" id="course-stats"></div>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:18px;">
+        <div class="course-stats" id="course-stats" style="margin-bottom:0;"></div>
+        <div class="seg-toggle" id="lang-toggle" title="Filter courses by instruction language" style="margin-left:auto;">
+          <button class="seg-btn active" data-lang="all">All</button>
+          <button class="seg-btn" data-lang="en">🇺🇸 EN</button>
+          <button class="seg-btn" data-lang="es">🇪🇸 ES</button>
+        </div>
+      </div>
 
       <div class="course-controls">
         <input type="search" id="course-search" placeholder="Search courses… (e.g. plasma, MATH, 4699)"
@@ -77,9 +84,9 @@
         <select id="sem-filter" aria-label="Filter by semester">
           <option value="">All semesters</option>
         </select>
-        <div class="seg-toggle" id="ap-toggle" title="Show GT coursework or the AP exams behind the pre-college credit">
+        <div class="seg-toggle" id="ap-toggle" title="Show GT coursework or transfer credit">
           <button class="seg-btn active" data-mode="gt">gt credit</button>
-          <button class="seg-btn" data-mode="ap">ap exams</button>
+          <button class="seg-btn" data-mode="transfer">transfer</button>
         </div>
       </div>
 
@@ -109,8 +116,8 @@
       <p class="muted" style="font-size:0.85rem; margin:18px 0 64px">
         Grades: <strong>A</strong> letter grade · <strong>T</strong> AP/transfer credit · <strong>GT</strong>
         GT-approved transfer credit (exam or study abroad at UC3M Madrid) · Courses marked with 🇪🇸 were taken in
-        Spanish · <strong>V</strong> no grade (recitation). The <em>ap exams</em> toggle shows only the AP exams and
-        scores behind the pre-college credit, plus standardized testing.
+        Spanish · <strong>V</strong> no grade (recitation). The <em>transfer</em> toggle shows the AP exams and
+        scores behind the pre-college credit, as well as the UC3M study abroad courses, plus standardized testing.
       </p>
     </section>
   </main>
@@ -219,17 +226,25 @@
     const semSel = document.getElementById("sem-filter");
     const stats = document.getElementById("course-stats");
     const satStrip = document.getElementById("sat-strip");
-    let sortKey = "ord", sortDir = 1, apMode = false;
+    let sortKey = "ord", sortDir = 1, transferMode = false, langMode = "all";
 
-    // AP-exams view: ONLY the exams (no GT coursework)
-    const AP_ROWS = AP_EXAMS.map(e => ({
-      sem: "Pre-College", ord: 0, subj: "AP", num: "—",
-      title: e.exam, equiv: e.equiv, cr: e.cr, grade: e.score
-    }));
+    const gtCourses = COURSES.filter(c => c.sem !== "Fall 2024 (UC3M)");
+
+    // Transfer view: AP Exams + UC3M
+    const TRANSFER_ROWS = [
+      ...AP_EXAMS.map(e => ({
+        sem: "Pre-College", ord: 0, subj: "AP", num: "—",
+        title: e.exam, equiv: e.equiv, cr: e.cr, grade: e.score
+      })),
+      ...UC3M_EXAMS.map(e => ({
+        sem: "Fall 2024 (UC3M)", ord: 5, subj: e.subj, num: e.num,
+        title: e.title, equiv: e.equiv, cr: e.cr, grade: "GT", syl: e.syl
+      }))
+    ];
 
     // populate filter dropdowns (GT view)
-    [...new Set(COURSES.map(c => c.subj))].sort().forEach(d => deptSel.add(new Option(d, d)));
-    [...new Map(COURSES.map(c => [c.sem, c.ord])).entries()]
+    [...new Set(gtCourses.map(c => c.subj))].sort().forEach(d => deptSel.add(new Option(d, d)));
+    [...new Map(gtCourses.map(c => [c.sem, c.ord])).entries()]
       .sort((a, b) => a[1] - b[1])
       .forEach(([s]) => semSel.add(new Option(s, s)));
 
@@ -254,11 +269,16 @@
 
     function render() {
       const q = search.value.trim().toLowerCase();
-      let rows = (apMode ? AP_ROWS : COURSES).filter(c =>
-        (apMode || !deptSel.value || c.subj === deptSel.value) &&
-        (apMode || !semSel.value || c.sem === semSel.value) &&
-        (!q || `${c.subj} ${c.num} ${c.title} ${c.equiv || ""} ${c.sem} ${c.grade}`.toLowerCase().includes(q))
-      );
+      let rows = (transferMode ? TRANSFER_ROWS : gtCourses).filter(c => {
+        const titleStr = c.title || "";
+        const isSpanish = titleStr.includes("🇪🇸");
+        if (langMode === "en" && isSpanish) return false;
+        if (langMode === "es" && !isSpanish) return false;
+
+        return (transferMode || !deptSel.value || c.subj === deptSel.value) &&
+               (transferMode || !semSel.value || c.sem === semSel.value) &&
+               (!q || `${c.subj} ${c.num} ${c.title} ${c.equiv || ""} ${c.sem} ${c.grade}`.toLowerCase().includes(q));
+      });
       rows.sort((a, b) => {
         const va = a[sortKey], vb = b[sortKey];
         const cmp = typeof va === "number" ? va - vb : String(va).localeCompare(String(vb));
@@ -274,9 +294,9 @@
           <td><span class="grade grade-${String(c.grade).replace(/[^A-Za-z0-9]/g, "")}">${c.grade}</span></td>
         </tr>`).join("");
       const hours = rows.reduce((s, c) => s + c.cr, 0);
-      stats.innerHTML = apMode
-        ? `<span class="stat"><strong>${rows.length}</strong> exams shown</span>
-           <span class="stat"><strong>${hours}</strong> credit hours earned</span>
+      stats.innerHTML = transferMode
+        ? `<span class="stat"><strong>${rows.length}</strong> items shown</span>
+           <span class="stat"><strong>${hours}</strong> transfer credits earned</span>
            <span class="stat"><strong>9×5</strong> AP scores of 5</span>`
         : `<span class="stat"><strong>${rows.length}</strong> courses shown</span>
            <span class="stat"><strong>${hours}</strong> credit hours</span>
@@ -292,15 +312,23 @@
         render();
       }));
 
-    // AP / GT segmented toggle — AP view shows only the exams + SAT strip
+    // Transfer / GT segmented toggle
     document.querySelectorAll("#ap-toggle .seg-btn").forEach(btn =>
       btn.addEventListener("click", () => {
-        apMode = btn.dataset.mode === "ap";
+        transferMode = btn.dataset.mode === "transfer";
         document.querySelectorAll("#ap-toggle .seg-btn").forEach(b => b.classList.toggle("active", b === btn));
-        deptSel.disabled = apMode;
-        semSel.disabled = apMode;
-        if (apMode) { deptSel.value = ""; semSel.value = ""; }
-        satStrip.classList.toggle("show", apMode);
+        deptSel.disabled = transferMode;
+        semSel.disabled = transferMode;
+        if (transferMode) { deptSel.value = ""; semSel.value = ""; }
+        satStrip.classList.toggle("show", transferMode);
+        render();
+      }));
+
+    // Language toggle
+    document.querySelectorAll("#lang-toggle .seg-btn").forEach(btn =>
+      btn.addEventListener("click", () => {
+        langMode = btn.dataset.lang;
+        document.querySelectorAll("#lang-toggle .seg-btn").forEach(b => b.classList.toggle("active", b === btn));
         render();
       }));
 

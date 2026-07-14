@@ -48,6 +48,7 @@ const FEATURED = [
     title: "@RansomEverglade",
     desc: "Meet '22 Cum Laude inductees",
     url: "https://x.com/RansomEverglade/status/1450803328808591362",
+    cat: "education",
     img: "assets/featured/FCJJy93WQAATnN6.jpg"
   }
 ];

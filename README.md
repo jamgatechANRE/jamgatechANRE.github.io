@@ -16,6 +16,7 @@ personal-website/
 ├── news.html          # media mentions + "featured" tab (data/news.js + data/featured.js)
 ├── featured.html      # redirect stub → news.html#featured (featured now lives there)
 ├── timeline.html      # scrolling mission timeline (from data/timeline.js)
+├── travel.html        # spinning globe of visited countries + ski log (data/travel.js)
 ├── assets/style.css   # all styling (theme colors/fonts in :root at top)
 ├── assets/site.js     # starfield, electron cloud, page animations, scroll effects
 ├── assets/photo.jpg   # profile photo (grayscaled by CSS)
@@ -73,7 +74,8 @@ cards, and both card columns share one width (the spine sits slightly
 off-center to absorb the label gutter). Embed size knob: `.tl-embed iframe` height in
 `assets/style.css`, width caps (`Math.min(..., 280)`) in
 timeline.html's `build()`. The
-professional ↔ service toggle switches everything: bars swap between
+professional ↔ community toggle (internal mode name: "service")
+switches everything: bars swap between
 career and community windows (Chabad, AEPi, Israel Learning Lab…),
 and the cards swap between LinkedIn embeds (professional) and compact
 news + featured entries (service) that link back to the news page's
@@ -89,6 +91,38 @@ regardless of their color/category; chapter pill captions live in
 `TL_CHAPTERS` (blank for now).
 To add a post: copy a `TL_POSTS` block, set `urn` (`urn:li:share:<id>`
 or `urn:li:ugcPost:<id>`) and the exact date.
+
+## Travel page
+
+`travel.html` draws an interactive planet (D3 orthographic projection
+on canvas — drag to spin, wheel/pinch to zoom 1–5×, slow idle
+rotation) with a display toggle: "countries + trips" glows the
+`VISITED` countries cyan with gold `TRIPS` pins (click → trip card
+overlay; give a trip several `imgs:` and the card becomes a swipeable
+photo carousel; photos in `assets/travel/`),
+while "mountains" shows a neutral planet with emoji pins for every
+`SKI` (❄️) and `BIKE` (🚵) entry — a spot in both lists gets a dual
+pin — Ikon-map style; clicking a mountain pin opens a small pinned
+popup (emoji, name, summit) with a "view in the ski log" link for ski
+spots, dismissed by clicking away. Pins that overlap on screen (the
+Wasatch resorts are closer than any globe zoom can separate) merge
+into a count badge whose popup lists every spot, each linked. The
+globe canvas breaks out of the content column and grows with zoom to
+the full screen width (height capped at ~94vh); zoom runs 1–24×, and
+past 2.5× the map hot-swaps to vendored 50m-resolution coastlines
+(`data/world-50m.json`) so zoomed-in borders stay crisp. The ski log tab renders one huge
+full-bleed photo panel per mountain, the resort's name set giant and
+frosted INSIDE the image (Sölden-style), with area + summit in a slim
+caption below; photos go in `assets/ski/` (see the README.txt there —
+a ridgeline placeholder shows until each exists; true text-behind-
+the-peaks masking requires editing the photos themselves). Map data is vendored (`data/world-110m.json` from
+world-atlas, with French Guiana split out of France's geometry so FRA
+doesn't light up South America; `data/iso-num.js` maps the ISO alpha-3
+codes you write in `VISITED` to the map's numeric ids — note tiny
+territories like Anguilla don't exist at 110m resolution and won't
+render). D3 + topojson load
+from cdnjs. Like the embeds, the globe needs the site served over
+http(s) — not `file://`.
 
 ## Featured / Instagram cards
 

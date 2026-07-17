@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='10' fill='%23f2b134'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='26' ry='11' fill='none' stroke='%235fd0f5' stroke-width='3' opacity='0.7' transform='rotate(-30 32 32)'/%3E%3C/svg%3E">
+  <title>Travel — Joseph Moskovitz</title>
+  <meta name="description"
+    content="Joseph Moskovitz beyond the lab: a spinning globe of visited countries, pinned trips, and a ski log.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+  <canvas id="stars"></canvas>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">Joseph Moskovitz<span class="dot">.</span></a>
+      <div class="links">
+        <a href="index.html">about</a>
+        <a href="work.html">work</a>
+        <a href="cv.html">cv</a>
+        <a href="news.html">news</a>
+        <a href="timeline.html">timeline</a>
+        <a href="travel.html" class="active">travel</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-heading">Beyond the lab</h1>
+    <p class="page-sub">The one planet I've actually explored. Drag the globe to spin it — visited countries glow,
+      and the gold pins are trips worth telling. The second tab is the ski log.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="globe-pane" role="tab">globe</button>
+      <button class="tab-btn" data-tab="ski-pane" role="tab">ski log</button>
+    </div>
+
+    <!-- ---------------- Globe tab ---------------- -->
+    <section id="globe-pane" class="tab-pane active">
+      <div class="course-stats" id="travel-stats" style="margin-top:24px"></div>
+      <div class="globe-mode-row">
+        <div class="seg-toggle" id="globe-mode" title="Switch what the globe displays">
+          <button class="seg-btn active" data-gmode="trips">countries + trips</button>
+          <button class="seg-btn" data-gmode="ski">mountains</button>
+        </div>
+      </div>
+      <div class="globe-wrap">
+        <canvas id="globe" aria-label="Interactive globe of visited countries and ski mountains"></canvas>
+        <div class="globe-caption" id="globe-caption">drag to spin · scroll to zoom · click a pin</div>
+      </div>
+    </section>
+
+    <!-- ---------------- Ski log tab ---------------- -->
+    <section id="ski-pane" class="tab-pane">
+      <div class="course-stats" id="ski-stats" style="margin-top:24px"></div>
+      <p class="page-sub">A few favorites up top — the full list of every mountain below.</p>
+      <ul class="ski-list" id="ski-list"></ul>
+      <h2 class="ski-all-head">Every mountain</h2>
+      <ul class="ski-all" id="ski-all"></ul>
+    </section>
+  </main>
+
+  <div id="tl-tip" role="tooltip"></div>
+
+  <footer>
+    <div class="container">
+      <div class="social">
+        <a href="mailto:jam.gatech.ae@gmail.com" target="_blank" rel="noopener" aria-label="Email" title="Email"><svg
+            viewBox="0 0 24 24">
+            <path
+              d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+          </svg></a>
+        <a href="https://www.linkedin.com/in/josephmoskovitz" target="_blank" rel="noopener" aria-label="LinkedIn"
+          title="LinkedIn"><svg viewBox="0 0 24 24">
+            <path
+              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+          </svg></a>
+        <a href="https://github.com/jamgatechANRE" target="_blank" rel="noopener" aria-label="GitHub"
+          title="GitHub"><svg viewBox="0 0 24 24">
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+          </svg></a>
+        <a href="https://orcid.org/0009-0005-2993-5576" target="_blank" rel="noopener" aria-label="ORCID"
+          title="ORCID"><svg viewBox="0 0 512 512">
+            <path
+              d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zM175.23 368.83h-29.34V187.42h29.34zM160.56 162.52a19.57 19.57 0 1 1 19.57-19.57 19.56 19.56 0 0 1-19.57 19.57zM300 369h-81V162.5h80.6c76.73 0 110.44 54.83 110.44 103.26C410 318.39 368.38 369 300 369z" />
+          </svg></a>
+      </div>
+      <div class="copyright">© 2026 Joseph Moskovitz</div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+  <script src="data/iso-num.js"></script>
+  <script src="data/travel.js"></script>
+  <script>
+    // ---------- tabs ----------
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+    }));
+
+    // ---------- stats strips (globe tab / ski tab) ----------
+    document.getElementById("travel-stats").innerHTML = `
+      <span class="stat"><strong>${VISITED.length}</strong> countries</span>`;
+    document.getElementById("ski-stats").innerHTML = `
+      <span class="stat"><strong>${SKI.length}</strong> mountains skied</span>
+      <span class="stat"><strong>${Math.max(...SKI.map(m => m.summit_m)).toLocaleString()}</strong> m highest summit</span>`;
+
+    // ---------- ski log: full-bleed photo panels for the FEATURED
+    // mountains (name set huge inside the image) ----------
+    const skiId = s => "ski-" + s.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const skiList = document.getElementById("ski-list");
+    SKI.filter(s => s.featured).sort((a, b) => b.summit_m - a.summit_m).forEach(s => {
+      const li = document.createElement("li");
+      li.className = "ski-panel reveal";
+      li.id = skiId(s);
+      const img = s.img
+        ? `<img src="${s.img}" alt="${s.name}" loading="lazy"
+             onerror="this.parentElement.classList.add('placeholder'); this.remove();">`
+        : "";
+      li.innerHTML = `
+        <figure class="ski-photo${s.img ? "" : " placeholder"}">
+          ${img}
+          <span class="ski-ph"><svg viewBox="0 0 64 40" aria-hidden="true">
+            <path d="M2 38 L18 10 L26 22 L36 4 L50 26 L56 18 L62 38 Z" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span>Add this mountain's photo to<br>assets/ski/</span></span>
+          <span class="ski-name-overlay">${s.name}</span>
+          <span class="ski-flag">${s.country}</span>
+        </figure>
+        <div class="ski-caption">
+          <div class="ski-title-row">
+            <div class="ski-sub">${s.area}${s.note ? ` · ${s.note}` : ""}</div>
+            <div class="ski-alt"><strong>${s.summit_m.toLocaleString()}</strong><span>m summit</span></div>
+          </div>
+        </div>`;
+      skiList.appendChild(li);
+    });
+
+    // ---------- master list: every mountain, grouped by country ----------
+    const COUNTRY_NAMES = { "🇺🇸": "United States", "🇨🇦": "Canada", "🇨🇭": "Switzerland", "🇮🇹": "Italy", "🇯🇵": "Japan", "🇦🇹": "Austria", "🇫🇷": "France" };
+    const skiAll = document.getElementById("ski-all");
+    const groups = new Map();
+    for (const s of [...SKI].sort((a, b) => b.summit_m - a.summit_m)) {
+      const key = s.country;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(s);
+    }
+    for (const [flag, list] of [...groups.entries()].sort((a, b) => b[1].length - a[1].length)) {
+      const head = document.createElement("li");
+      head.className = "ski-all-region";
+      head.textContent = `${flag} ${COUNTRY_NAMES[flag] || ""}`;
+      skiAll.appendChild(head);
+      for (const s of list) {
+        const li = document.createElement("li");
+        li.className = "ski-item" + (s.featured ? " is-featured" : "");
+        li.id = "m-" + skiId(s);
+        li.innerHTML = `
+          <span class="ski-item-name">${s.name}${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
+          <span class="ski-item-meta">${s.area} · ${s.summit_m.toLocaleString()} m</span>`;
+        if (s.featured) li.addEventListener("click", () => scrollToPanel(document.getElementById(skiId(s))));
+        skiAll.appendChild(li);
+      }
+    }
+
+    // scroll so the TOP OF THE IMAGE clears the sticky nav
+    function scrollToPanel(el) {
+      if (!el) return;
+      const nav = document.querySelector(".site-nav");
+      const y = el.getBoundingClientRect().top + window.scrollY - ((nav ? nav.offsetHeight : 64) + 12);
+      window.scrollTo({ top: y, behavior: "smooth" });
+      el.classList.add("flash");
+      setTimeout(() => el.classList.remove("flash"), 1800);
+    }
+
+    // ---------- the globe ----------
+    (async function () {
+      const canvas = document.getElementById("globe");
+      const capEl = document.getElementById("globe-caption");
+      const wrap = canvas.parentElement;
+      function fallback(msg) { capEl.textContent = msg; canvas.remove(); }
+      if (!window.d3 || !window.topojson) { fallback("The globe libraries didn't load — check your connection."); return; }
+
+      let world;
+      try {
+        world = await (await fetch("data/world-110m.json")).json();
+      } catch (e) {
+        fallback(location.protocol === "file:"
+          ? "The globe can't load when the site is opened as a local file — serve it (python -m http.server) or view the live site."
+          : "Couldn't load the map data.");
+        return;
+      }
+
+      const visitedIds = new Set(VISITED.map(c => ISO_NUM[c]).filter(Boolean));
+      const tagVisited = fs => { for (const f of fs) f._visited = visitedIds.has(f.id); return fs; };
+      let countries = tagVisited(topojson.feature(world, world.objects.countries).features);
+
+      // sharper 50m coastlines stream in once you zoom past 2.5×
+      let hiRes = false, hiResLoading = false;
+      function maybeHiRes() {
+        if (hiRes || hiResLoading || zoom < 2.5) return;
+        hiResLoading = true;
+        fetch("data/world-50m.json")
+          .then(r => r.json())
+          .then(w2 => { countries = tagVisited(topojson.feature(w2, w2.objects.countries).features); hiRes = true; })
+          .catch(() => { hiResLoading = false; });
+      }
+
+      // ---- sizing (re-run on resize and on zoom) ----
+      // the canvas grows with the disc: width up to the SCREEN edge,
+      // height up to (nearly) the viewport height — so the globe swells
+      // to fill the screen before any cropping starts
+      const MAX_ZOOM = 24;
+      let W = 0, H = 0, BASE, R, CX, CY, dpr, ctx, projection, geoPath;
+      function size() {
+        BASE = Math.min(560, window.innerWidth - 16);
+        R = BASE / 2 - 10;
+        // diameter + margin generous enough for the atmosphere glow
+        // (outer rim reaches R·zoom + 7, so 10px each side clears it)
+        const disc = Math.round(2 * R * zoom) + 20;
+        const w = Math.min(disc, window.innerWidth - 4);
+        const h = Math.min(disc, Math.round(window.innerHeight * 0.94));
+        if (w !== W || h !== H) {
+          W = w; H = h;
+          dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+          canvas.width = Math.round(W * dpr);
+          canvas.height = Math.round(H * dpr);
+          canvas.style.width = W + "px";
+          canvas.style.height = H + "px";
+          ctx = canvas.getContext("2d");
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        CX = W / 2; CY = H / 2;
+        if (!projection) projection = d3.geoOrthographic().clipAngle(90);
+        projection.scale(R * zoom).translate([CX, CY]).rotate(rotation);
+        geoPath = d3.geoPath(projection, ctx);
+      }
+
+      // start over the US, tilted like a desk globe
+      let rotation = [98, -32];
+      let zoom = 1;                        // 1× … 5×, wheel / pinch
+      size();
+      const graticule = d3.geoGraticule10();
+
+      const GOLD = "#f2b134", CYAN = "#5fd0f5";
+      let hoverPin = null, hoverName = "";
+      let drawnPins = [];                  // screen pins after clustering
+      let dragging = false, lastInteract = 0;
+      let gMode = "trips";                 // "trips" | "ski" (the toggle)
+      // mountains view = ski + bike spots, merged so a place in both
+      // lists (Deer Valley) gets one dual pin
+      const MTN = (() => {
+        const m = new Map();
+        for (const s of SKI) m.set(s.name, { ...s, ski: true });
+        for (const b of BIKE) {
+          const e = m.get(b.name);
+          if (e) e.bike = true; else m.set(b.name, { ...b, bike: true });
+        }
+        return [...m.values()];
+      })();
+      const pins = () => gMode === "trips" ? TRIPS : MTN;
+
+      function markerXY(t) {
+        // null when the pin is on the far side of the planet
+        const d = d3.geoDistance([t.lon, t.lat], [-rotation[0], -rotation[1]]);
+        if (d > 1.5) return null;
+        return projection([t.lon, t.lat]);
+      }
+
+      function draw(now) {
+        projection.rotate(rotation);
+        ctx.clearRect(0, 0, W, H);
+
+        // ocean with a soft day-side shading
+        const RZ = R * zoom;
+        const g = ctx.createRadialGradient(CX - RZ * 0.35, CY - RZ * 0.4, RZ * 0.1, CX, CY, RZ);
+        g.addColorStop(0, "#12233f");
+        g.addColorStop(1, "#080f1e");
+        ctx.beginPath(); geoPath({ type: "Sphere" }); ctx.fillStyle = g; ctx.fill();
+
+        // graticule
+        ctx.beginPath(); geoPath(graticule);
+        ctx.strokeStyle = "rgba(148,160,184,0.10)"; ctx.lineWidth = 0.5; ctx.stroke();
+
+        // countries (visited only glow in trips mode — ski mode shows a
+        // neutral planet so the mountain pins carry the story)
+        for (const f of countries) {
+          ctx.beginPath(); geoPath(f);
+          if (gMode === "trips" && f._visited) {
+            ctx.fillStyle = "rgba(95,208,245,0.32)"; ctx.fill();
+            ctx.strokeStyle = "rgba(95,208,245,0.75)"; ctx.lineWidth = 0.7; ctx.stroke();
+          } else {
+            ctx.fillStyle = "rgba(233,238,248,0.05)"; ctx.fill();
+            ctx.strokeStyle = "rgba(148,160,184,0.25)"; ctx.lineWidth = 0.4; ctx.stroke();
+          }
+        }
+
+        // atmosphere rim (grows with the canvas; crops only past the cap)
+        const rimR = R * zoom;
+        ctx.beginPath(); ctx.arc(CX, CY, rimR, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(95,208,245,0.35)"; ctx.lineWidth = 1.2; ctx.stroke();
+        ctx.beginPath(); ctx.arc(CX, CY, rimR + 4, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(95,208,245,0.08)"; ctx.lineWidth = 6; ctx.stroke();
+
+        // pins → screen positions; in mountains view, pins that overlap
+        // on screen merge into a count badge (a globe can't separate
+        // resorts two kilometers apart, no matter the zoom)
+        const pts = [];
+        for (const t of pins()) {
+          const p = markerXY(t);
+          if (p) pts.push({ x: p[0], y: p[1], t });
+        }
+        drawnPins = [];
+        if (gMode === "trips") {
+          for (const q of pts) drawnPins.push({ x: q.x, y: q.y, items: [q.t] });
+        } else {
+          const used = new Array(pts.length).fill(false);
+          for (let i = 0; i < pts.length; i++) {
+            if (used[i]) continue;
+            const grp = [pts[i]]; used[i] = true;
+            for (let j = i + 1; j < pts.length; j++) {
+              if (!used[j] && Math.hypot(pts[j].x - pts[i].x, pts[j].y - pts[i].y) < 26) {
+                grp.push(pts[j]); used[j] = true;
+              }
+            }
+            drawnPins.push({
+              x: grp.reduce((s, g) => s + g.x, 0) / grp.length,
+              y: grp.reduce((s, g) => s + g.y, 0) / grp.length,
+              items: grp.map(g => g.t)
+            });
+          }
+        }
+        for (const d of drawnPins) {
+          const t = d.items[0];
+          const hovered = d === hoverPin;
+          const pulse = 0.5 + 0.5 * Math.sin(now / 600 + t.lon);
+          if (gMode === "trips") {
+            ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(242,177,52,${0.35 * (1 - pulse) + 0.1})`; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.beginPath(); ctx.arc(d.x, d.y, hovered ? 5 : 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = GOLD; ctx.fill();
+            ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+          } else if (d.items.length === 1) {
+            // emoji pins: ❄️ ski, 🚵 bike, both for dual spots
+            const label = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
+            ctx.font = `${hovered ? 16 : 13}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.beginPath(); ctx.arc(d.x, d.y, 10 + 3 * pulse, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(95,208,245,${0.25 * (1 - pulse) + 0.05})`; ctx.lineWidth = 1; ctx.stroke();
+            ctx.fillStyle = "#e6f6ff";
+            ctx.fillText(label, d.x, d.y);
+          } else {
+            // cluster badge: emoji kinds + count, click to list
+            const hasSki = d.items.some(i => i.ski), hasBike = d.items.some(i => i.bike);
+            const rr = hovered ? 16 : 14;
+            ctx.beginPath(); ctx.arc(d.x, d.y, rr, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(13,21,38,0.92)"; ctx.fill();
+            ctx.strokeStyle = "rgba(95,208,245,0.8)"; ctx.lineWidth = 1.2; ctx.stroke();
+            ctx.beginPath(); ctx.arc(d.x, d.y, rr + 3 + 3 * pulse, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(95,208,245,${0.2 * (1 - pulse) + 0.04})`; ctx.lineWidth = 1; ctx.stroke();
+            ctx.font = `${hovered ? 11 : 10}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "#e6f6ff";
+            ctx.fillText(`${hasSki ? "❄️" : ""}${hasBike ? "🚵" : ""} ${d.items.length}`, d.x, d.y);
+          }
+        }
+      }
+
+      function frame(now) {
+        // slow idle spin — only when fully zoomed out, and pausing while
+        // (and shortly after) you interact
+        if (!dragging && zoom <= 1.02 && now - lastInteract > 4000) rotation[0] += 0.045;
+        draw(now);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      // ---- zoom: trackpad / mouse wheel over the globe ----
+      const setZoom = z => {
+        zoom = Math.max(1, Math.min(MAX_ZOOM, z));
+        size();                              // canvas grows/shrinks with it
+        maybeHiRes();
+        lastInteract = performance.now();
+      };
+      canvas.addEventListener("wheel", e => {
+        e.preventDefault();
+        // proportional to the actual scroll delta — gentle on trackpads,
+        // ~15% per mouse-wheel notch
+        setZoom(zoom * Math.pow(2, -e.deltaY * 0.0015));
+      }, { passive: false });
+
+      // ---- drag to rotate + two-finger pinch to zoom ----
+      let px = 0, py = 0;
+      const touches = new Map();             // active pointers (for pinch)
+      canvas.addEventListener("pointerdown", e => {
+        touches.set(e.pointerId, [e.clientX, e.clientY]);
+        dragging = touches.size === 1;
+        px = e.clientX; py = e.clientY;
+        canvas.setPointerCapture(e.pointerId);
+        canvas.style.cursor = "grabbing";
+      });
+      const endPointer = e => {
+        touches.delete(e.pointerId);
+        dragging = touches.size === 1;
+        if (touches.size === 1) { const p = [...touches.values()][0]; px = p[0]; py = p[1]; }
+        lastInteract = performance.now();
+        canvas.style.cursor = "grab";
+      };
+      canvas.addEventListener("pointerup", endPointer);
+      canvas.addEventListener("pointercancel", endPointer);
+      canvas.addEventListener("pointermove", e => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        if (touches.size === 2 && touches.has(e.pointerId)) {
+          // pinch: zoom by the change in finger separation
+          const other = [...touches.entries()].find(([id]) => id !== e.pointerId)[1];
+          const prev = touches.get(e.pointerId);
+          const d0 = Math.hypot(prev[0] - other[0], prev[1] - other[1]);
+          const d1 = Math.hypot(e.clientX - other[0], e.clientY - other[1]);
+          if (d0 > 0) setZoom(zoom * d1 / d0);
+          touches.set(e.pointerId, [e.clientX, e.clientY]);
+          return;
+        }
+        if (touches.has(e.pointerId)) touches.set(e.pointerId, [e.clientX, e.clientY]);
+        if (dragging) {
+          const k = 90 / (R * zoom);            // degrees per pixel, roughly
+          rotation[0] += (e.clientX - px) * k;
+          rotation[1] = Math.max(-89, Math.min(89, rotation[1] - (e.clientY - py) * k));
+          px = e.clientX; py = e.clientY;
+          lastInteract = performance.now();
+          return;
+        }
+        // hover: pins first (clusters have a bigger hit zone), then countries
+        hoverPin = null;
+        for (const d of drawnPins) {
+          if (Math.hypot(d.x - mx, d.y - my) < (d.items.length > 1 ? 17 : 12)) { hoverPin = d; break; }
+        }
+        if (hoverPin) {
+          const t = hoverPin.items[0];
+          canvas.style.cursor = "pointer";
+          capEl.textContent = hoverPin.items.length > 1
+            ? `${hoverPin.items.length} spots here · click to list them`
+            : gMode === "trips"
+              ? `${t.name} · ${t.date}`
+              : `${t.country} ${t.name}` +
+                (t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ` · ${t.area}`) +
+                (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
+          return;
+        }
+        canvas.style.cursor = "grab";
+        const ll = projection.invert([mx, my]);
+        hoverName = "";
+        if (ll && !isNaN(ll[0])) {
+          for (const f of countries) {
+            if (d3.geoContains(f, ll)) { hoverName = f.properties.name + (gMode === "trips" && f._visited ? " ✓" : ""); break; }
+          }
+        }
+        capEl.textContent = hoverName || "drag to spin · scroll to zoom · click a pin";
+      });
+      canvas.addEventListener("pointerleave", () => {
+        hoverPin = null;
+        capEl.textContent = "drag to spin · scroll to zoom · click a pin";
+      });
+
+      // ---- globe mode toggle: countries + trips ↔ ski mountains ----
+      document.querySelectorAll("#globe-mode .seg-btn").forEach(btn =>
+        btn.addEventListener("click", () => {
+          if (btn.dataset.gmode === gMode) return;
+          gMode = btn.dataset.gmode;
+          document.querySelectorAll("#globe-mode .seg-btn").forEach(b =>
+            b.classList.toggle("active", b === btn));
+          hoverPin = null;
+          hidePinTip();
+          capEl.textContent = "drag to spin · scroll to zoom · click a pin";
+        }));
+
+      // ---- click a pin: trips expand a card; mountain pins show a small
+      // pinned popup (like the timeline's) with a link into the ski log,
+      // dismissed by clicking anywhere else ----
+      let modalClose = null;
+      const gtip = document.getElementById("tl-tip");
+      const hidePinTip = () => gtip.classList.remove("show");
+      function gotoSkiLog(t) {
+        hidePinTip();
+        document.querySelector('[data-tab="ski-pane"]').click();
+        const target = t.featured
+          ? document.getElementById(skiId(t))
+          : document.getElementById("m-" + skiId(t));
+        setTimeout(() => scrollToPanel(target), 60);
+      }
+      function placeTip(x, y) {
+        gtip.classList.add("show");
+        const tw = gtip.offsetWidth;
+        gtip.style.left = Math.min(x + 14, window.scrollX + window.innerWidth - tw - 14) + "px";
+        gtip.style.top = (y + 14) + "px";
+      }
+      function showPinTip(t, x, y) {
+        const emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
+        const meta = `${t.area}${t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ""}` +
+          (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
+        const link = t.ski
+          ? `<div class="tip-link"><a href="#" class="tip-goto">view in the ski log</a></div>` : "";
+        gtip.innerHTML = `<div class="tip-head"><span>${emoji} ${t.country} ${t.name}</span></div>
+          <span class="tip-dates">${meta}</span>${link}`;
+        placeTip(x, y);
+        const a = gtip.querySelector(".tip-goto");
+        if (a) a.addEventListener("click", ev => { ev.preventDefault(); gotoSkiLog(t); });
+      }
+      function showClusterTip(items, x, y) {
+        const rows = items.map((t, i) => {
+          const emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
+          const meta = t.summit_m ? `${t.summit_m.toLocaleString()} m` : t.area;
+          return t.ski
+            ? `<a href="#" class="tip-row" data-i="${i}">${emoji} ${t.name}<span>${meta}</span></a>`
+            : `<span class="tip-row">${emoji} ${t.name}<span>${meta}</span></span>`;
+        }).join("");
+        gtip.innerHTML = `<div class="tip-head"><span>${items.length} spots here</span></div>
+          <div class="tip-rows">${rows}</div>`;
+        placeTip(x, y);
+        gtip.querySelectorAll("a.tip-row").forEach(a =>
+          a.addEventListener("click", ev => { ev.preventDefault(); gotoSkiLog(items[+a.dataset.i]); }));
+      }
+      document.addEventListener("click", e => {
+        if (!e.target.closest("#tl-tip") && e.target !== canvas) hidePinTip();
+      });
+
+      canvas.addEventListener("click", e => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        for (const d of drawnPins) {
+          if (Math.hypot(d.x - mx, d.y - my) < (d.items.length > 1 ? 17 : 12)) {
+            if (gMode === "trips") openTrip(d.items[0], e.clientX, e.clientY);
+            else if (d.items.length > 1) showClusterTip(d.items, e.pageX, e.pageY);
+            else showPinTip(d.items[0], e.pageX, e.pageY);
+            return;
+          }
+        }
+        hidePinTip();          // clicked empty globe
+      });
+
+      function openTrip(t, cx, cy) {
+        if (modalClose) modalClose(true);
+        const back = document.createElement("div");
+        back.className = "tl-modal-back";
+        const box = document.createElement("div");
+        box.className = "tl-modal-box trip-box";
+        // photos: one = simple, several = swipeable carousel
+        const imgs = t.imgs || (t.img ? [t.img] : []);
+        const slides = imgs.map(src => `
+          <div class="trip-slide"><img src="${src}" alt=""
+              onerror="this.parentElement.classList.add('missing'); this.remove();">
+            <span class="trip-ph">🌍<span>Add a photo to<br>assets/travel/</span></span></div>`).join("");
+        const multi = imgs.length > 1;
+        const photo = imgs.length ? `
+          <div class="trip-photo">
+            <div class="trip-track">${slides}</div>
+            ${multi ? `<button class="trip-nav prev" aria-label="Previous photo">‹</button>
+                       <button class="trip-nav next" aria-label="Next photo">›</button>
+                       <div class="trip-dots">${imgs.map((_, i) =>
+                         `<span class="trip-dot${i ? "" : " on"}"></span>`).join("")}</div>` : ""}
+          </div>` : "";
+        box.innerHTML = `
+          <div class="tl-date">✈ ${t.date}</div>
+          ${photo}
+          <div class="trip-title">${t.name}</div>
+          <p class="trip-desc">${t.desc}</p>
+          ${t.url ? `<div class="tl-card-foot"><span></span><a href="${t.url}" target="_blank" rel="noopener">read more</a></div>` : ""}`;
+        document.body.append(back, box);
+
+        // carousel wiring: arrows, dots, swipe
+        if (multi) {
+          const track = box.querySelector(".trip-track");
+          const dots = [...box.querySelectorAll(".trip-dot")];
+          let idx = 0;
+          const show = i => {
+            idx = (i + imgs.length) % imgs.length;
+            track.style.transform = `translateX(-${idx * 100}%)`;
+            dots.forEach((d, k) => d.classList.toggle("on", k === idx));
+          };
+          box.querySelector(".trip-nav.prev").addEventListener("click", () => show(idx - 1));
+          box.querySelector(".trip-nav.next").addEventListener("click", () => show(idx + 1));
+          let sx = null;
+          track.addEventListener("pointerdown", e => { sx = e.clientX; });
+          track.addEventListener("pointerup", e => {
+            if (sx === null) return;
+            const dx = e.clientX - sx;
+            if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+            sx = null;
+          });
+          box.addEventListener("keydown", e => {
+            if (e.key === "ArrowLeft") show(idx - 1);
+            if (e.key === "ArrowRight") show(idx + 1);
+          });
+        }
+        const MW = Math.min(460, window.innerWidth * 0.92);
+        const MH = Math.min(window.innerHeight * 0.82, 560);
+        box.style.width = MW + "px";
+        box.style.maxHeight = MH + "px";
+        box.style.left = (window.innerWidth - MW) / 2 + "px";
+        box.style.top = Math.max((window.innerHeight - MH) / 2, 20) + "px";
+        const fromT = `translate(${cx - window.innerWidth / 2}px, ${cy - window.innerHeight / 2}px) scale(0.05)`;
+        box.style.transform = fromT;
+        box.getBoundingClientRect();
+        back.classList.add("open"); box.classList.add("open");
+        box.style.transform = "";
+        document.body.style.overflow = "hidden";
+        const onKey = ev => { if (ev.key === "Escape") close(); };
+        function close(instant) {
+          document.removeEventListener("keydown", onKey);
+          document.body.style.overflow = "";
+          modalClose = null;
+          if (instant) { back.remove(); box.remove(); return; }
+          box.style.transform = fromT;
+          box.classList.remove("open"); back.classList.remove("open");
+          setTimeout(() => { back.remove(); box.remove(); }, 340);
+        }
+        back.addEventListener("click", () => close());
+        document.addEventListener("keydown", onKey);
+        modalClose = close;
+      }
+
+      let rw = null;
+      window.addEventListener("resize", () => { clearTimeout(rw); rw = setTimeout(size, 150); });
+    })();
+  </script>
+  <script src="assets/site.js"></script>
+</body>
+
+</html>

@@ -36,36 +36,8 @@
   </nav>
 
   <main class="container">
-    <!-- static constellation decor (a "shooting star" over a star field) -->
-    <svg class="page-decor" width="260" height="130" viewBox="0 0 260 130" aria-hidden="true">
-      <g fill="#cfe4ff">
-        <circle cx="30" cy="86" r="2.4" />
-        <circle cx="66" cy="58" r="1.8" />
-        <circle cx="104" cy="74" r="2.6" />
-        <circle cx="142" cy="46" r="1.9" />
-        <circle cx="182" cy="60" r="2.6" />
-        <circle cx="216" cy="34" r="2" />
-      </g>
-      <g stroke="rgba(148,160,184,0.45)" stroke-width="1">
-        <line x1="30" y1="86" x2="66" y2="58" />
-        <line x1="66" y1="58" x2="104" y2="74" />
-        <line x1="104" y1="74" x2="142" y2="46" />
-        <line x1="142" y1="46" x2="182" y2="60" />
-        <line x1="182" y1="60" x2="216" y2="34" />
-      </g>
-      <g fill="#f2b134">
-        <circle cx="104" cy="74" r="4" opacity="0.35" />
-        <circle cx="182" cy="60" r="4.4" opacity="0.35" />
-      </g>
-      <line x1="150" y1="14" x2="238" y2="94" stroke="url(#tail)" stroke-width="2" stroke-linecap="round" />
-      <circle cx="238" cy="94" r="3.2" fill="#f8cf74" />
-      <defs>
-        <linearGradient id="tail" x1="150" y1="14" x2="238" y2="94" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#f2b134" stop-opacity="0" />
-          <stop offset="1" stop-color="#f2b134" stop-opacity="0.9" />
-        </linearGradient>
-      </defs>
-    </svg>
+    <canvas class="page-anim" data-anim="hall" width="380" height="260" aria-hidden="true"
+      style="top: 0px; right: 30px;"></canvas>
 
     <h1 class="page-heading">Mission timeline</h1>
     <p class="page-sub">My trajectory so far — present up top, scroll to descend into the past</p>
@@ -769,7 +741,7 @@
       build();
     })();
   </script>
-  <script src="assets/site.js"></script>
+  <script src="assets/site.js?v=2"></script>
 </body>
 
 </html>

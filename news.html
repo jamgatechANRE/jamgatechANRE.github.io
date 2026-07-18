@@ -35,12 +35,15 @@
   </nav>
 
   <main class="container">
-    <canvas class="page-anim" data-anim="magnetar" width="200" height="100" aria-hidden="true"></canvas>
-    <h1 class="page-heading" id="news-heading">In the news</h1>
+    <div style="position: relative; display: flow-root; clip-path: polygon(-100% -40px, 200% -40px, 200% 100%, -100% 100%); padding-top: 2px;">
+      <canvas class="page-anim" data-anim="magnetar" width="400" height="280" aria-hidden="true"
+        style="top: -40px; right: -20px;"></canvas>
+      <h1 class="page-heading" id="news-heading" style="margin-top: 46px;">In the news</h1>
 
-    <div class="tabs" role="tablist">
-      <button class="tab-btn active" data-tab="news-pane" role="tab">news</button>
-      <button class="tab-btn" data-tab="featured-pane" role="tab">featured</button>
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="news-pane" role="tab">news</button>
+        <button class="tab-btn" data-tab="featured-pane" role="tab">featured</button>
+      </div>
     </div>
 
     <!-- ---------------- News tab ---------------- -->

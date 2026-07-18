@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Culture | JamgatechANRE</title>
+  <link rel="preconnect" href="https://open.spotify.com">
+  <link rel="preconnect" href="https://open.spotifycdn.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 </head>
+
 <body class="culture-page">
+  <canvas id="stars"></canvas>
   <nav class="site-nav">
     <div class="nav-inner">
       <a class="brand" href="index.html">Joseph Moskovitz<span class="dot">.</span></a>
@@ -23,21 +33,127 @@
   </nav>
 
   <main class="container">
+    <canvas class="page-anim" data-anim="quasar" width="600" height="600" aria-hidden="true"
+      style="top: -180px; right: -120px; clip-path: inset(120px 0 135px 0);"></canvas>
+    <h1 class="page-heading">Culture</h1>
     <section class="culture-section spotify-section">
-      <h2>Music</h2>
-      <p>My current heavy rotation and all-time favorites.</p>
-      <!-- Spotify Embed -->
-      <div class="spotify-embed-wrapper">
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4nDfLtlyOQO6aQhLZRHuA6?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <h2 style="margin-top: 24px;">Music</h2>
+      <p style="margin-bottom: 24px;">Some of my favorite playlists currently as well as my most popular songs last year
+      </p>
+    </section>
+    <section class="culture-section spotify-section" style="margin-top: 0;">
+      <div class="spotify-grid">
+        <div class="spotify-embed">
+          <iframe style="border-radius:12px"
+            src="https://open.spotify.com/embed/playlist/4nDfLtlyOQO6aQhLZRHuA6?utm_source=generator" width="100%"
+            height="352" frameBorder="0" allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+        <div class="spotify-embed">
+          <iframe style="border-radius:12px"
+            src="https://open.spotify.com/embed/playlist/0cmYAcI9M1mmVcfaj2Id3N?utm_source=generator" width="100%"
+            height="352" frameBorder="0" allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+        <div class="spotify-embed">
+          <iframe style="border-radius:12px"
+            src="https://open.spotify.com/embed/playlist/37i9dQZEVXd0362UOEm7nM?utm_source=generator" width="100%"
+            height="352" frameBorder="0" allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
       </div>
     </section>
 
     <section class="culture-section media-section">
       <h2>Reading & Watching</h2>
-      <p>Favorite books and TV shows.</p>
-      <div class="media-container" id="books-container">
-        <!-- Books will be populated here by JS -->
-        <p style="color: #6a82a0; font-style: italic;">Add your favorite books and TV shows to data/culture.js!</p>
+      <p>A selection of my favorite books, TV shows, and movies</p>
+
+      <div id="goodreads-container" style="margin-bottom: 24px; display: none;">
+        <a id="goodreads-btn" href="#" target="_blank" rel="noopener" class="btn">View my Goodreads Profile</a>
+      </div>
+
+      <div class="media-category" id="books-category" style="display: none;">
+        <h3>Books</h3>
+        <div class="media-carousel-container" data-speed="-0.2">
+          <button class="carousel-btn prev-btn">‹</button>
+          <div class="media-carousel-track" id="books-track"></div>
+          <button class="carousel-btn next-btn">›</button>
+        </div>
+      </div>
+
+      <div class="media-category" id="tv-category" style="display: none;">
+        <h3>TV Shows</h3>
+        <div class="media-carousel-container" data-speed="0.2">
+          <button class="carousel-btn prev-btn">‹</button>
+          <div class="media-carousel-track" id="tv-track"></div>
+          <button class="carousel-btn next-btn">›</button>
+        </div>
+      </div>
+
+      <div class="media-category" id="movies-category" style="display: none;">
+        <h3>Movies</h3>
+        <div class="media-carousel-container" data-speed="-0.2">
+          <button class="carousel-btn prev-btn">‹</button>
+          <div class="media-carousel-track" id="movies-track"></div>
+          <button class="carousel-btn next-btn">›</button>
+        </div>
+      </div>
+
+      <div class="culture-section podcasts-section">
+        <h2>Podcasts</h2>
+        <p>Conversations that make me think from</p>
+        <div class="spotify-grid">
+          <div class="podcast-item">
+            <div class="spotify-embed">
+              <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/show/0Cj2lIpGxkrw1RFVIPTa6a?utm_source=generator" width="100%"
+                height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 16px; justify-content: center;">
+              <a href="https://podcasts.apple.com/us/podcast/conversations-with-coleman/id1716338488" target="_blank"
+                class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Apple Podcasts</a>
+              <a href="https://youtube.com/playlist?list=PL-I-R-UPHKLWGPO1YE5cX2ho8QNm4hOG2&si=Ygd_PqFr9a_8FIvS"
+                target="_blank" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">YouTube</a>
+            </div>
+          </div>
+          <div class="podcast-item">
+            <div class="spotify-embed">
+              <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/show/3lM71vn6aMhr3K7Fgytq7J?utm_source=generator" width="100%"
+                height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 16px; justify-content: center;">
+              <a href="https://podcasts.apple.com/us/podcast/ask-haviv-anything/id1794590850" target="_blank"
+                class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Apple Podcasts</a>
+              <a href="https://www.youtube.com/@AskHavivAnything" target="_blank" class="btn"
+                style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">YouTube</a>
+            </div>
+          </div>
+          <div class="podcast-item">
+            <div class="spotify-embed">
+              <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/show/5rgumWEx4FsqIY8e1wJNAk?utm_source=generator" width="100%"
+                height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 16px; justify-content: center;">
+              <a href="https://podcasts.apple.com/us/podcast/making-sense-with-sam-harris/id733163012" target="_blank"
+                class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Apple Podcasts</a>
+              <a href="https://youtube.com/playlist?list=PLDtc_uppNe1oyTZ6HQc3jEU1Q0WRpTWGF&si=SWIPqttaZmbzVaic"
+                target="_blank" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="media-empty-state">
+        <p style="color: #6a82a0; font-style: italic;">Add your favorite books, TV shows, and movies to data/culture.js!
+        </p>
       </div>
     </section>
 
@@ -49,33 +165,242 @@
     </section>
   </main>
 
+  <div class="media-modal-back" id="media-modal-back">
+    <div class="media-modal-box" id="media-modal-box">
+      <div class="media-modal-content" id="media-modal-content"></div>
+    </div>
+  </div>
+
   <script src="data/culture.js"></script>
   <script>
+    // Populate Media (Books, TV, Movies)
+    if (typeof GOODREADS_URL !== 'undefined' && GOODREADS_URL && GOODREADS_URL !== "https://www.goodreads.com/user/show/YOUR_USER_ID_HERE") {
+      const grBtn = document.getElementById('goodreads-btn');
+      grBtn.href = GOODREADS_URL;
+      document.getElementById('goodreads-container').style.display = 'block';
+    }
+
+    const carousels = [];
+
+    const renderCarousel = (items, trackId, categoryId) => {
+      if (items && items.length > 0) {
+        document.getElementById(categoryId).style.display = 'block';
+        document.getElementById('media-empty-state').style.display = 'none';
+        const track = document.getElementById(trackId);
+
+        // Duplicate items for infinite scroll (loop 4 times)
+        const loopItems = [...items, ...items, ...items, ...items];
+
+        loopItems.forEach(item => {
+          const el = document.createElement('div');
+          el.className = 'media-card';
+          const img = item.img ? `<img src="${item.img}" alt="${item.title}" loading="lazy" onerror="this.parentElement.classList.add('placeholder'); this.remove();">` : "";
+          el.innerHTML = `
+            <div class="media-poster ${item.img ? '' : 'placeholder'}">
+              ${img}
+              ${!item.img ? `<span class="media-ph">Cover</span>` : ''}
+            </div>
+            <div class="media-info">
+              <h4>${item.title}</h4>
+              ${item.author ? `<span>${item.author}</span>` : item.creator ? `<span>${item.creator}</span>` : ''}
+            </div>
+          `;
+          el.addEventListener('click', () => {
+            const modalBack = document.getElementById('media-modal-back');
+            const modalContent = document.getElementById('media-modal-content');
+            const isBook = !!item.author;
+            const btnText = isBook ? 'Where to Read' : 'Where to Watch';
+            const searchQuery = encodeURIComponent(item.title + (isBook ? ' book' : ' where to watch'));
+            modalContent.innerHTML = `
+              <div style="display: flex; gap: 24px; margin-bottom: 24px; align-items: flex-start;">
+                <div class="media-poster" style="width: 140px; flex-shrink: 0; transform: none; box-shadow: none;">
+                  ${img}
+                </div>
+                <div>
+                  <h2 style="margin: 0 0 8px 0; line-height: 1.1;">${item.title}</h2>
+                  <p style="color: #6a82a0; margin-bottom: 16px;">${item.author ? item.author : item.creator ? item.creator : ''}</p>
+                  ${item.synopsis ? `<p style="color: #92a8c3; font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px;">${item.synopsis}</p>` : ''}
+                  <a href="https://www.google.com/search?q=${searchQuery}" target="_blank" rel="noopener" class="btn">${btnText}</a>
+                </div>
+              </div>
+            `;
+            modalBack.classList.add('open');
+          });
+          track.appendChild(el);
+        });
+
+        // Add modal close handlers if not already added
+        if (!document.windowModalInitialized) {
+          const modalBack = document.getElementById('media-modal-back');
+          modalBack.addEventListener('click', (e) => {
+            if (e.target === modalBack) {
+              modalBack.classList.remove('open');
+            }
+          });
+          document.windowModalInitialized = true;
+        }
+
+        const container = track.parentElement;
+        const speed = parseFloat(container.dataset.speed);
+
+        const cObj = {
+          track: track,
+          container: container,
+          speed: speed,
+          position: 0,
+          targetPosition: null,
+          resumeTime: 0,
+          itemCount: items.length
+        };
+
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+
+        function getNextCenterPosition(isNext) {
+          const viewportCenter = window.innerWidth / 2;
+          const cards = Array.from(track.children);
+          let closestIndex = 0;
+          let minDistance = Infinity;
+
+          cards.forEach((card, i) => {
+            const rect = card.getBoundingClientRect();
+            const center = rect.left + rect.width / 2;
+            // Where this card will be if we apply targetPosition (if animating)
+            const futureCenter = center + (cObj.targetPosition !== null ? cObj.targetPosition - cObj.position : 0);
+            const distance = Math.abs(viewportCenter - futureCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestIndex = i;
+            }
+          });
+
+          const targetCard = cards[closestIndex + (isNext ? 1 : -1)] || cards[closestIndex];
+          const rect = targetCard.getBoundingClientRect();
+          const center = rect.left + rect.width / 2;
+          const futureCenter = center + (cObj.targetPosition !== null ? cObj.targetPosition - cObj.position : 0);
+
+          return (cObj.targetPosition !== null ? cObj.targetPosition : cObj.position) + (viewportCenter - futureCenter);
+        }
+
+        if (prevBtn && nextBtn) {
+          prevBtn.addEventListener('click', () => {
+            cObj.targetPosition = getNextCenterPosition(false);
+            cObj.resumeTime = Date.now() + 8000;
+          });
+          nextBtn.addEventListener('click', () => {
+            cObj.targetPosition = getNextCenterPosition(true);
+            cObj.resumeTime = Date.now() + 8000;
+          });
+        }
+
+        carousels.push(cObj);
+      }
+    };
+
+    renderCarousel(typeof BOOKS !== 'undefined' ? BOOKS : [], 'books-track', 'books-category');
+    renderCarousel(typeof TV_SHOWS !== 'undefined' ? TV_SHOWS : [], 'tv-track', 'tv-category');
+    renderCarousel(typeof MOVIES !== 'undefined' ? MOVIES : [], 'movies-track', 'movies-category');
+
+    // Animation Loop
+    function animateCarousels() {
+      // Pause completely if the modal is open
+      const modalBack = document.getElementById('media-modal-back');
+      if (modalBack && modalBack.classList.contains('open')) {
+        requestAnimationFrame(animateCarousels);
+        return;
+      }
+
+      const viewportCenter = window.innerWidth / 2;
+      const maxDistance = window.innerWidth / 2;
+
+      carousels.forEach(c => {
+        const now = Date.now();
+
+        if (c.targetPosition !== null) {
+          c.position += (c.targetPosition - c.position) * 0.1;
+          if (Math.abs(c.targetPosition - c.position) < 1) {
+            c.position = c.targetPosition;
+            c.targetPosition = null;
+          }
+        } else if (now >= c.resumeTime) {
+          c.position += c.speed;
+        }
+
+        // Calculate a full "set" width by taking the width of the track and dividing by 4 (since we duplicated 4 times)
+        // Wait for elements to layout
+        if (c.track.offsetWidth > 0) {
+          const setWidth = c.track.scrollWidth / 4;
+
+          // Infinite loop boundary handling
+          if (c.speed < 0 && Math.abs(c.position) >= setWidth) {
+            c.position += setWidth;
+            if (c.targetPosition !== null) c.targetPosition += setWidth;
+          } else if (c.speed > 0 && c.position >= 0) {
+            c.position -= setWidth;
+            if (c.targetPosition !== null) c.targetPosition -= setWidth;
+          }
+
+          c.track.style.transform = `translateX(${c.position}px)`;
+
+          // Scale elements based on distance to center
+          const cards = c.track.children;
+          const containerLeft = c.container.getBoundingClientRect().left;
+
+          for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const cardRect = card.getBoundingClientRect();
+            // Calculate card center in viewport
+            const cardCenter = cardRect.left + cardRect.width / 2;
+            const distance = Math.abs(viewportCenter - cardCenter);
+
+            // map distance to scale (max 1.15 in center, min 0.8 at edges)
+            let scale = 1.15 - (distance / maxDistance) * 0.35;
+            scale = Math.max(0.7, Math.min(1.15, scale));
+
+            // map distance to opacity
+            let opacity = 1.2 - (distance / maxDistance) * 0.5;
+            opacity = Math.max(0.4, Math.min(1, opacity));
+
+            card.style.transform = `scale(${scale})`;
+            card.style.opacity = opacity;
+          }
+        }
+      });
+      requestAnimationFrame(animateCarousels);
+    }
+    requestAnimationFrame(animateCarousels);
+
     // Populate Restaurants
     const grid = document.getElementById('restaurants-grid');
-    RESTAURANTS.forEach(r => {
-      const el = document.createElement('div');
-      el.className = 'restaurant-card';
-      el.innerHTML = `
-        <div class="restaurant-map">
-          <iframe 
-            src="${r.mapUrl}" 
-            width="100%" 
-            height="100%" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
-        </div>
-        <div class="restaurant-info">
-          <h3>${r.name}</h3>
-          <span class="restaurant-location">${r.location}</span>
-        </div>
-      `;
-      grid.appendChild(el);
-    });
+    if (typeof RESTAURANTS !== 'undefined') {
+      RESTAURANTS.forEach(r => {
+        const el = document.createElement('div');
+        el.className = 'restaurant-card';
+        const imgHTML = r.img ? `<div class="restaurant-preview"><img src="${r.img}" alt="${r.name}" loading="lazy" onerror="this.remove()"></div>` : '';
+
+        el.innerHTML = `
+          ${imgHTML}
+          <div class="restaurant-map">
+            <iframe 
+              src="${r.mapUrl}" 
+              width="100%" 
+              height="100%" 
+              style="border:0;" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+          <div class="restaurant-info">
+            <h3><a href="${r.url || `https://www.google.com/search?q=${encodeURIComponent(r.name + ' restaurant ' + r.location)}`}" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${r.name}</a></h3>
+            <span class="restaurant-location">${r.location}</span>
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+    }
   </script>
   <script src="assets/site.js"></script>
 </body>
+
 </html>

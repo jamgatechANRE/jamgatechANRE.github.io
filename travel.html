@@ -36,13 +36,18 @@
   </nav>
 
   <main class="container">
-    <h1 class="page-heading">Beyond the lab</h1>
-    <p class="page-sub">The one planet I've actually explored. Drag the globe to spin it — visited countries glow,
-      and the gold pins are trips worth telling. The second tab is the ski log.</p>
+    <div style="position: relative; overflow: hidden; padding-top: 2px;">
+      <canvas class="page-anim" data-anim="hyperspace" width="400" height="400" aria-hidden="true"
+        style="top: 50%; right: -20px; transform: translateY(-50%);"></canvas>
+      <h1 class="page-heading">Beyond the lab</h1>
+      <p class="page-sub" style="max-width: 32em; margin-bottom: 48px;">The one planet I've actually explored. Drag the
+        globe to spin it — visited countries glow,
+        and the gold pins are trips worth telling. The second tab is the ski log.</p>
 
-    <div class="tabs" role="tablist">
-      <button class="tab-btn active" data-tab="globe-pane" role="tab">globe</button>
-      <button class="tab-btn" data-tab="ski-pane" role="tab">ski log</button>
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="globe-pane" role="tab">globe</button>
+        <button class="tab-btn" data-tab="ski-pane" role="tab">ski log</button>
+      </div>
     </div>
 
     <!-- ---------------- Globe tab ---------------- -->
@@ -67,7 +72,7 @@
       <ul class="ski-list" id="ski-list"></ul>
       <h2 class="ski-all-head">Every mountain</h2>
       <ul class="ski-all" id="ski-all"></ul>
-      
+
       <h2 class="ski-all-head" style="margin-top: 48px;">Mountain Biking</h2>
       <ul class="ski-list" id="bike-list"></ul>
       <h2 class="ski-all-head">Every biking spot</h2>
@@ -178,8 +183,9 @@
         const li = document.createElement("li");
         li.className = "ski-item" + (s.featured ? " is-featured" : "");
         li.id = "m-" + skiId(s);
+        const searchUrl = s.url || `https://www.google.com/search?q=${encodeURIComponent(s.name + ' ski resort ' + s.area)}`;
         li.innerHTML = `
-          <span class="ski-item-name">${s.name}${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
+          <span class="ski-item-name"><a href="${searchUrl}" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${s.name}</a>${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
           <span class="ski-item-meta">${s.area} · ${s.summit_m.toLocaleString()} m</span>`;
         if (s.featured) li.addEventListener("click", () => scrollToPanel(document.getElementById(skiId(s))));
         skiAll.appendChild(li);
@@ -233,8 +239,9 @@
         const li = document.createElement("li");
         li.className = "ski-item" + (s.featured ? " is-featured" : "");
         li.id = "m-" + bikeId(s);
+        const searchUrl = s.url || `https://www.google.com/search?q=${encodeURIComponent(s.name + ' mountain biking ' + s.area)}`;
         li.innerHTML = `
-          <span class="ski-item-name">${s.name}${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
+          <span class="ski-item-name"><a href="${searchUrl}" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${s.name}</a>${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
           <span class="ski-item-meta">${s.area}</span>`;
         if (s.featured) li.addEventListener("click", () => scrollToPanel(document.getElementById(bikeId(s))));
         bikeAll.appendChild(li);
@@ -329,10 +336,24 @@
       // lists (Deer Valley) gets one dual pin
       const MTN = (() => {
         const m = new Map();
-        for (const s of SKI) m.set(s.name, { ...s, ski: true });
+        for (const s of SKI) {
+          s.ski = true;
+          if (s.img && !s.imgs) s.imgs = [s.img];
+          m.set(s.name, s);
+        }
         for (const b of BIKE) {
-          const e = m.get(b.name);
-          if (e) e.bike = true; else m.set(b.name, { ...b, bike: true });
+          if (m.has(b.name)) {
+            const e = m.get(b.name);
+            e.bike = true;
+            if (b.img) {
+              if (!e.imgs) e.imgs = e.img ? [e.img] : [];
+              if (!e.imgs.includes(b.img)) e.imgs.push(b.img);
+            }
+          } else {
+            b.bike = true;
+            if (b.img && !b.imgs) b.imgs = [b.img];
+            m.set(b.name, b);
+          }
         }
         return [...m.values()];
       })();
@@ -412,7 +433,7 @@
             if (used[i]) continue;
             const grp = [pts[i]]; used[i] = true;
             for (let j = i + 1; j < pts.length; j++) {
-              if (!used[j] && Math.hypot(pts[j].x - pts[i].x, pts[j].y - pts[i].y) < 26) {
+              if (!used[j] && Math.hypot(pts[j].x - pts[i].x, pts[j].y - pts[i].y) < 45) {
                 grp.push(pts[j]); used[j] = true;
               }
             }
@@ -430,21 +451,21 @@
           if (gMode === "trips") {
             const isLived = t.isLived;
             const isTrip = t.isTrip;
-            
+
             if (isLived && isTrip) {
-              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, Math.PI/2, Math.PI*1.5);
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, Math.PI / 2, Math.PI * 1.5);
               ctx.strokeStyle = `rgba(95,208,245,${0.35 * (1 - pulse) + 0.1})`; ctx.lineWidth = 1.5; ctx.stroke();
-              
-              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, -Math.PI/2, Math.PI/2);
+
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, -Math.PI / 2, Math.PI / 2);
               ctx.strokeStyle = `rgba(242,177,52,${0.35 * (1 - pulse) + 0.1})`; ctx.lineWidth = 1.5; ctx.stroke();
-              
+
               const r = hovered ? 5 : 3.5;
-              ctx.beginPath(); ctx.arc(d.x, d.y, r, Math.PI/2, Math.PI*1.5);
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, Math.PI / 2, Math.PI * 1.5);
               ctx.fillStyle = CYAN; ctx.fill();
-              
-              ctx.beginPath(); ctx.arc(d.x, d.y, r, -Math.PI/2, Math.PI/2);
+
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, -Math.PI / 2, Math.PI / 2);
               ctx.fillStyle = GOLD; ctx.fill();
-              
+
               ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
               ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
             } else {
@@ -465,7 +486,7 @@
             const rw = Math.max(rr * 2, tw + 8);
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.beginPath(); ctx.roundRect(d.x - rw/2, d.y - rr, rw, rr * 2, rr);
+            ctx.beginPath(); ctx.roundRect(d.x - rw / 2, d.y - rr, rw, rr * 2, rr);
             ctx.strokeStyle = `rgba(95,208,245,${0.25 * (1 - pulse) + 0.05})`; ctx.lineWidth = 1; ctx.stroke();
             ctx.fillStyle = "#e6f6ff";
             ctx.fillText(label, d.x, d.y);
@@ -477,10 +498,10 @@
             const tw = ctx.measureText(label).width;
             const rr = hovered ? 16 : 14;
             const rw = Math.max(rr * 2, tw + 10);
-            ctx.beginPath(); ctx.roundRect(d.x - rw/2, d.y - rr, rw, rr * 2, rr);
+            ctx.beginPath(); ctx.roundRect(d.x - rw / 2, d.y - rr, rw, rr * 2, rr);
             ctx.fillStyle = "rgba(13,21,38,0.92)"; ctx.fill();
             ctx.strokeStyle = "rgba(95,208,245,0.8)"; ctx.lineWidth = 1.2; ctx.stroke();
-            ctx.beginPath(); ctx.roundRect(d.x - rw/2 - 3 - 3*pulse, d.y - rr - 3 - 3*pulse, rw + 6 + 6*pulse, rr * 2 + 6 + 6*pulse, rr + 3 + 3*pulse);
+            ctx.beginPath(); ctx.roundRect(d.x - rw / 2 - 3 - 3 * pulse, d.y - rr - 3 - 3 * pulse, rw + 6 + 6 * pulse, rr * 2 + 6 + 6 * pulse, rr + 3 + 3 * pulse);
             ctx.strokeStyle = `rgba(95,208,245,${0.2 * (1 - pulse) + 0.04})`; ctx.lineWidth = 1; ctx.stroke();
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -569,8 +590,8 @@
             : gMode === "trips"
               ? (t.isLived ? `Lived: ${t.name}` : `${t.name} · ${t.date}`)
               : `${t.country} ${t.name}` +
-                (t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ` · ${t.area}`) +
-                (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
+              (t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ` · ${t.area}`) +
+              (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
           return;
         }
         canvas.style.cursor = "grab";
@@ -621,12 +642,13 @@
         gtip.style.top = (y + 14) + "px";
       }
       function showPinTip(t, x, y) {
-        const emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
-        const meta = `${t.area}${t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ""}` +
-          (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
+        let emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
+        if (!emoji && t.isLived && !t.isTrip) emoji = "🏠";
+        const meta = t.desc ? t.desc : (`${t.area || ""}${t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ""}` +
+          (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : ""));
         const link = (t.ski || t.bike)
           ? `<div class="tip-link"><a href="#" class="tip-goto">view in the ${t.ski && t.bike ? 'ski & bike log' : t.ski ? 'ski log' : 'bike log'}</a></div>` : "";
-        gtip.innerHTML = `<div class="tip-head"><span>${emoji} ${t.country} ${t.name}</span></div>
+        gtip.innerHTML = `<div class="tip-head"><span>${emoji ? emoji + " " : ""}${t.country || ""} ${t.name}</span></div>
           <span class="tip-dates">${meta}</span>${link}`;
         placeTip(x, y);
         const a = gtip.querySelector(".tip-goto");
@@ -656,7 +678,11 @@
         for (const d of drawnPins) {
           if (Math.hypot(d.x - mx, d.y - my) < (d.items.length > 1 ? 17 : 12)) {
             if (gMode === "trips") {
-              openTrip(d.items[0], e.clientX, e.clientY);
+              if (d.items.length === 1 && d.items[0].isLived && !d.items[0].isTrip) {
+                showPinTip(d.items[0], e.pageX, e.pageY);
+              } else {
+                openTrip(d.items[0], e.clientX, e.clientY);
+              }
             }
             else if (d.items.length > 1) showClusterTip(d.items, e.pageX, e.pageY);
             else showPinTip(d.items[0], e.pageX, e.pageY);
@@ -672,108 +698,127 @@
         back.className = "tl-modal-back";
         const box = document.createElement("div");
         box.className = "tl-modal-box trip-box";
-        
-        // auto-discover images if not explicitly listed
+
+        // photos: one = simple, several = swipeable carousel
+        let imgs = t.imgs || (t.img ? [t.img] : []);
+
+        const renderModal = (photoArray) => {
+          let slidesHTML = photoArray.map(src => `
+            <div class="trip-slide"><img src="${src}" alt=""
+                onerror="this.parentElement.classList.add('missing'); this.remove();">
+              <span class="trip-ph">🌍<span>Add a photo to<br>assets/travel/</span></span></div>`).join("");
+          const multi = photoArray.length > 1;
+          if (multi) {
+            const firstSlide = `<div class="trip-slide clone" aria-hidden="true"><img src="${photoArray[0]}" alt=""></div>`;
+            const lastSlide = `<div class="trip-slide clone" aria-hidden="true"><img src="${photoArray[photoArray.length - 1]}" alt=""></div>`;
+            slidesHTML = lastSlide + slidesHTML + firstSlide;
+          }
+          const photo = photoArray.length ? `
+            <div class="trip-photo">
+              <div class="trip-track">${slidesHTML}</div>
+              ${multi ? `<button class="trip-nav prev" aria-label="Previous photo">‹</button>
+                         <button class="trip-nav next" aria-label="Next photo">›</button>
+                         <div class="trip-dots">${photoArray.map((_, i) =>
+            `<span class="trip-dot${i ? "" : " on"}"></span>`).join("")}</div>` : ""}
+            </div>` : "";
+
+          box.innerHTML = `
+            ${t.date ? `<div class="tl-date">${t.isLived && !t.isTrip ? "🏠" : "✈️"} ${t.date}</div>` : ""}
+            ${photo}
+            <div class="trip-title">${t.name}</div>
+            ${t.desc ? `<p class="trip-desc">${t.desc}</p>` : ""}
+            ${t.url ? `<div class="tl-card-foot"><span></span><a href="${t.url}" target="_blank" rel="noopener">read more</a></div>` : ""}`;
+        };
+
+        renderModal(imgs);
+        document.body.append(back, box);
+
+        // auto-discover images in the background if not explicitly listed
         if (!t.imgs && t.img) {
           const ext = t.img.substring(t.img.lastIndexOf("."));
           const base = t.img.substring(0, t.img.lastIndexOf("."));
           let found = [t.img];
-          
-          for (let i = 2; i <= 20; i++) {
-            try {
-              let res = await fetch(`${base}-${i}${ext}`, { method: 'HEAD' });
-              if (res.ok) found.push(`${base}-${i}${ext}`);
-              else {
-                // sometimes extensions change case (e.g. .jpg vs .JPG)
-                let altExt = ext === '.jpg' ? '.JPG' : '.jpg';
-                let altRes = await fetch(`${base}-${i}${altExt}`, { method: 'HEAD' });
-                if (altRes.ok) found.push(`${base}-${i}${altExt}`);
-                else break;
-              }
-            } catch(e) { break; }
-          }
-          t.imgs = found; // cache for next time
+
+          (async () => {
+            for (let i = 2; i <= 20; i++) {
+              try {
+                let res = await fetch(`${base}-${i}${ext}`, { method: 'HEAD' });
+                if (res.ok) found.push(`${base}-${i}${ext}`);
+                else {
+                  let altExt = ext === '.jpg' ? '.JPG' : '.jpg';
+                  let altRes = await fetch(`${base}-${i}${altExt}`, { method: 'HEAD' });
+                  if (altRes.ok) found.push(`${base}-${i}${altExt}`);
+                  else break;
+                }
+              } catch (e) { break; }
+            }
+            if (found.length > 1) {
+              t.imgs = found;
+              renderModal(found);
+              wireCarousel(found.length);
+            }
+          })();
         }
 
-        // photos: one = simple, several = swipeable carousel
-        const imgs = t.imgs || (t.img ? [t.img] : []);
-        let slidesHTML = imgs.map(src => `
-          <div class="trip-slide"><img src="${src}" alt=""
-              onerror="this.parentElement.classList.add('missing'); this.remove();">
-            <span class="trip-ph">🌍<span>Add a photo to<br>assets/travel/</span></span></div>`).join("");
-        const multi = imgs.length > 1;
-        if (multi) {
-          const firstSlide = `<div class="trip-slide clone" aria-hidden="true"><img src="${imgs[0]}" alt=""></div>`;
-          const lastSlide = `<div class="trip-slide clone" aria-hidden="true"><img src="${imgs[imgs.length - 1]}" alt=""></div>`;
-          slidesHTML = lastSlide + slidesHTML + firstSlide;
-        }
-        const photo = imgs.length ? `
-          <div class="trip-photo">
-            <div class="trip-track">${slidesHTML}</div>
-            ${multi ? `<button class="trip-nav prev" aria-label="Previous photo">‹</button>
-                       <button class="trip-nav next" aria-label="Next photo">›</button>
-                       <div class="trip-dots">${imgs.map((_, i) =>
-                         `<span class="trip-dot${i ? "" : " on"}"></span>`).join("")}</div>` : ""}
-          </div>` : "";
-        box.innerHTML = `
-          ${t.date ? `<div class="tl-date">✈ ${t.date}</div>` : ""}
-          ${photo}
-          <div class="trip-title">${t.name}</div>
-          ${t.desc ? `<p class="trip-desc">${t.desc}</p>` : ""}
-          ${t.url ? `<div class="tl-card-foot"><span></span><a href="${t.url}" target="_blank" rel="noopener">read more</a></div>` : ""}`;
-        document.body.append(back, box);
-
-        // carousel wiring: arrows, dots, swipe
-        if (multi) {
+        const wireCarousel = (count) => {
           const track = box.querySelector(".trip-track");
-          const dots = [...box.querySelectorAll(".trip-dot")];
-          let idx = 1;
-          let isAnimating = false;
-          track.style.transition = "none";
-          track.style.transform = `translateX(-100%)`;
-          setTimeout(() => { track.style.transition = "transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1)"; }, 50);
+          if (!track) return;
+          const multi = box.querySelectorAll(".trip-slide").length > 1;
 
-          const show = i => {
-            if (isAnimating) return;
-            isAnimating = true;
-            idx = i;
-            track.style.transition = "transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1)";
-            track.style.transform = `translateX(-${idx * 100}%)`;
-            
-            let dotIdx = idx - 1;
-            if (dotIdx === -1) dotIdx = imgs.length - 1;
-            if (dotIdx === imgs.length) dotIdx = 0;
-            dots.forEach((d, k) => d.classList.toggle("on", k === dotIdx));
+          // carousel wiring: arrows, dots, swipe
+          if (multi) {
+            const dots = [...box.querySelectorAll(".trip-dot")];
+            let idx = 1;
+            let isAnimating = false;
+            track.style.transition = "none";
+            track.style.transform = `translateX(-100%)`;
+            setTimeout(() => { track.style.transition = "transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1)"; }, 50);
 
-            setTimeout(() => {
-              if (idx === 0) {
-                track.style.transition = "none";
-                idx = imgs.length;
-                track.style.transform = `translateX(-${idx * 100}%)`;
-              } else if (idx === imgs.length + 1) {
-                track.style.transition = "none";
-                idx = 1;
-                track.style.transform = `translateX(-${idx * 100}%)`;
-              }
-              isAnimating = false;
-            }, 350);
-          };
-          box.querySelector(".trip-nav.prev").addEventListener("click", () => show(idx - 1));
-          box.querySelector(".trip-nav.next").addEventListener("click", () => show(idx + 1));
-          dots.forEach((d, i) => d.addEventListener("click", () => show(i + 1)));
-          let sx = null;
-          track.addEventListener("pointerdown", e => { sx = e.clientX; });
-          track.addEventListener("pointerup", e => {
-            if (sx === null) return;
-            const dx = e.clientX - sx;
-            if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
-            sx = null;
-          });
-          box.addEventListener("keydown", e => {
-            if (e.key === "ArrowLeft") show(idx - 1);
-            if (e.key === "ArrowRight") show(idx + 1);
-          });
-        }
+            const show = i => {
+              if (isAnimating) return;
+              isAnimating = true;
+              idx = i;
+              track.style.transition = "transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1)";
+              track.style.transform = `translateX(-${idx * 100}%)`;
+
+              let dotIdx = idx - 1;
+              if (dotIdx === -1) dotIdx = count - 1;
+              if (dotIdx === count) dotIdx = 0;
+              dots.forEach((d, k) => d.classList.toggle("on", k === dotIdx));
+
+              setTimeout(() => {
+                if (idx === 0) {
+                  track.style.transition = "none";
+                  idx = count;
+                  track.style.transform = `translateX(-${idx * 100}%)`;
+                } else if (idx === count + 1) {
+                  track.style.transition = "none";
+                  idx = 1;
+                  track.style.transform = `translateX(-${idx * 100}%)`;
+                }
+                isAnimating = false;
+              }, 350);
+            };
+            box.querySelector(".trip-nav.prev").addEventListener("click", () => show(idx - 1));
+            box.querySelector(".trip-nav.next").addEventListener("click", () => show(idx + 1));
+            dots.forEach((d, i) => d.addEventListener("click", () => show(i + 1)));
+            let sx = null;
+            track.addEventListener("pointerdown", e => { sx = e.clientX; });
+            track.addEventListener("pointerup", e => {
+              if (sx === null) return;
+              const dx = e.clientX - sx;
+              if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+              sx = null;
+            });
+            box.addEventListener("keydown", e => {
+              if (e.key === "ArrowLeft") show(idx - 1);
+              if (e.key === "ArrowRight") show(idx + 1);
+            });
+          }
+        };
+
+        if (imgs.length > 1) wireCarousel(imgs.length);
+
         const MW = Math.min(840, window.innerWidth * 0.94);
         const MH = Math.min(window.innerHeight * 0.92, 850);
         box.style.width = MW + "px";
@@ -791,6 +836,7 @@
           document.removeEventListener("keydown", onKey);
           document.body.style.overflow = "";
           modalClose = null;
+          lastInteract = performance.now() + 5000;
           if (instant) { back.remove(); box.remove(); return; }
           box.style.transform = fromT;
           box.classList.remove("open"); back.classList.remove("open");

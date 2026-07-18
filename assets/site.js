@@ -12,6 +12,21 @@
   const reduced = false;
   const GOLD = "#f2b134", CYAN = "#5fd0f5";
 
+  function sprite(rgb, size = 64) {
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const g = c.getContext("2d");
+    const gr = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    gr.addColorStop(0, `rgba(${rgb},1)`);
+    gr.addColorStop(0.25, `rgba(${rgb},0.5)`);
+    gr.addColorStop(0.6, `rgba(${rgb},0.12)`);
+    gr.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = gr;
+    g.fillRect(0, 0, size, size);
+    return c;
+  }
+  const S_CY = sprite("120,215,255"), S_BL = sprite("110,160,255"), S_WH = sprite("235,242,255"), S_OR = sprite("242,177,52");
+
   let scrollY = window.scrollY;
   window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
 
@@ -308,26 +323,11 @@
     const cx = W / 2, cy = H / 2;
     const ALPHA = 0.42, VIEW = 0.35;
     const cV = Math.cos(VIEW), sV = Math.sin(VIEW);
-    const SHELLS = [15, 24, 34, 44];
+    const SHELLS = [44, 70, 98, 128];
 
-    // soft glow sprite for particles and the star
-    function sprite(rgb, size = 64) {
-      const c = document.createElement("canvas");
-      c.width = c.height = size;
-      const g = c.getContext("2d");
-      const gr = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      gr.addColorStop(0, `rgba(${rgb},1)`);
-      gr.addColorStop(0.25, `rgba(${rgb},0.5)`);
-      gr.addColorStop(0.6, `rgba(${rgb},0.12)`);
-      gr.addColorStop(1, `rgba(${rgb},0)`);
-      g.fillStyle = gr;
-      g.fillRect(0, 0, size, size);
-      return c;
-    }
-    const S_CY = sprite("120,215,255"), S_BL = sprite("110,160,255"), S_WH = sprite("235,242,255");
     const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s / 2, y - s / 2, s, s); };
 
-    const streams = Array.from({ length: 60 }, () => ({
+    const streams = Array.from({ length: 130 }, () => ({
       u: Math.random(), shell: SHELLS[Math.random() * SHELLS.length | 0],
       phi: Math.random() * Math.PI * 2, sp: 0.12 + Math.random() * 0.25, pole: Math.random() < 0.5 ? 1 : -1
     }));
@@ -342,7 +342,7 @@
       return [cx + x2, cy - y3, z3];
     }
     function lp(L, th, phi) {
-      const r = L * Math.sin(th) ** 2 + 2.5;
+      const r = L * Math.sin(th) ** 2 + 6;
       return { x: r * Math.sin(th) * Math.cos(phi), y: r * Math.cos(th), z: r * Math.sin(th) * Math.sin(phi) };
     }
 
@@ -354,33 +354,33 @@
 
       fx.globalCompositeOperation = "lighter";
       for (const L of SHELLS) {
-        for (let k = 0; k < 8; k++) {
-          const phi = (k / 8) * Math.PI * 2;
+        for (let k = 0; k < 10; k++) {
+          const phi = (k / 10) * Math.PI * 2;
           fx.beginPath();
           let za = 0;
-          for (let i = 0; i <= 32; i++) {
-            const th = 0.22 + (i / 32) * (Math.PI - 0.44);
+          for (let i = 0; i <= 42; i++) {
+            const th = 0.22 + (i / 42) * (Math.PI - 0.44);
             const [x, y, z] = toView(lp(L, th, phi), spin);
             za += z;
             i ? fx.lineTo(x, y) : fx.moveTo(x, y);
           }
-          fx.strokeStyle = `rgba(120,215,255,${0.05 + 0.10 * ((za / 33 / L) + 1) / 2})`;
-          fx.lineWidth = 0.8;
+          fx.strokeStyle = `rgba(120,215,255,${0.05 + 0.10 * ((za / 43 / L) + 1) / 2})`;
+          fx.lineWidth = 1;
           fx.stroke();
         }
       }
       for (const pole of [1, -1]) {
-        const base = toView({ x: 0, y: pole * 6, z: 0 }, spin);
-        const tip = toView({ x: 0, y: pole * 54, z: 0 }, spin);
+        const base = toView({ x: 0, y: pole * 14, z: 0 }, spin);
+        const tip = toView({ x: 0, y: pole * 150, z: 0 }, spin);
         const g = fx.createLinearGradient(base[0], base[1], tip[0], tip[1]);
         g.addColorStop(0, `rgba(235,242,255,${0.5 * pulse})`);
         g.addColorStop(0.4, `rgba(120,215,255,${0.16 * pulse})`);
         g.addColorStop(1, "rgba(120,215,255,0)");
         fx.strokeStyle = g;
         fx.lineCap = "round";
-        fx.lineWidth = 3.4;
+        fx.lineWidth = 7;
         fx.beginPath(); fx.moveTo(base[0], base[1]); fx.lineTo(tip[0], tip[1]); fx.stroke();
-        fx.lineWidth = 1.3;
+        fx.lineWidth = 2.4;
         fx.beginPath(); fx.moveTo(base[0], base[1]); fx.lineTo(tip[0], tip[1]); fx.stroke();
       }
       const T = reduced ? 0 : t * 0.001;
@@ -388,11 +388,11 @@
         p.u = (p.u + (reduced ? 0 : p.sp * 0.006)) % 1;
         const th = p.pole > 0 ? 0.22 + p.u * 1.2 : Math.PI - 0.22 - p.u * 1.2;
         const [x, y, z] = toView(lp(p.shell, th, p.phi + T * 0.15), spin);
-        put(S_CY, x, y, 2.6, 0.22 + 0.28 * ((z / p.shell) + 1) / 2);
+        put(S_CY, x, y, 5.5, 0.22 + 0.28 * ((z / p.shell) + 1) / 2);
       }
-      put(S_WH, cx, cy, 11, 1);
-      put(S_BL, cx, cy, 24 + 6 * pulse, 0.75 * pulse);
-      put(S_CY, cx, cy, 48 + 12 * pulse, 0.28 * pulse);
+      put(S_WH, cx, cy, 26, 1);
+      put(S_BL, cx, cy, 60 + 14 * pulse, 0.75 * pulse);
+      put(S_CY, cx, cy, 120 + 30 * pulse, 0.28 * pulse);
       fx.globalCompositeOperation = "source-over";
       fx.globalAlpha = 1;
       if (!reduced) requestAnimationFrame(frame);
@@ -400,11 +400,248 @@
     if (reduced) frame(0); else requestAnimationFrame(frame);
   }
 
+  // ---------- hyperspace warp (travel) ----------
+  function animHyperspace(cv) {
+    const [fx, W, H] = hidpi(cv);
+    const cx = W / 2, cy = H / 2;
+
+    const stars = Array.from({ length: 300 }, () => {
+      return {
+        x: (Math.random() - 0.5) * W * 4,
+        y: (Math.random() - 0.5) * H * 4,
+        z: Math.random() * 1000 + 100
+      };
+    });
+
+    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s / 2, y - s / 2, s, s); };
+
+    function frame(t) {
+      const speed = reduced ? 0 : 8;
+
+      fx.globalCompositeOperation = "source-over";
+      // Semi-transparent black fill to create motion blur trails. 
+      // After several frames, the center becomes jet black.
+      fx.fillStyle = "rgba(0,0,0,0.35)";
+      fx.fillRect(0, 0, W, H);
+
+      fx.globalCompositeOperation = "lighter";
+
+      for (let s of stars) {
+        const pz = s.z;
+        if (!reduced) s.z -= speed;
+        if (s.z <= 1) {
+          s.z = 1000 + Math.random() * 200;
+          s.x = (Math.random() - 0.5) * W * 4;
+          s.y = (Math.random() - 0.5) * H * 4;
+          continue;
+        }
+
+        const px1 = cx + (s.x / s.z) * 200;
+        const py1 = cy + (s.y / s.z) * 200;
+
+        const px2 = cx + (s.x / pz) * 200;
+        const py2 = cy + (s.y / pz) * 200;
+
+        const size = Math.max(0.5, (1000 - s.z) / 200);
+
+        fx.beginPath();
+        fx.moveTo(px1, py1);
+        fx.lineTo(px2, py2);
+        fx.lineWidth = size;
+        fx.strokeStyle = Math.random() > 0.8 ? "rgba(242,177,52,0.8)" : "rgba(120,215,255,0.8)";
+        fx.stroke();
+
+        if (Math.random() > 0.95) put(S_WH, px1, py1, size * 8, 0.8);
+      }
+
+      // Fade out edges radially for seamless blending
+      const mask = fx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(cx, cy) * 0.95);
+      mask.addColorStop(0, "rgba(0,0,0,1)");
+      mask.addColorStop(0.5, "rgba(0,0,0,1)");
+      mask.addColorStop(1, "rgba(0,0,0,0)");
+      fx.globalCompositeOperation = "destination-in";
+      fx.fillStyle = mask;
+      fx.fillRect(0, 0, W, H);
+
+      fx.globalCompositeOperation = "source-over";
+      fx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  }
+
+  // ---------- hall thruster (timeline) ----------
+  function animHall(cv) {
+    const [fx, W, H] = hidpi(cv);
+    const cx = W / 2 - 40, cy = H / 2 + 10;
+    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s / 2, y - s / 2, s, s); };
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      const T = reduced ? 0 : t;
+
+      fx.globalCompositeOperation = "source-over";
+
+      fx.lineWidth = 15;
+      fx.strokeStyle = "rgba(40,50,70,1)";
+      fx.beginPath(); fx.ellipse(cx, cy, 30, 100, 0, 0, Math.PI * 2); fx.stroke();
+
+      fx.lineWidth = 6;
+      fx.strokeStyle = "rgba(100,120,150,1)";
+      fx.beginPath(); fx.ellipse(cx + 5, cy, 30, 100, 0, 0, Math.PI * 2); fx.stroke();
+
+      fx.fillStyle = "rgba(20,25,35,1)";
+      fx.beginPath(); fx.ellipse(cx + 10, cy, 18, 70, 0, 0, Math.PI * 2); fx.fill();
+
+      fx.globalCompositeOperation = "lighter";
+
+      for (let i = 0; i < 30; i++) {
+        const spread = 40 + i * 1.8;
+        const length = 450 + i * 15;
+        const pulse = 0.8 + 0.2 * Math.sin(T * 0.02 - i * 0.5);
+        const op = Math.exp(-i * 0.15) * 0.5 * pulse;
+
+        const g = fx.createLinearGradient(cx + 12, cy, cx + length, cy);
+        g.addColorStop(0, `rgba(255,255,255,${op})`);
+        g.addColorStop(0.1, `rgba(100,200,255,${op * 0.9})`);
+        g.addColorStop(0.4, `rgba(20,80,255,${op * 0.5})`);
+        g.addColorStop(1, "rgba(10,30,100,0)");
+
+        fx.fillStyle = g;
+        fx.beginPath();
+        fx.ellipse(cx + 12, cy, 22, 85, 0, -Math.PI / 2, Math.PI / 2);
+        fx.bezierCurveTo(cx + 150, cy + spread * 0.6, cx + length * 0.5, cy + spread * 1.2, cx + length, cy + spread * 2);
+        fx.lineTo(cx + length, cy - spread * 2);
+        fx.bezierCurveTo(cx + length * 0.5, cy - spread * 1.2, cx + 150, cy - spread * 0.6, cx + 12, cy - 85);
+        fx.fill();
+      }
+
+      fx.strokeStyle = "rgba(200,240,255,0.95)";
+      fx.lineWidth = 12;
+      fx.beginPath(); fx.ellipse(cx + 12, cy, 22, 85, 0, 0, Math.PI * 2); fx.stroke();
+
+      put(S_WH, cx + 25, cy, 80, 0.6);
+      put(S_CY, cx + 45, cy, 160, 0.4);
+      put(S_BL, cx + 80, cy, 250, 0.2);
+
+      // Mask to fade out only the far right edge of the discharge plume
+      const mask = fx.createLinearGradient(0, 0, W, 0);
+      mask.addColorStop(0, "rgba(0,0,0,1)");
+      mask.addColorStop(0.75, "rgba(0,0,0,1)");
+      mask.addColorStop(1, "rgba(0,0,0,0)");
+      fx.globalCompositeOperation = "destination-in";
+      fx.globalAlpha = 1;
+      fx.fillStyle = mask;
+      fx.fillRect(0, 0, W, H);
+
+      fx.globalCompositeOperation = "source-over";
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  }
+
+  // ---------- quasar (culture) ----------
+  function animQuasar(cv) {
+    const [fx, W, H] = hidpi(cv);
+    const cx = W / 2, cy = H / 2;
+    const INCL = 0.25;
+    const put = (sp, x, y, s, a) => { fx.globalAlpha = a; fx.drawImage(sp, x - s / 2, y - s / 2, s, s); };
+
+    function frame(t) {
+      fx.clearRect(0, 0, W, H);
+      fx.globalCompositeOperation = "lighter";
+      const T = reduced ? 0 : t;
+
+      for (const dir of [1, -1]) {
+        const h = 400;
+        // High-frequency sin waves + random noise for erratic, flickery pulse
+        const basePulse = Math.sin(T * 0.002) * 0.4 + Math.sin(T * 0.015) * 0.3 + (Math.random() - 0.5) * 0.4;
+        const w = 40 + basePulse * 8;
+
+        const g = fx.createLinearGradient(cx, cy, cx, cy - dir * h);
+        g.addColorStop(0, "rgba(255,255,255,1)");
+        g.addColorStop(0.3, "rgba(100,180,255,0.9)");
+        g.addColorStop(0.8, `rgba(150,50,255,${0.5 + basePulse * 0.15})`);
+        g.addColorStop(1, "rgba(50,10,100,0)");
+
+        fx.fillStyle = g;
+        fx.beginPath();
+        fx.moveTo(cx - w * 0.1, cy);
+        fx.lineTo(cx - w, cy - dir * h);
+        fx.lineTo(cx + w, cy - dir * h);
+        fx.lineTo(cx + w * 0.1, cy);
+        fx.fill();
+
+        const g2 = fx.createLinearGradient(cx, cy, cx, cy - dir * h * 0.7);
+        g2.addColorStop(0, "rgba(255,255,255,1)");
+        g2.addColorStop(0.4, "rgba(220,240,255,0.9)");
+        g2.addColorStop(1, "rgba(220,240,255,0)");
+
+        fx.fillStyle = g2;
+        fx.beginPath();
+        fx.moveTo(cx - w * 0.05, cy);
+        fx.lineTo(cx - w * 0.3, cy - dir * h * 0.7);
+        fx.lineTo(cx + w * 0.3, cy - dir * h * 0.7);
+        fx.lineTo(cx + w * 0.05, cy);
+        fx.fill();
+      }
+
+      fx.globalCompositeOperation = "source-over";
+      fx.fillStyle = "#020204";
+      fx.beginPath(); fx.ellipse(cx, cy, 18, 18 * INCL, 0, 0, Math.PI * 2); fx.fill();
+
+      fx.globalCompositeOperation = "lighter";
+      for (let i = 0; i < 40; i++) {
+        const r = 20 + i * 2.5;
+        const op = Math.exp(-i * 0.1) * 0.35;
+        fx.strokeStyle = `rgba(255,200,100,${op})`;
+        fx.lineWidth = 1.5;
+        fx.beginPath(); fx.ellipse(cx, cy, r, r * INCL, 0, 0, Math.PI * 2); fx.stroke();
+
+        fx.strokeStyle = `rgba(100,150,255,${op * 0.8})`;
+        fx.beginPath(); fx.ellipse(cx, cy, r * 1.2, r * INCL * 1.2, 0, 0, Math.PI * 2); fx.stroke();
+      }
+
+      put(S_WH, cx, cy, 45, 0.7);
+      put(S_OR, cx, cy, 90, 0.5);
+
+      const mask = fx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(cx, cy) * 0.95);
+      mask.addColorStop(0, "rgba(0,0,0,1)");
+      mask.addColorStop(0.5, "rgba(0,0,0,1)");
+      mask.addColorStop(1, "rgba(0,0,0,0)");
+      fx.globalCompositeOperation = "destination-in";
+      fx.globalAlpha = 0.8 + (Math.random() - 0.5) * 0.05; // Slightly change brightness with flickering
+      fx.fillStyle = mask;
+      fx.fillRect(0, 0, W, H);
+
+      fx.globalCompositeOperation = "source-over";
+      if (!reduced) requestAnimationFrame(frame);
+    }
+    if (reduced) frame(0); else requestAnimationFrame(frame);
+  }
+
+  // Ensure the old constellation SVG is removed and replaced by the hall thruster canvas
+  // in case the browser aggressively cached the HTML file.
+  document.querySelectorAll(".page-decor").forEach((el) => {
+    const cv = document.createElement("canvas");
+    cv.className = "page-anim";
+    cv.dataset.anim = "hall";
+    cv.width = 380;
+    cv.height = 260;
+    cv.setAttribute("aria-hidden", "true");
+    cv.style.top = "10px";
+    cv.style.right = "0px";
+    el.replaceWith(cv);
+  });
+
   document.querySelectorAll(".page-anim").forEach((cv) => {
     const kind = cv.dataset.anim;
     if (kind === "orbit") animOrbit(cv);
     else if (kind === "torus") animTorus(cv);
     else if (kind === "magnetar") animMagnetar(cv);
+    else if (kind === "hyperspace") animHyperspace(cv);
+    else if (kind === "hall") animHall(cv);
+    else if (kind === "quasar") animQuasar(cv);
   });
 
   // ---------- scroll-reveal ----------

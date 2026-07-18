@@ -42,58 +42,97 @@ const VISITED = [
   "ECU", "PER"
 ];
 
+const LIVED = [
+  { name: "Miami", date: "2004 - 2022", desc: "Born and raised in the 305", lat: 25.76, lon: -80.19 },
+  { name: "Atlanta", date: "College", desc: "Georgia Tech BS & MS", lat: 33.75, lon: -84.39 },
+  { name: "New York", date: "Summer 2025", desc: "Interned", lat: 40.71, lon: -74.01 },
+  { name: "Madison", date: "Summer 2026", desc: "Interned here", lat: 43.07, lon: -89.40 },
+  { name: "Tel Aviv", date: "Summers: 2021, 2023, 2024", desc: "Lived here for multiple summers", lat: 32.08, lon: 34.78 },
+  { name: "Madrid", date: "Fall 2024", desc: "Studied abroad here", lat: 40.42, lon: -3.70 },
+  { name: "Park City", date: "Summer-Fall 2020", desc: "Lived here over summer & fall during COVID", lat: 40.64, lon: -111.49 }
+];
+
 const TRIPS = [
   {
     name: "Galápagos",
     date: "Winter 2025",
     lat: -0.74, lon: -90.31,
     desc: "Traveled by sea between islands, snorkeling with sea lions and penguins, and hiking to the top of volcanoes.",
-    imgs: ["assets/travel/galapagos.jpg"]
+    img: "assets/travel/galapagos.jpg"
   },
   {
     name: "Japan",
     date: "Winter 2024",
     lat: 35.68, lon: 139.69,
     desc: "Tokyo, Kyoto, Osaka, Hiroshima, Niseko.",
-    imgs: ["assets/travel/japan.jpg"]
+    img: "assets/travel/japan.jpg"
   },
   {
     name: "South Africa",
     date: "Winter 2018",
     lat: -26.20, lon: 28.05,
     desc: "Johannesburg, Cape Town, and a safari in Kruger National Park.",
-    imgs: ["assets/travel/south-africa.jpg"]
+    img: "assets/travel/south-africa.JPG"
   },
   {
     name: "Cyprus",
     date: "Summer 2024",
     lat: 34.92, lon: 33.00,
     desc: "Roadtrip around the island, hiking in the Troodos mountains, and swimming in the Mediterranean.",
-    imgs: ["assets/travel/cyprus.jpg"]
+    img: "assets/travel/cyprus.jpg"
   },
   {
     name: "Costa Rica",
     date: "Winter 2021",
     lat: 9.93, lon: -84.08,
     desc: "Roadtrip through the mountains and beaches of Costa Rica, hiking in the rainforest.",
-    imgs: ["assets/travel/costa-rica.jpg"]
+    img: "assets/travel/costa-rica.jpg"
   },
   {
     name: "National Parks roadtrip",
     date: "Summer 2020",
     lat: 41.26, lon: -110.34,
     desc: "A covid-summer loop through the West: Grand Teton, Yellowstone, Arches, Canyonlands, and Zion.",
-    imgs: ["assets/travel/national-parks.jpg"]
+    img: "assets/travel/national-parks.jpg"
+  },
+  {
+    name: "Cusco & Machu Picchu",
+    date: "Travel",
+    lat: -13.53, lon: -71.96,
+    desc: "Explored the Sacred Valley and hiked up to Machu Picchu.",
+    img: "assets/travel/cusco.jpg"
+  },
+  {
+    name: "Anguilla",
+    date: "Travel",
+    lat: 18.22, lon: -63.06,
+    desc: "Relaxing on the beautiful beaches of Anguilla.",
+    img: "assets/travel/anguilla.jpg"
+  },
+  {
+    name: "Dominican Republic",
+    date: "Travel",
+    lat: 18.73, lon: -70.16,
+    desc: "Vacation in the Dominican Republic.",
+    img: "assets/travel/dominican-republic.jpg"
+  },
+  {
+    name: "Madrid",
+    lat: 40.42, lon: -3.70,
+    img: "assets/travel/abroad.jpg"
   }
 ];
 
 // BIKE: mountain-biking spots — shown on the globe's "mountains" view
 //   alongside the ski pins (a place in both lists gets a dual ❄️🚵 pin)
 const BIKE = [
-  { name: "Moab", area: "Utah", country: "🇺🇸", lat: 38.57, lon: -109.55 },
-  { name: "Deer Valley", area: "Utah", country: "🇺🇸", lat: 40.62, lon: -111.49 },
-  { name: "Madison", area: "Wisconsin", country: "🇺🇸", lat: 43.07, lon: -89.40 },
-  { name: "Achensee", area: "Tirol", country: "🇦🇹", lat: 47.43, lon: 11.71 }
+  { name: "Achensee", area: "Tirol", country: "🇦🇹", lat: 47.43, lon: 11.71, featured: true, img: "assets/ski/pertisau.jpg" },
+  { name: "Deer Valley", area: "Utah", country: "🇺🇸", lat: 40.62, lon: -111.49, featured: true, img: "assets/ski/deer-valley-summer.jpg" },
+  { name: "Slickrock", area: "Moab, Utah", country: "🇺🇸", lat: 38.57, lon: -109.52 },
+  { name: "Blankets Creek", area: "Atlanta, Georgia", country: "🇺🇸", lat: 34.16, lon: -84.53 },
+  { name: "Virginia Key", area: "Miami, Florida", country: "🇺🇸", lat: 25.74, lon: -80.14 },
+  { name: "Quarry Ridge", area: "Madison, Wisconsin", country: "🇺🇸", lat: 43.01, lon: -89.47 },
+  { name: "CamRock County Park", area: "Madison, Wisconsin", country: "🇺🇸", lat: 43.00, lon: -89.02 }
 ];
 
 const SKI = [
@@ -102,9 +141,11 @@ const SKI = [
   { name: "Dolomiti Superski", area: "Dolomites", country: "🇮🇹", summit_m: 3269, lat: 46.50, lon: 11.80, featured: true, img: "assets/ski/dolomiti.jpg" },
   { name: "Deer Valley", area: "Utah", country: "🇺🇸", summit_m: 2917, lat: 40.62, lon: -111.49, featured: true, img: "assets/ski/deer-valley.jpg" },
   { name: "Mt Bachelor", area: "Oregon", country: "🇺🇸", summit_m: 2764, lat: 43.98, lon: -121.68, featured: true, img: "assets/ski/bachelor.jpg" },
-  { name: "Banff", area: "Lake Louise · Sunshine · Norquay — Alberta", country: "🇨🇦", summit_m: 2730, lat: 51.08, lon: -115.76, featured: true, img: "assets/ski/banff.jpg" },
+  { name: "Lake Louise", displayName: "Banff", area: "Alberta", country: "🇨🇦", summit_m: 2637, lat: 51.46, lon: -116.16, featured: true, img: "assets/ski/banff.jpg" },
   { name: "Niseko", area: "Hokkaidō", country: "🇯🇵", summit_m: 1308, lat: 42.86, lon: 140.70, featured: true, img: "assets/ski/niseko.jpg" },
   // ---- the rest of the master list ----
+  { name: "Banff Sunshine", area: "Alberta", country: "🇨🇦", summit_m: 2730, lat: 51.10, lon: -115.76 },
+  { name: "Norquay", area: "Alberta", country: "🇨🇦", summit_m: 2133, lat: 51.20, lon: -115.60 },
   { name: "Breckenridge", area: "Colorado", country: "🇺🇸", summit_m: 3914, lat: 39.48, lon: -106.07 },
   { name: "Aspen", area: "Colorado", country: "🇺🇸", summit_m: 3813, lat: 39.19, lon: -106.82 },
   { name: "Copper Mountain", area: "Colorado", country: "🇺🇸", summit_m: 3767, lat: 39.50, lon: -106.15 },

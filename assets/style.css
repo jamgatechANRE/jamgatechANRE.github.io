@@ -1,5 +1,5 @@
 /* ============================================================
-   Joseph Moskovitz — personal site
+   Joseph Moskovitz â€” personal site
    Space + nuclear theme: deep-space background with parallax
    starfield (assets/site.js), reactor-gold + plasma-cyan accents.
    Colors/fonts are defined once in :root below.
@@ -36,7 +36,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* full-bleed sections (ski log) use 100vw, which includes the scrollbar —
+/* full-bleed sections (ski log) use 100vw, which includes the scrollbar â€”
    keep that from creating a horizontal scroll */
 body {
   overflow-x: hidden;
@@ -180,7 +180,7 @@ nav.site-nav .links a.active {
   max-width: 34em;
 }
 
-/* electron cloud graphic — drawn on canvas by site.js */
+/* electron cloud graphic â€” drawn on canvas by site.js */
 .cloud-wrap {
   display: flex;
   justify-content: center;
@@ -395,7 +395,7 @@ main .prose a:hover {
   transform: scale(1.04);
 }
 
-/* featured (social) thumbs: portrait ratio, never cropped — the whole
+/* featured (social) thumbs: portrait ratio, never cropped â€” the whole
    image is shown (letterboxed on the dark card if ratios differ) */
 .feat-thumb {
   aspect-ratio: 4 / 5;
@@ -506,7 +506,7 @@ main .prose a:hover {
 }
 
 .card .card-links a::after {
-  content: " →";
+  content: " â†’";
 }
 
 /* ---------- click-to-play video embed ---------- */
@@ -688,7 +688,7 @@ main .prose a:hover {
   box-shadow: 0 8px 26px rgba(242, 177, 52, 0.3);
 }
 
-/* CV pages rendered by pdf.js — each page is a canvas "sheet" */
+/* CV pages rendered by pdf.js â€” each page is a canvas "sheet" */
 .pdf-pages {
   display: flex;
   flex-direction: column;
@@ -821,7 +821,7 @@ main .prose a:hover {
   background: #0d1526;
 }
 
-/* segmented toggle: gt credit ↔ ap exams */
+/* segmented toggle: gt credit â†” ap exams */
 .seg-toggle {
   display: inline-flex;
   background: var(--bg-card);
@@ -854,7 +854,7 @@ main .prose a:hover {
   font-weight: 700;
 }
 
-/* SAT strip — standardized testing, below the AP table, AP view only */
+/* SAT strip â€” standardized testing, below the AP table, AP view only */
 .sat-strip {
   display: none;
   flex-wrap: wrap;
@@ -937,12 +937,12 @@ main .prose a:hover {
 }
 
 .course-table th.sort-asc::after {
-  content: " ↑";
+  content: " â†‘";
   color: var(--gold);
 }
 
 .course-table th.sort-desc::after {
-  content: " ↓";
+  content: " â†“";
   color: var(--gold);
 }
 
@@ -1023,7 +1023,7 @@ main .prose a:hover {
 }
 
 /* ============================================================
-   TIMELINE (timeline.html) — mission-log style vertical timeline.
+   TIMELINE (timeline.html) â€” mission-log style vertical timeline.
    Present at the top, past at the bottom. A glowing "comet"
    descends the spine as you scroll; experience windows render
    as orbit-track bars beside the spine; LinkedIn posts are
@@ -1128,7 +1128,7 @@ main .prose a:hover {
 }
 
 .tl-comet::before {
-  /* exhaust plume pointing down — the comet is ascending from ignition */
+  /* exhaust plume pointing down â€” the comet is ascending from ignition */
   content: "";
   position: absolute;
   left: 50%;
@@ -1243,7 +1243,7 @@ main .prose a:hover {
   z-index: 3;
 }
 
-/* semester boundaries: subtle dashed lines (May → summer, Aug → fall) */
+/* semester boundaries: subtle dashed lines (May â†’ summer, Aug â†’ fall) */
 .tl-sem {
   position: absolute;
   height: 0;
@@ -1286,7 +1286,7 @@ main .prose a:hover {
   background: color-mix(in srgb, currentColor 80%, var(--bg));
 }
 
-/* short stints (a summer at Realta / Allen / Technion…) get extra pop */
+/* short stints (a summer at Realta / Allen / Technionâ€¦) get extra pop */
 .tl-bar.brief {
   background: color-mix(in srgb, currentColor 55%, var(--bg));
   box-shadow: 0 0 14px currentColor;
@@ -1330,7 +1330,7 @@ main .prose a:hover {
   filter: none;
 }
 
-/* name chips in the label gutter — tall cards: big logo above the name,
+/* name chips in the label gutter â€” tall cards: big logo above the name,
    outlined in the stint's category color */
 .tl-chip {
   position: absolute;
@@ -1381,7 +1381,7 @@ main .prose a:hover {
   pointer-events: none;
 }
 
-/* ongoing windows fade out at "now" (gradient, not mask — the logo must stay visible) */
+/* ongoing windows fade out at "now" (gradient, not mask â€” the logo must stay visible) */
 .tl-bar.ongoing {
   background: linear-gradient(180deg, var(--bg), color-mix(in srgb, currentColor 34%, var(--bg)) 30px);
 }
@@ -1482,7 +1482,7 @@ main .prose a:hover {
 }
 
 #tl-tip .tip-link a::after {
-  content: " →";
+  content: " â†’";
 }
 
 /* post nodes on the spine */
@@ -1523,7 +1523,7 @@ main .prose a:hover {
   opacity: 0;
 }
 
-/* connector elbows from spine to card (SVG overlay) — kept at the very
+/* connector elbows from spine to card (SVG overlay) â€” kept at the very
    bottom of the stack so lines run BEHIND bars, labels, and cards */
 .tl-connectors {
   position: absolute;
@@ -1601,7 +1601,7 @@ main .prose a:hover {
   background: #0d1526;
 }
 
-/* ⚙ POST CARD SIZE — cards show just the post's first photo. Shape: the
+/* âš™ POST CARD SIZE â€” cards show just the post's first photo. Shape: the
    aspect-ratio below. Width: cards fill the space beside the spine up to
    the Math.min(..., 280) cap in timeline.html's build(). Clicking a card
    expands the full LinkedIn embed in the centered modal (sized by the
@@ -1743,7 +1743,7 @@ main .prose a:hover {
 }
 
 .tl-card-foot a::after {
-  content: " →";
+  content: " â†’";
 }
 
 /* mini cards (service view): news + featured entries, compact rows
@@ -1834,13 +1834,13 @@ main .prose a:hover {
   }
 }
 
-/* NOTE: no prefers-reduced-motion override for the timeline — the comet
+/* NOTE: no prefers-reduced-motion override for the timeline â€” the comet
    and scroll reveals are forced on (matching the site-wide canvas
    animations in site.js), since Windows' reduced-motion setting was
    silently freezing them */
 
 /* ============================================================
-   TRAVEL (travel.html) — the "beyond the lab" planet + ski log.
+   TRAVEL (travel.html) â€” the "beyond the lab" planet + ski log.
    The globe itself is drawn on canvas by the page script (D3
    orthographic projection); this styles the frame around it,
    the trip cards (reusing the timeline's modal classes), and
@@ -1886,7 +1886,7 @@ main .prose a:hover {
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--rule);
-  background: #0d1526;
+  background-color: #060a14;
   flex: none;
   touch-action: pan-y;
 }
@@ -1906,7 +1906,7 @@ main .prose a:hover {
 .trip-slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   -webkit-user-drag: none;
   user-select: none;
@@ -1986,7 +1986,7 @@ main .prose a:hover {
 
 /* ---------- ski log: full-bleed photo panels, lookbook style ----------
    Each mountain is a huge edge-to-edge photo with a ghost index number
-   and the name/summit set in display type below — scroll through them. */
+   and the name/summit set in display type below â€” scroll through them. */
 .ski-list {
   list-style: none;
   margin: 12px 0 80px;
@@ -2030,8 +2030,8 @@ main .prose a:hover {
   pointer-events: none;
 }
 
-/* the resort's name, set huge and frosted INSIDE the photo —
-   à la the Sölden one-pager watermark */
+/* the resort's name, set huge and frosted INSIDE the photo â€”
+   Ã  la the SÃ¶lden one-pager watermark */
 .ski-name-overlay {
   position: absolute;
   top: 6%;
@@ -2043,18 +2043,18 @@ main .prose a:hover {
   font-weight: 700;
   font-size: clamp(3rem, 11.5vw, 9rem);
   line-height: 0.95;
+  padding-bottom: 0.15em;
   letter-spacing: -0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-  color: rgba(240, 248, 255, 0.55);
-  mix-blend-mode: overlay;
-  text-shadow: 0 0 60px rgba(255, 255, 255, 0.25);
+  color: rgba(240, 248, 255, 0.85);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 60px rgba(0, 0, 0, 0.3);
   pointer-events: none;
   z-index: 1;
 }
 
-/* on the dark placeholder there's nothing to blend with — soften it */
+/* on the dark placeholder there's nothing to blend with â€” soften it */
 .ski-photo.placeholder .ski-name-overlay {
   mix-blend-mode: normal;
   color: rgba(233, 238, 248, 0.10);
@@ -2313,4 +2313,262 @@ footer {
     gap: 14px;
     font-size: 0.85rem;
   }
+}.pin-legend { display: flex; gap: 16px; align-items: center; font-size: 0.85rem; color: var(--muted); margin-left: auto; font-family: var(--font-head); } .legend-item { display: flex; align-items: center; gap: 6px; } .legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #060a14; } .legend-dot.yellow { background-color: #f2b134; box-shadow: 0 0 6px rgba(242,177,52,0.6); } .legend-dot.blue { background-color: #5fd0f5; box-shadow: 0 0 6px rgba(95,208,245,0.6); }
+
+/* ==========================================================================
+   CULTURE PAGE
+   ========================================================================== */
+
+.culture-section {
+  margin-bottom: 64px;
+}
+
+.spotify-embed {
+  margin-top: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+}
+
+/* Books and TV Grid */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+@media (min-width: 600px) {
+  .media-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px;
+  }
+}
+
+.media-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.media-photo {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0d1526;
+  border: 1px solid var(--rule);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  margin: 0 0 12px 0;
+}
+
+.media-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-photo.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px;
+  font-size: 0.85rem;
+}
+
+.media-ph svg {
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.media-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.media-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.media-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Restaurants List */
+.restaurant-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.restaurant-panel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: #080d19;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.restaurant-photo {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  margin: 0;
+  overflow: hidden;
+  background: #0d1526;
+  border-radius: 12px 12px 0 0;
+}
+@media (min-width: 768px) {
+  .restaurant-photo { height: 320px; }
+}
+
+.restaurant-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.restaurant-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(6, 10, 20, 0.8), transparent 50%);
+  pointer-events: none;
+}
+
+.restaurant-name-overlay {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.02em;
+  color: #fff;
+  z-index: 1;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.restaurant-flag {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  z-index: 1;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.restaurant-map {
+  width: 100%;
+  height: 280px;
+  background: #111;
+  border-radius: 0 0 12px 12px;
+}
+
+.restaurant-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.restaurant-photo .restaurant-ph {
+  color: var(--text-muted);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.2rem;
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   CULTURE PAGE
+   ========================================================================== */
+
+.culture-page .site-nav {
+  position: relative;
+  background: transparent;
+  padding: 2rem 0;
+}
+.culture-page .container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+.culture-section {
+  margin-bottom: 4rem;
+  animation: fade-in 0.6s ease-out forwards;
+}
+.culture-section h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #e6f6ff;
+}
+.culture-section p {
+  color: #92a8c3;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+.spotify-embed-wrapper {
+  background: rgba(13, 21, 38, 0.4);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.restaurants-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 768px) {
+  .restaurants-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .restaurants-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.restaurant-card {
+  background: rgba(13, 21, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.restaurant-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(95, 208, 245, 0.4);
+}
+.restaurant-map {
+  height: 200px;
+  width: 100%;
+  background: #111a2c;
+}
+.restaurant-info {
+  padding: 1.2rem;
+}
+.restaurant-info h3 {
+  font-size: 1.2rem;
+  color: #e6f6ff;
+  margin-bottom: 0.4rem;
+}
+.restaurant-location {
+  font-size: 0.95rem;
+  color: #6a82a0;
+  display: block;
 }

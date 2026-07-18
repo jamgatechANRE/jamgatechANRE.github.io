@@ -30,6 +30,7 @@
         <a href="news.html">news</a>
         <a href="timeline.html">timeline</a>
         <a href="travel.html" class="active">travel</a>
+        <a href="culture.html">culture</a>
       </div>
     </div>
   </nav>
@@ -66,6 +67,11 @@
       <ul class="ski-list" id="ski-list"></ul>
       <h2 class="ski-all-head">Every mountain</h2>
       <ul class="ski-all" id="ski-all"></ul>
+      
+      <h2 class="ski-all-head" style="margin-top: 48px;">Mountain Biking</h2>
+      <ul class="ski-list" id="bike-list"></ul>
+      <h2 class="ski-all-head">Every biking spot</h2>
+      <ul class="ski-all" id="bike-all"></ul>
     </section>
   </main>
 
@@ -114,7 +120,11 @@
 
     // ---------- stats strips (globe tab / ski tab) ----------
     document.getElementById("travel-stats").innerHTML = `
-      <span class="stat"><strong>${VISITED.length}</strong> countries</span>`;
+      <span class="stat"><strong>${VISITED.length}</strong> countries</span>
+      <div class="pin-legend">
+        <div class="legend-item"><span class="legend-dot yellow"></span> trips</div>
+        <div class="legend-item"><span class="legend-dot blue"></span> lived</div>
+      </div>`;
     document.getElementById("ski-stats").innerHTML = `
       <span class="stat"><strong>${SKI.length}</strong> mountains skied</span>
       <span class="stat"><strong>${Math.max(...SKI.map(m => m.summit_m)).toLocaleString()}</strong> m highest summit</span>`;
@@ -138,7 +148,7 @@
             <path d="M2 38 L18 10 L26 22 L36 4 L50 26 L56 18 L62 38 Z" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
             <span>Add this mountain's photo to<br>assets/ski/</span></span>
-          <span class="ski-name-overlay">${s.name}</span>
+          <span class="ski-name-overlay">${s.displayName || s.name}</span>
           <span class="ski-flag">${s.country}</span>
         </figure>
         <div class="ski-caption">
@@ -173,6 +183,61 @@
           <span class="ski-item-meta">${s.area} · ${s.summit_m.toLocaleString()} m</span>`;
         if (s.featured) li.addEventListener("click", () => scrollToPanel(document.getElementById(skiId(s))));
         skiAll.appendChild(li);
+      }
+    }
+
+    // ---------- bike log: full-bleed photo panels for the FEATURED ----------
+    const bikeId = s => "bike-" + s.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const bikeList = document.getElementById("bike-list");
+    BIKE.filter(s => s.featured).forEach(s => {
+      const li = document.createElement("li");
+      li.className = "ski-panel reveal";
+      li.id = bikeId(s);
+      const img = s.img
+        ? `<img src="${s.img}" alt="${s.name}" loading="lazy"
+             onerror="this.parentElement.classList.add('placeholder'); this.remove();">`
+        : "";
+      li.innerHTML = `
+        <figure class="ski-photo${s.img ? "" : " placeholder"}">
+          ${img}
+          <span class="ski-ph"><svg viewBox="0 0 64 40" aria-hidden="true">
+            <path d="M2 38 L18 10 L26 22 L36 4 L50 26 L56 18 L62 38 Z" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span>Add this mountain's photo to<br>assets/ski/</span></span>
+          <span class="ski-name-overlay">${s.displayName || s.name}</span>
+          <span class="ski-flag">${s.country}</span>
+        </figure>
+        <div class="ski-caption">
+          <div class="ski-title-row">
+            <div class="ski-sub">${s.area}${s.note ? ` · ${s.note}` : ""}</div>
+            <div class="ski-alt"><strong>🚵</strong><span>bike</span></div>
+          </div>
+        </div>`;
+      bikeList.appendChild(li);
+    });
+
+    // ---------- master bike list: every biking spot, grouped by country ----------
+    const bikeAll = document.getElementById("bike-all");
+    const bikeGroups = new Map();
+    for (const s of [...BIKE]) {
+      const key = s.country;
+      if (!bikeGroups.has(key)) bikeGroups.set(key, []);
+      bikeGroups.get(key).push(s);
+    }
+    for (const [flag, list] of [...bikeGroups.entries()].sort((a, b) => b[1].length - a[1].length)) {
+      const head = document.createElement("li");
+      head.className = "ski-all-region";
+      head.textContent = `${flag} ${COUNTRY_NAMES[flag] || ""}`;
+      bikeAll.appendChild(head);
+      for (const s of list) {
+        const li = document.createElement("li");
+        li.className = "ski-item" + (s.featured ? " is-featured" : "");
+        li.id = "m-" + bikeId(s);
+        li.innerHTML = `
+          <span class="ski-item-name">${s.name}${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
+          <span class="ski-item-meta">${s.area}</span>`;
+        if (s.featured) li.addEventListener("click", () => scrollToPanel(document.getElementById(bikeId(s))));
+        bikeAll.appendChild(li);
       }
     }
 
@@ -271,7 +336,22 @@
         }
         return [...m.values()];
       })();
-      const pins = () => gMode === "trips" ? TRIPS : MTN;
+      const TRIPS_AND_LIVED = (() => {
+        const m = new Map();
+        for (const t of TRIPS) m.set(t.name, { ...t, isTrip: true });
+        for (const l of LIVED) {
+          const e = m.get(l.name);
+          if (e) {
+            e.isLived = true;
+            if (l.date && !(e.date || "").includes(l.date)) e.date = (e.date ? e.date + " & " : "") + l.date;
+            if (l.desc) e.desc = (e.desc ? e.desc + " " : "") + l.desc;
+          } else {
+            m.set(l.name, { ...l, isLived: true });
+          }
+        }
+        return [...m.values()];
+      })();
+      const pins = () => gMode === "trips" ? TRIPS_AND_LIVED : MTN;
 
       function markerXY(t) {
         // null when the pin is on the far side of the planet
@@ -348,42 +428,73 @@
           const hovered = d === hoverPin;
           const pulse = 0.5 + 0.5 * Math.sin(now / 600 + t.lon);
           if (gMode === "trips") {
-            ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(242,177,52,${0.35 * (1 - pulse) + 0.1})`; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.beginPath(); ctx.arc(d.x, d.y, hovered ? 5 : 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = GOLD; ctx.fill();
-            ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+            const isLived = t.isLived;
+            const isTrip = t.isTrip;
+            
+            if (isLived && isTrip) {
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, Math.PI/2, Math.PI*1.5);
+              ctx.strokeStyle = `rgba(95,208,245,${0.35 * (1 - pulse) + 0.1})`; ctx.lineWidth = 1.5; ctx.stroke();
+              
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, -Math.PI/2, Math.PI/2);
+              ctx.strokeStyle = `rgba(242,177,52,${0.35 * (1 - pulse) + 0.1})`; ctx.lineWidth = 1.5; ctx.stroke();
+              
+              const r = hovered ? 5 : 3.5;
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, Math.PI/2, Math.PI*1.5);
+              ctx.fillStyle = CYAN; ctx.fill();
+              
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, -Math.PI/2, Math.PI/2);
+              ctx.fillStyle = GOLD; ctx.fill();
+              
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+              ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+            } else {
+              const pinColor = isLived ? CYAN : GOLD;
+              const glowColor = isLived ? `rgba(95,208,245,${0.35 * (1 - pulse) + 0.1})` : `rgba(242,177,52,${0.35 * (1 - pulse) + 0.1})`;
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, 0, Math.PI * 2);
+              ctx.strokeStyle = glowColor; ctx.lineWidth = 1.5; ctx.stroke();
+              ctx.beginPath(); ctx.arc(d.x, d.y, hovered ? 5 : 3.5, 0, Math.PI * 2);
+              ctx.fillStyle = pinColor; ctx.fill();
+              ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+            }
           } else if (d.items.length === 1) {
             // emoji pins: ❄️ ski, 🚵 bike, both for dual spots
             const label = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
             ctx.font = `${hovered ? 16 : 13}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+            const tw = ctx.measureText(label).width;
+            const rr = 10 + 3 * pulse;
+            const rw = Math.max(rr * 2, tw + 8);
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.beginPath(); ctx.arc(d.x, d.y, 10 + 3 * pulse, 0, Math.PI * 2);
+            ctx.beginPath(); ctx.roundRect(d.x - rw/2, d.y - rr, rw, rr * 2, rr);
             ctx.strokeStyle = `rgba(95,208,245,${0.25 * (1 - pulse) + 0.05})`; ctx.lineWidth = 1; ctx.stroke();
             ctx.fillStyle = "#e6f6ff";
             ctx.fillText(label, d.x, d.y);
           } else {
             // cluster badge: emoji kinds + count, click to list
             const hasSki = d.items.some(i => i.ski), hasBike = d.items.some(i => i.bike);
+            const label = `${hasSki ? "❄️" : ""}${hasBike ? "🚵" : ""} ${d.items.length}`;
+            ctx.font = `${hovered ? 11 : 10}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
+            const tw = ctx.measureText(label).width;
             const rr = hovered ? 16 : 14;
-            ctx.beginPath(); ctx.arc(d.x, d.y, rr, 0, Math.PI * 2);
+            const rw = Math.max(rr * 2, tw + 10);
+            ctx.beginPath(); ctx.roundRect(d.x - rw/2, d.y - rr, rw, rr * 2, rr);
             ctx.fillStyle = "rgba(13,21,38,0.92)"; ctx.fill();
             ctx.strokeStyle = "rgba(95,208,245,0.8)"; ctx.lineWidth = 1.2; ctx.stroke();
-            ctx.beginPath(); ctx.arc(d.x, d.y, rr + 3 + 3 * pulse, 0, Math.PI * 2);
+            ctx.beginPath(); ctx.roundRect(d.x - rw/2 - 3 - 3*pulse, d.y - rr - 3 - 3*pulse, rw + 6 + 6*pulse, rr * 2 + 6 + 6*pulse, rr + 3 + 3*pulse);
             ctx.strokeStyle = `rgba(95,208,245,${0.2 * (1 - pulse) + 0.04})`; ctx.lineWidth = 1; ctx.stroke();
-            ctx.font = `${hovered ? 11 : 10}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillStyle = "#e6f6ff";
-            ctx.fillText(`${hasSki ? "❄️" : ""}${hasBike ? "🚵" : ""} ${d.items.length}`, d.x, d.y);
+            ctx.fillText(label, d.x, d.y);
           }
         }
       }
 
+      let modalClose = null;
       function frame(now) {
         // slow idle spin — only when fully zoomed out, and pausing while
         // (and shortly after) you interact
+        if (typeof modalClose === "function") lastInteract = now + 4000;
         if (!dragging && zoom <= 1.02 && now - lastInteract > 4000) rotation[0] += 0.045;
         draw(now);
         requestAnimationFrame(frame);
@@ -456,7 +567,7 @@
           capEl.textContent = hoverPin.items.length > 1
             ? `${hoverPin.items.length} spots here · click to list them`
             : gMode === "trips"
-              ? `${t.name} · ${t.date}`
+              ? (t.isLived ? `Lived: ${t.name}` : `${t.name} · ${t.date}`)
               : `${t.country} ${t.name}` +
                 (t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ` · ${t.area}`) +
                 (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
@@ -492,15 +603,15 @@
       // ---- click a pin: trips expand a card; mountain pins show a small
       // pinned popup (like the timeline's) with a link into the ski log,
       // dismissed by clicking anywhere else ----
-      let modalClose = null;
       const gtip = document.getElementById("tl-tip");
       const hidePinTip = () => gtip.classList.remove("show");
       function gotoSkiLog(t) {
         hidePinTip();
         document.querySelector('[data-tab="ski-pane"]').click();
+        const targetId = t.ski ? skiId(t) : bikeId(t);
         const target = t.featured
-          ? document.getElementById(skiId(t))
-          : document.getElementById("m-" + skiId(t));
+          ? document.getElementById(targetId)
+          : document.getElementById("m-" + targetId);
         setTimeout(() => scrollToPanel(target), 60);
       }
       function placeTip(x, y) {
@@ -513,8 +624,8 @@
         const emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
         const meta = `${t.area}${t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ""}` +
           (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
-        const link = t.ski
-          ? `<div class="tip-link"><a href="#" class="tip-goto">view in the ski log</a></div>` : "";
+        const link = (t.ski || t.bike)
+          ? `<div class="tip-link"><a href="#" class="tip-goto">view in the ${t.ski && t.bike ? 'ski & bike log' : t.ski ? 'ski log' : 'bike log'}</a></div>` : "";
         gtip.innerHTML = `<div class="tip-head"><span>${emoji} ${t.country} ${t.name}</span></div>
           <span class="tip-dates">${meta}</span>${link}`;
         placeTip(x, y);
@@ -525,7 +636,7 @@
         const rows = items.map((t, i) => {
           const emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
           const meta = t.summit_m ? `${t.summit_m.toLocaleString()} m` : t.area;
-          return t.ski
+          return (t.ski || t.bike)
             ? `<a href="#" class="tip-row" data-i="${i}">${emoji} ${t.name}<span>${meta}</span></a>`
             : `<span class="tip-row">${emoji} ${t.name}<span>${meta}</span></span>`;
         }).join("");
@@ -544,7 +655,9 @@
         const mx = e.clientX - rect.left, my = e.clientY - rect.top;
         for (const d of drawnPins) {
           if (Math.hypot(d.x - mx, d.y - my) < (d.items.length > 1 ? 17 : 12)) {
-            if (gMode === "trips") openTrip(d.items[0], e.clientX, e.clientY);
+            if (gMode === "trips") {
+              openTrip(d.items[0], e.clientX, e.clientY);
+            }
             else if (d.items.length > 1) showClusterTip(d.items, e.pageX, e.pageY);
             else showPinTip(d.items[0], e.pageX, e.pageY);
             return;
@@ -553,32 +666,60 @@
         hidePinTip();          // clicked empty globe
       });
 
-      function openTrip(t, cx, cy) {
+      async function openTrip(t, cx, cy) {
         if (modalClose) modalClose(true);
         const back = document.createElement("div");
         back.className = "tl-modal-back";
         const box = document.createElement("div");
         box.className = "tl-modal-box trip-box";
+        
+        // auto-discover images if not explicitly listed
+        if (!t.imgs && t.img) {
+          const ext = t.img.substring(t.img.lastIndexOf("."));
+          const base = t.img.substring(0, t.img.lastIndexOf("."));
+          let found = [t.img];
+          
+          for (let i = 2; i <= 20; i++) {
+            try {
+              let res = await fetch(`${base}-${i}${ext}`, { method: 'HEAD' });
+              if (res.ok) found.push(`${base}-${i}${ext}`);
+              else {
+                // sometimes extensions change case (e.g. .jpg vs .JPG)
+                let altExt = ext === '.jpg' ? '.JPG' : '.jpg';
+                let altRes = await fetch(`${base}-${i}${altExt}`, { method: 'HEAD' });
+                if (altRes.ok) found.push(`${base}-${i}${altExt}`);
+                else break;
+              }
+            } catch(e) { break; }
+          }
+          t.imgs = found; // cache for next time
+        }
+
         // photos: one = simple, several = swipeable carousel
         const imgs = t.imgs || (t.img ? [t.img] : []);
-        const slides = imgs.map(src => `
+        let slidesHTML = imgs.map(src => `
           <div class="trip-slide"><img src="${src}" alt=""
               onerror="this.parentElement.classList.add('missing'); this.remove();">
             <span class="trip-ph">🌍<span>Add a photo to<br>assets/travel/</span></span></div>`).join("");
         const multi = imgs.length > 1;
+        if (multi) {
+          const firstSlide = `<div class="trip-slide clone" aria-hidden="true"><img src="${imgs[0]}" alt=""></div>`;
+          const lastSlide = `<div class="trip-slide clone" aria-hidden="true"><img src="${imgs[imgs.length - 1]}" alt=""></div>`;
+          slidesHTML = lastSlide + slidesHTML + firstSlide;
+        }
         const photo = imgs.length ? `
           <div class="trip-photo">
-            <div class="trip-track">${slides}</div>
+            <div class="trip-track">${slidesHTML}</div>
             ${multi ? `<button class="trip-nav prev" aria-label="Previous photo">‹</button>
                        <button class="trip-nav next" aria-label="Next photo">›</button>
                        <div class="trip-dots">${imgs.map((_, i) =>
                          `<span class="trip-dot${i ? "" : " on"}"></span>`).join("")}</div>` : ""}
           </div>` : "";
         box.innerHTML = `
-          <div class="tl-date">✈ ${t.date}</div>
+          ${t.date ? `<div class="tl-date">✈ ${t.date}</div>` : ""}
           ${photo}
           <div class="trip-title">${t.name}</div>
-          <p class="trip-desc">${t.desc}</p>
+          ${t.desc ? `<p class="trip-desc">${t.desc}</p>` : ""}
           ${t.url ? `<div class="tl-card-foot"><span></span><a href="${t.url}" target="_blank" rel="noopener">read more</a></div>` : ""}`;
         document.body.append(back, box);
 
@@ -586,14 +727,40 @@
         if (multi) {
           const track = box.querySelector(".trip-track");
           const dots = [...box.querySelectorAll(".trip-dot")];
-          let idx = 0;
+          let idx = 1;
+          let isAnimating = false;
+          track.style.transition = "none";
+          track.style.transform = `translateX(-100%)`;
+          setTimeout(() => { track.style.transition = "transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1)"; }, 50);
+
           const show = i => {
-            idx = (i + imgs.length) % imgs.length;
+            if (isAnimating) return;
+            isAnimating = true;
+            idx = i;
+            track.style.transition = "transform 0.35s cubic-bezier(0.22, 0.8, 0.3, 1)";
             track.style.transform = `translateX(-${idx * 100}%)`;
-            dots.forEach((d, k) => d.classList.toggle("on", k === idx));
+            
+            let dotIdx = idx - 1;
+            if (dotIdx === -1) dotIdx = imgs.length - 1;
+            if (dotIdx === imgs.length) dotIdx = 0;
+            dots.forEach((d, k) => d.classList.toggle("on", k === dotIdx));
+
+            setTimeout(() => {
+              if (idx === 0) {
+                track.style.transition = "none";
+                idx = imgs.length;
+                track.style.transform = `translateX(-${idx * 100}%)`;
+              } else if (idx === imgs.length + 1) {
+                track.style.transition = "none";
+                idx = 1;
+                track.style.transform = `translateX(-${idx * 100}%)`;
+              }
+              isAnimating = false;
+            }, 350);
           };
           box.querySelector(".trip-nav.prev").addEventListener("click", () => show(idx - 1));
           box.querySelector(".trip-nav.next").addEventListener("click", () => show(idx + 1));
+          dots.forEach((d, i) => d.addEventListener("click", () => show(i + 1)));
           let sx = null;
           track.addEventListener("pointerdown", e => { sx = e.clientX; });
           track.addEventListener("pointerup", e => {
@@ -607,8 +774,8 @@
             if (e.key === "ArrowRight") show(idx + 1);
           });
         }
-        const MW = Math.min(460, window.innerWidth * 0.92);
-        const MH = Math.min(window.innerHeight * 0.82, 560);
+        const MW = Math.min(840, window.innerWidth * 0.94);
+        const MH = Math.min(window.innerHeight * 0.92, 850);
         box.style.width = MW + "px";
         box.style.maxHeight = MH + "px";
         box.style.left = (window.innerWidth - MW) / 2 + "px";

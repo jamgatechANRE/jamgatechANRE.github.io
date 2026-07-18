@@ -139,6 +139,37 @@ nav.site-nav .links a.active {
   border-bottom-color: var(--gold);
 }
 
+/* Mobile Nav Adjustments */
+@media (max-width: 800px) {
+  nav.site-nav .nav-inner {
+    padding: 12px 16px;
+    gap: 16px;
+  }
+
+  nav.site-nav .brand {
+    flex-shrink: 0;
+  }
+
+  nav.site-nav .links {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    padding-bottom: 2px;
+    min-width: 0;
+  }
+
+  nav.site-nav .links::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+  }
+
+  nav.site-nav .links a {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
 /* ---------- hero (index) ---------- */
 .hero {
   position: relative;
@@ -1858,7 +1889,10 @@ main .prose a:hover {
   margin: 26px 0 64px calc(50% - 50vw);
 }
 
-#globe { cursor: grab; touch-action: none; }
+#globe {
+  cursor: grab;
+  touch-action: none;
+}
 
 .globe-mode-row {
   display: flex;
@@ -1876,7 +1910,9 @@ main .prose a:hover {
 }
 
 /* trip card variant of the modal */
-.tl-modal-box.trip-box { overflow-y: auto; }
+.tl-modal-box.trip-box {
+  overflow-y: auto;
+}
 
 /* trip photos: single image, or a swipeable carousel when a trip has
    several (imgs: [...] in data/travel.js) */
@@ -1911,7 +1947,9 @@ main .prose a:hover {
   user-select: none;
 }
 
-.trip-slide .trip-ph { display: none; }
+.trip-slide .trip-ph {
+  display: none;
+}
 
 .trip-slide.missing {
   display: flex;
@@ -1951,9 +1989,18 @@ main .prose a:hover {
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.trip-nav:hover { border-color: rgba(95, 208, 245, 0.6); background: rgba(6, 10, 20, 0.9); }
-.trip-nav.prev { left: 10px; }
-.trip-nav.next { right: 10px; }
+.trip-nav:hover {
+  border-color: rgba(95, 208, 245, 0.6);
+  background: rgba(6, 10, 20, 0.9);
+}
+
+.trip-nav.prev {
+  left: 10px;
+}
+
+.trip-nav.next {
+  right: 10px;
+}
 
 .trip-dots {
   position: absolute;
@@ -1972,7 +2019,10 @@ main .prose a:hover {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.trip-dot.on { background: var(--gold); transform: scale(1.25); }
+.trip-dot.on {
+  background: var(--gold);
+  transform: scale(1.25);
+}
 
 .trip-title {
   font-family: var(--font-head);
@@ -1981,7 +2031,11 @@ main .prose a:hover {
   line-height: 1.35;
 }
 
-.trip-desc { font-size: 0.9rem; color: #c4cdde; margin: 0; }
+.trip-desc {
+  font-size: 0.9rem;
+  color: #c4cdde;
+  margin: 0;
+}
 
 /* ---------- ski log: full-bleed photo panels, lookbook style ----------
    Each mountain is a huge edge-to-edge photo with a ghost index number
@@ -1995,7 +2049,9 @@ main .prose a:hover {
   gap: 72px;
 }
 
-.ski-panel { margin: 0; }
+.ski-panel {
+  margin: 0;
+}
 
 /* the photo breaks out of the container to span the full viewport */
 .ski-photo {
@@ -2012,13 +2068,16 @@ main .prose a:hover {
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: scale(1.08) translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  transform: scale(1.08);
+  -webkit-mask-image: -webkit-linear-gradient(white, white);
+  mask-image: linear-gradient(white, white);
+  outline: 1px solid transparent;
   transition: transform 6s cubic-bezier(0.2, 0.6, 0.3, 1);
 }
 
-.ski-panel.visible .ski-photo img { transform: scale(1); }
+.ski-panel.visible .ski-photo img {
+  transform: scale(1.01);
+}
 
 /* soft vignette so the ghost number + flag always read */
 .ski-photo::after {
@@ -2062,7 +2121,11 @@ main .prose a:hover {
 }
 
 /* flash highlight when a globe pin links you here */
-.ski-panel.flash .ski-photo { outline: 2px solid rgba(95, 208, 245, 0.7); outline-offset: -2px; }
+.ski-panel.flash .ski-photo {
+  outline: 2px solid rgba(95, 208, 245, 0.7);
+  outline-offset: -2px;
+}
+
 .ski-item.flash {
   background: rgba(95, 208, 245, 0.10);
   border-color: rgba(95, 208, 245, 0.5);
@@ -2077,7 +2140,9 @@ main .prose a:hover {
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
 }
 
-.ski-photo .ski-ph { display: none; }
+.ski-photo .ski-ph {
+  display: none;
+}
 
 .ski-photo.placeholder {
   display: flex;
@@ -2102,10 +2167,15 @@ main .prose a:hover {
   line-height: 1.6;
 }
 
-.ski-photo.placeholder .ski-ph svg { width: 120px; color: rgba(148, 160, 184, 0.5); }
+.ski-photo.placeholder .ski-ph svg {
+  width: 120px;
+  color: rgba(148, 160, 184, 0.5);
+}
 
 /* slim caption below the photo (the name lives inside the image) */
-.ski-caption { padding-top: 14px; }
+.ski-caption {
+  padding-top: 14px;
+}
 
 .ski-title-row {
   display: flex;
@@ -2185,7 +2255,9 @@ main .prose a:hover {
   padding-bottom: 8px;
 }
 
-.ski-all-region:first-child { margin-top: 0; }
+.ski-all-region:first-child {
+  margin-top: 0;
+}
 
 .ski-item {
   background: var(--bg-card);
@@ -2195,7 +2267,9 @@ main .prose a:hover {
   transition: border-color 0.2s ease, background 0.3s ease, transform 0.2s ease;
 }
 
-.ski-item.is-featured { cursor: pointer; }
+.ski-item.is-featured {
+  cursor: pointer;
+}
 
 .ski-item.is-featured:hover {
   border-color: rgba(95, 208, 245, 0.5);
@@ -2227,8 +2301,19 @@ main .prose a:hover {
 }
 
 @media (max-width: 660px) {
-  .ski-list { gap: 52px; }
-  .ski-photo { height: 52vh; }
+  .ski-list {
+    gap: 52px;
+  }
+
+  .ski-photo {
+    height: 52vh;
+  }
+
+  .ski-name-overlay {
+    font-size: clamp(1.6rem, 8.5vw, 4rem);
+    white-space: normal;
+    overflow: visible;
+  }
 }
 
 /* ---------- footer ---------- */
@@ -2314,7 +2399,40 @@ footer {
     gap: 14px;
     font-size: 0.85rem;
   }
-}.pin-legend { display: flex; gap: 16px; align-items: center; font-size: 0.85rem; color: var(--muted); margin-left: auto; font-family: var(--font-head); } .legend-item { display: flex; align-items: center; gap: 6px; } .legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #060a14; } .legend-dot.yellow { background-color: #f2b134; box-shadow: 0 0 6px rgba(242,177,52,0.6); } .legend-dot.blue { background-color: #5fd0f5; box-shadow: 0 0 6px rgba(95,208,245,0.6); }
+}
+
+.pin-legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-left: auto;
+  font-family: var(--font-head);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #060a14;
+}
+
+.legend-dot.yellow {
+  background-color: #f2b134;
+  box-shadow: 0 0 6px rgba(242, 177, 52, 0.6);
+}
+
+.legend-dot.blue {
+  background-color: #5fd0f5;
+  box-shadow: 0 0 6px rgba(95, 208, 245, 0.6);
+}
 
 /* ==========================================================================
    CULTURE PAGE
@@ -2337,6 +2455,7 @@ footer {
   gap: 24px;
   margin-top: 24px;
 }
+
 @media (min-width: 600px) {
   .media-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -2356,7 +2475,7 @@ footer {
   overflow: hidden;
   background: #0d1526;
   border: 1px solid var(--rule);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   margin: 0 0 12px 0;
 }
 
@@ -2419,7 +2538,7 @@ footer {
   border: 1px solid var(--rule);
   border-radius: 12px;
   background: #080d19;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .restaurant-photo {
@@ -2431,8 +2550,11 @@ footer {
   background: #0d1526;
   border-radius: 12px 12px 0 0;
 }
+
 @media (min-width: 768px) {
-  .restaurant-photo { height: 320px; }
+  .restaurant-photo {
+    height: 320px;
+  }
 }
 
 .restaurant-photo img {
@@ -2460,7 +2582,7 @@ footer {
   letter-spacing: -0.02em;
   color: #fff;
   z-index: 1;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .restaurant-flag {
@@ -2485,6 +2607,7 @@ footer {
   align-items: center;
   justify-content: center;
 }
+
 .restaurant-photo .restaurant-ph {
   color: var(--text-muted);
   font-family: 'Space Grotesk', sans-serif;
@@ -2502,36 +2625,43 @@ footer {
   margin: 0 auto;
   padding: 0 1.5rem 4rem;
 }
+
 .culture-section {
   margin-bottom: 4rem;
   animation: fade-in 0.6s ease-out forwards;
 }
+
 .culture-section h2 {
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #e6f6ff;
 }
+
 .culture-section p {
   color: #92a8c3;
   margin-bottom: 2rem;
   font-size: 1.1rem;
 }
+
 .spotify-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
+
 @media (max-width: 768px) {
   .spotify-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 480px) {
   .spotify-grid {
     grid-template-columns: 1fr;
   }
 }
+
 .spotify-embed {
   background: rgba(13, 21, 38, 0.4);
   border-radius: 12px;
@@ -2539,21 +2669,25 @@ footer {
   border: 1px solid rgba(255, 255, 255, 0.08);
   height: 352px;
 }
+
 .restaurants-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
+
 @media (max-width: 768px) {
   .restaurants-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (max-width: 480px) {
   .restaurants-grid {
     grid-template-columns: 1fr;
   }
 }
+
 .restaurant-card {
   background: rgba(13, 21, 38, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2563,23 +2697,28 @@ footer {
   flex-direction: column;
   transition: transform 0.2s, border-color 0.2s;
 }
+
 .restaurant-card:hover {
   transform: translateY(-4px);
   border-color: rgba(95, 208, 245, 0.4);
 }
+
 .restaurant-map {
   height: 200px;
   width: 100%;
   background: #111a2c;
 }
+
 .restaurant-info {
   padding: 1.2rem;
 }
+
 .restaurant-info h3 {
   font-size: 1.2rem;
   color: #e6f6ff;
   margin-bottom: 0.4rem;
 }
+
 .restaurant-location {
   font-size: 0.95rem;
   color: #6a82a0;
@@ -2615,7 +2754,8 @@ footer {
   width: 100%;
   overflow: hidden;
   position: relative;
-  padding: 2rem 0; /* padding for the scale effect to not clip */
+  padding: 2rem 0;
+  /* padding for the scale effect to not clip */
   -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
   mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
@@ -2750,7 +2890,7 @@ footer {
 .media-modal-back {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -2773,7 +2913,7 @@ footer {
   width: 90%;
   max-width: 600px;
   padding: 32px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   transform: translateY(20px);
   transition: transform 0.3s;
 }

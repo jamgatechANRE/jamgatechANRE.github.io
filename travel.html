@@ -124,6 +124,9 @@
     }));
 
     // ---------- stats strips (globe tab / ski tab) ----------
+    function elevNum(t) { return t.country === "🇺🇸" ? Math.round(t.summit_m * 3.28084).toLocaleString() : t.summit_m.toLocaleString(); }
+    function elevUnit(t) { return t.country === "🇺🇸" ? "ft" : "m"; }
+
     document.getElementById("travel-stats").innerHTML = `
       <span class="stat"><strong>${VISITED.length}</strong> countries</span>
       <div class="pin-legend">
@@ -140,7 +143,7 @@
     const skiList = document.getElementById("ski-list");
     SKI.filter(s => s.featured).sort((a, b) => b.summit_m - a.summit_m).forEach(s => {
       const li = document.createElement("li");
-      li.className = "ski-panel reveal";
+      li.className = "ski-panel reveal replay";
       li.id = skiId(s);
       const img = s.img
         ? `<img src="${s.img}" alt="${s.name}" loading="lazy"
@@ -159,7 +162,7 @@
         <div class="ski-caption">
           <div class="ski-title-row">
             <div class="ski-sub">${s.area}${s.note ? ` · ${s.note}` : ""}</div>
-            <div class="ski-alt"><strong>${s.summit_m.toLocaleString()}</strong><span>m summit</span></div>
+            <div class="ski-alt"><strong>${elevNum(s)}</strong><span>${elevUnit(s)} summit</span></div>
           </div>
         </div>`;
       skiList.appendChild(li);
@@ -186,7 +189,7 @@
         const searchUrl = s.url || `https://www.google.com/search?q=${encodeURIComponent(s.name + ' ski resort ' + s.area)}`;
         li.innerHTML = `
           <span class="ski-item-name"><a href="${searchUrl}" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${s.name}</a>${s.featured ? '<span class="ski-item-star" title="featured above">★</span>' : ""}</span>
-          <span class="ski-item-meta">${s.area} · ${s.summit_m.toLocaleString()} m</span>`;
+          <span class="ski-item-meta">${s.area} · ${elevNum(s)} ${elevUnit(s)}</span>`;
         if (s.featured) li.addEventListener("click", () => scrollToPanel(document.getElementById(skiId(s))));
         skiAll.appendChild(li);
       }
@@ -197,7 +200,7 @@
     const bikeList = document.getElementById("bike-list");
     BIKE.filter(s => s.featured).forEach(s => {
       const li = document.createElement("li");
-      li.className = "ski-panel reveal";
+      li.className = "ski-panel reveal replay";
       li.id = bikeId(s);
       const img = s.img
         ? `<img src="${s.img}" alt="${s.name}" loading="lazy"
@@ -590,7 +593,7 @@
             : gMode === "trips"
               ? (t.isLived ? `Lived: ${t.name}` : `${t.name} · ${t.date}`)
               : `${t.country} ${t.name}` +
-              (t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ` · ${t.area}`) +
+              (t.summit_m ? ` · ${elevNum(t)} ${elevUnit(t)}` : ` · ${t.area}`) +
               (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : "");
           return;
         }
@@ -644,7 +647,7 @@
       function showPinTip(t, x, y) {
         let emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
         if (!emoji && t.isLived && !t.isTrip) emoji = "🏠";
-        const meta = t.desc ? t.desc : (`${t.area || ""}${t.summit_m ? ` · ${t.summit_m.toLocaleString()} m` : ""}` +
+        const meta = t.desc ? t.desc : (`${t.area || ""}${t.summit_m ? ` · ${elevNum(t)} ${elevUnit(t)}` : ""}` +
           (t.ski && t.bike ? " · ski + bike" : t.bike ? " · mountain biking" : ""));
         const link = (t.ski || t.bike)
           ? `<div class="tip-link"><a href="#" class="tip-goto">view in the ${t.ski && t.bike ? 'ski & bike log' : t.ski ? 'ski log' : 'bike log'}</a></div>` : "";
@@ -657,7 +660,7 @@
       function showClusterTip(items, x, y) {
         const rows = items.map((t, i) => {
           const emoji = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
-          const meta = t.summit_m ? `${t.summit_m.toLocaleString()} m` : t.area;
+          const meta = t.summit_m ? `${elevNum(t)} ${elevUnit(t)}` : t.area;
           return (t.ski || t.bike)
             ? `<a href="#" class="tip-row" data-i="${i}">${emoji} ${t.name}<span>${meta}</span></a>`
             : `<span class="tip-row">${emoji} ${t.name}<span>${meta}</span></span>`;

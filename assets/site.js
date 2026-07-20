@@ -648,15 +648,21 @@
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) { 
-          e.target.classList.add("visible"); 
-          if (!e.target.classList.contains("replay")) io.unobserve(e.target); 
-        } else {
-          if (e.target.classList.contains("replay")) e.target.classList.remove("visible");
+        if (e.target.classList.contains("replay")) {
+          // Hysteresis: reveal once ~15% is on screen, but only hide again
+          // once it's almost entirely gone (<2%). The dead-band between the
+          // two keeps a tall panel parked at the viewport edge from
+          // flip-flopping visible/hidden (which restarts the fade and looks
+          // like a rapid flicker).
+          if (e.intersectionRatio >= 0.15) e.target.classList.add("visible");
+          else if (e.intersectionRatio <= 0.02) e.target.classList.remove("visible");
+        } else if (e.intersectionRatio >= 0.12) {
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
         }
       }
     },
-    { threshold: 0.12 }
+    { threshold: [0, 0.02, 0.12, 0.15, 0.5] }
   );
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
   // ---------- nav scroll state ----------

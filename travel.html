@@ -40,9 +40,9 @@
       <canvas class="page-anim" data-anim="hyperspace" width="400" height="400" aria-hidden="true"
         style="top: 50%; right: -20px; transform: translateY(-50%);"></canvas>
       <h1 class="page-heading">Beyond the lab</h1>
-      <p class="page-sub" style="max-width: 32em; margin-bottom: 48px;">The one planet I've actually explored. Drag the
+      <p class="page-sub" style="max-width: 32em; margin-bottom: 48px;">The one planet I've actually explored! Drag the
         globe to spin it — visited countries glow,
-        and the gold pins are trips worth telling. The second tab is the ski log.</p>
+        click pins to learn more<br>The second tab is my ski log</p>
 
       <div class="tabs" role="tablist">
         <button class="tab-btn active" data-tab="globe-pane" role="tab">globe</button>
@@ -127,12 +127,23 @@
     function elevNum(t) { return t.country === "🇺🇸" ? Math.round(t.summit_m * 3.28084).toLocaleString() : t.summit_m.toLocaleString(); }
     function elevUnit(t) { return t.country === "🇺🇸" ? "ft" : "m"; }
 
+    // legend swaps with the globe toggle: trips/lived on the countries
+    // view, ski/bike on the mountains view
+    const PIN_LEGENDS = {
+      trips: `
+        <div class="legend-item"><span class="legend-dot yellow"></span> trips</div>
+        <div class="legend-item"><span class="legend-dot blue"></span> lived</div>`,
+      ski: `
+        <div class="legend-item"><span class="legend-dot white"></span> ski</div>
+        <div class="legend-item"><span class="legend-dot green"></span> mountain bike</div>`
+    };
+    const setPinLegend = mode => {
+      const el = document.getElementById("pin-legend");
+      if (el) el.innerHTML = PIN_LEGENDS[mode] || PIN_LEGENDS.trips;
+    };
     document.getElementById("travel-stats").innerHTML = `
       <span class="stat"><strong>${VISITED.length}</strong> countries</span>
-      <div class="pin-legend">
-        <div class="legend-item"><span class="legend-dot yellow"></span> trips</div>
-        <div class="legend-item"><span class="legend-dot blue"></span> lived</div>
-      </div>`;
+      <div class="pin-legend" id="pin-legend">${PIN_LEGENDS.trips}</div>`;
     document.getElementById("ski-stats").innerHTML = `
       <span class="stat"><strong>${SKI.length}</strong> mountains skied</span>
       <span class="stat"><strong>${Math.max(...SKI.map(m => m.summit_m)).toLocaleString()}</strong> m highest summit</span>`;
@@ -331,6 +342,7 @@
       const graticule = d3.geoGraticule10();
 
       const GOLD = "#f2b134", CYAN = "#5fd0f5";
+      const SNOW = "#eaf4ff", GREEN = "#5ad48a";   // mountains view: ski=white, bike=green
       let hoverPin = null, hoverName = "";
       let drawnPins = [];                  // screen pins after clustering
       let dragging = false, lastInteract = 0;
@@ -419,9 +431,10 @@
         ctx.beginPath(); ctx.arc(CX, CY, rimR + 4, 0, Math.PI * 2);
         ctx.strokeStyle = "rgba(95,208,245,0.08)"; ctx.lineWidth = 6; ctx.stroke();
 
-        // pins → screen positions; in mountains view, pins that overlap
-        // on screen merge into a count badge (a globe can't separate
-        // resorts two kilometers apart, no matter the zoom)
+        // pins → screen positions; in mountains view, pins that actually
+        // overlap on screen merge into a count badge. The dots are small,
+        // so the merge radius is tight — nearby resorts stay separate and
+        // spread further apart as you zoom in
         const pts = [];
         for (const t of pins()) {
           const p = markerXY(t);
@@ -436,7 +449,7 @@
             if (used[i]) continue;
             const grp = [pts[i]]; used[i] = true;
             for (let j = i + 1; j < pts.length; j++) {
-              if (!used[j] && Math.hypot(pts[j].x - pts[i].x, pts[j].y - pts[i].y) < 45) {
+              if (!used[j] && Math.hypot(pts[j].x - pts[i].x, pts[j].y - pts[i].y) < 16) {
                 grp.push(pts[j]); used[j] = true;
               }
             }
@@ -481,35 +494,56 @@
               ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
             }
           } else if (d.items.length === 1) {
-            // emoji pins: ❄️ ski, 🚵 bike, both for dual spots
-            const label = (t.ski ? "❄️" : "") + (t.bike ? "🚵" : "");
-            ctx.font = `${hovered ? 16 : 13}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
-            const tw = ctx.measureText(label).width;
-            const rr = 10 + 3 * pulse;
-            const rw = Math.max(rr * 2, tw + 8);
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.beginPath(); ctx.roundRect(d.x - rw / 2, d.y - rr, rw, rr * 2, rr);
-            ctx.strokeStyle = `rgba(95,208,245,${0.25 * (1 - pulse) + 0.05})`; ctx.lineWidth = 1; ctx.stroke();
-            ctx.fillStyle = "#e6f6ff";
-            ctx.fillText(label, d.x, d.y);
+            // dot pins (same style as trips): ski = white, bike = green,
+            // split circle for a place that's both
+            const hasSki = t.ski, hasBike = t.bike;
+            const snowGlow = `rgba(234,244,255,${0.35 * (1 - pulse) + 0.1})`;
+            const bikeGlow = `rgba(90,212,138,${0.35 * (1 - pulse) + 0.1})`;
+            if (hasSki && hasBike) {
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, Math.PI / 2, Math.PI * 1.5);
+              ctx.strokeStyle = snowGlow; ctx.lineWidth = 1.5; ctx.stroke();
+
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, -Math.PI / 2, Math.PI / 2);
+              ctx.strokeStyle = bikeGlow; ctx.lineWidth = 1.5; ctx.stroke();
+
+              const r = hovered ? 5 : 3.5;
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, Math.PI / 2, Math.PI * 1.5);
+              ctx.fillStyle = SNOW; ctx.fill();
+
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, -Math.PI / 2, Math.PI / 2);
+              ctx.fillStyle = GREEN; ctx.fill();
+
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+              ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+            } else {
+              const pinColor = hasBike ? GREEN : SNOW;
+              ctx.beginPath(); ctx.arc(d.x, d.y, 6 + 4 * pulse, 0, Math.PI * 2);
+              ctx.strokeStyle = hasBike ? bikeGlow : snowGlow; ctx.lineWidth = 1.5; ctx.stroke();
+              ctx.beginPath(); ctx.arc(d.x, d.y, hovered ? 5 : 3.5, 0, Math.PI * 2);
+              ctx.fillStyle = pinColor; ctx.fill();
+              ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+            }
           } else {
-            // cluster badge: emoji kinds + count, click to list
+            // cluster: a dot (split when it mixes ski + bike) with a count
             const hasSki = d.items.some(i => i.ski), hasBike = d.items.some(i => i.bike);
-            const label = `${hasSki ? "❄️" : ""}${hasBike ? "🚵" : ""} ${d.items.length}`;
-            ctx.font = `${hovered ? 11 : 10}px "Segoe UI Emoji", "Apple Color Emoji", sans-serif`;
-            const tw = ctx.measureText(label).width;
-            const rr = hovered ? 16 : 14;
-            const rw = Math.max(rr * 2, tw + 10);
-            ctx.beginPath(); ctx.roundRect(d.x - rw / 2, d.y - rr, rw, rr * 2, rr);
-            ctx.fillStyle = "rgba(13,21,38,0.92)"; ctx.fill();
-            ctx.strokeStyle = "rgba(95,208,245,0.8)"; ctx.lineWidth = 1.2; ctx.stroke();
-            ctx.beginPath(); ctx.roundRect(d.x - rw / 2 - 3 - 3 * pulse, d.y - rr - 3 - 3 * pulse, rw + 6 + 6 * pulse, rr * 2 + 6 + 6 * pulse, rr + 3 + 3 * pulse);
-            ctx.strokeStyle = `rgba(95,208,245,${0.2 * (1 - pulse) + 0.04})`; ctx.lineWidth = 1; ctx.stroke();
+            const r = hovered ? 9 : 8;
+            const glow = hasBike && !hasSki
+              ? `rgba(90,212,138,${0.3 * (1 - pulse) + 0.08})`
+              : `rgba(234,244,255,${0.3 * (1 - pulse) + 0.08})`;
+            ctx.beginPath(); ctx.arc(d.x, d.y, r + 3 + 3 * pulse, 0, Math.PI * 2);
+            ctx.strokeStyle = glow; ctx.lineWidth = 1.5; ctx.stroke();
+            if (hasSki && hasBike) {
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, Math.PI / 2, Math.PI * 1.5); ctx.fillStyle = SNOW; ctx.fill();
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, -Math.PI / 2, Math.PI / 2); ctx.fillStyle = GREEN; ctx.fill();
+            } else {
+              ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2); ctx.fillStyle = hasBike ? GREEN : SNOW; ctx.fill();
+            }
+            ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2); ctx.strokeStyle = "#060a14"; ctx.lineWidth = 1; ctx.stroke();
+            ctx.font = `700 ${hovered ? 11 : 10}px "Space Grotesk", sans-serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = "#e6f6ff";
-            ctx.fillText(label, d.x, d.y);
+            ctx.fillStyle = "#0a1220";
+            ctx.fillText(String(d.items.length), d.x, d.y + 0.5);
           }
         }
       }
@@ -619,6 +653,7 @@
           gMode = btn.dataset.gmode;
           document.querySelectorAll("#globe-mode .seg-btn").forEach(b =>
             b.classList.toggle("active", b === btn));
+          setPinLegend(gMode);
           hoverPin = null;
           hidePinTip();
           capEl.textContent = "drag to spin · scroll to zoom · click a pin";

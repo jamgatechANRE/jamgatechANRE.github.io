@@ -2434,6 +2434,16 @@ footer {
   box-shadow: 0 0 6px rgba(95, 208, 245, 0.6);
 }
 
+.legend-dot.white {
+  background-color: #eaf4ff;
+  box-shadow: 0 0 6px rgba(234, 244, 255, 0.6);
+}
+
+.legend-dot.green {
+  background-color: #5ad48a;
+  box-shadow: 0 0 6px rgba(90, 212, 138, 0.6);
+}
+
 /* ==========================================================================
    CULTURE PAGE
    ========================================================================== */

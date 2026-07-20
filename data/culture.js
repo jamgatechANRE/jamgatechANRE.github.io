@@ -28,7 +28,11 @@ const MOVIES = [
   { title: "Iron Man", creator: "Jon Favreau", img: "assets/culture/media/iron-man.jpg" },
   { title: "Interstellar", creator: "Christopher Nolan", img: "assets/culture/media/interstellar.jpg" },
   { title: "Dune 2", creator: "Denis Villeneuve", img: "assets/culture/media/dune-2.jpg" },
-  { title: "V for Vendetta", creator: "James McTeigue", img: "assets/culture/media/v-for-vendetta.jpg" }
+  { title: "V for Vendetta", creator: "James McTeigue", img: "assets/culture/media/v-for-vendetta.jpg" },
+  { title: "The Imitation Game", creator: "Morten Tyldum", img: "assets/culture/media/imitation-game.jpg" },
+  { title: "The Dictator", creator: "Larry Charles", img: "assets/culture/media/dictator.jpg" },
+  { title: "Inception", creator: "Christopher Nolan", img: "assets/culture/media/inception.jpg" },
+  { title: "The Shape of Water", creator: "Guillermo del Toro", img: "assets/culture/media/shape-of-water.jpg" }
 ];
 
 const PODCASTS = [

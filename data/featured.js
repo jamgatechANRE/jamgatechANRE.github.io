@@ -24,6 +24,15 @@
 const FEATURED = [
   {
     platform: "Instagram",
+    date: "2026",
+    d: "2026-07-27",
+    title: "@gtaerospace",
+    desc: "Intern Spotlight: Fusion energy at Realta",
+    url: "https://www.instagram.com/p/DbTys_BkVMR/?img_index=1",
+    img: "assets/featured/jam_gtae_realta.jpg"
+  },
+  {
+    platform: "Instagram",
     date: "2024",
     d: "2024-02-16",
     title: "@gtaepi",

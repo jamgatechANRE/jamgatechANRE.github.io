@@ -1,4 +1,4 @@
-const GOODREADS_URL = "";
+const GOODREADS_URL = "https://www.goodreads.com/user/show/192239713-joseph-moskovitz";
 
 const BOOKS = [
   { title: "Letters to My Palestinian Neighbor", author: "Yossi Klein Halevi", img: "assets/culture/media/letters-palestinian-neighbor.jpg" },
@@ -44,44 +44,65 @@ const PODCASTS = [
 const RESTAURANTS = [
   {
     name: "Karyu",
-    location: "Miami (Design District)",
+    location: "Design District, Miami",
     mapUrl: "https://maps.google.com/maps?q=Karyu+Miami+Design+District&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/karyu.jpg",
     url: "https://karyu-mia.com/"
   },
   {
     name: "The Mayfair Chippy",
-    location: "London (Mayfair)",
+    location: "Mayfair, London",
     mapUrl: "https://maps.google.com/maps?q=The+Mayfair+Chippy+London&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/mayfair.jpg",
     url: "https://mayfairchippy.com/"
   },
   {
     name: "Le Soufflé",
-    location: "Paris",
+    location: "1er arr, Paris",
     mapUrl: "https://maps.google.com/maps?q=Le+Souffle+Paris&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/lesouffle.jpg",
     url: "https://www.lesouffle.fr/"
   },
   {
     name: "Corral de la Morería",
-    location: "Madrid",
+    location: "Centro, Madrid",
     mapUrl: "https://maps.google.com/maps?q=Corral+de+la+Moreria+Madrid&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/corral-de-la-moreria.jpg",
     url: "https://www.corraldelamoreria.com/"
   },
   {
     name: "Aria",
-    location: "Panama City",
+    location: "Obarrio, Panama City",
     mapUrl: "https://maps.google.com/maps?q=Aria+Panama+City&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/aria.jpg",
     url: "https://ariapanama.com/"
   },
   {
     name: "Compartir",
-    location: "Barcelona",
+    location: "Eixample, Barcelona",
     mapUrl: "https://maps.google.com/maps?q=Compartir+Barcelona&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/compartir.jpg",
     url: "https://www.compartirbarcelona.com/"
+  },
+  {
+    name: "Bacchanalia",
+    location: "West Midtown, Atlanta",
+    mapUrl: "https://maps.google.com/maps?q=Bacchanalia+Atlanta&t=&z=15&ie=UTF8&iwloc=&output=embed",
+    img: "assets/culture/restaurants/bacchanalia.jpg",
+    url: "https://www.starprovisions.com/bacchanalia"
+  },
+  {
+    name: "Zushi Puzzle",
+    location: "Marina District, San Francisco",
+    mapUrl: "https://maps.google.com/maps?q=Zushi+Puzzle+San+Francisco&t=&z=15&ie=UTF8&iwloc=&output=embed",
+    img: "assets/culture/restaurants/zushi-puzzle.jpg",
+    url: "http://zushi-puzzle.com/"
+  },
+  {
+    name: "JachnunBar",
+    location: "Mahane Yehuda, Jerusalem",
+    mapUrl: "https://maps.google.com/maps?q=Jachnun+Bar+Jerusalem&t=&z=15&ie=UTF8&iwloc=&output=embed",
+    img: "assets/culture/restaurants/jachnunbar.jpg",
+    url: "https://www.instagram.com/jachnun_bar_jerusalem/"
   }
 ];

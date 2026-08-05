@@ -68,12 +68,177 @@
       <h2>Reading & Watching</h2>
       <p>A selection of my favorite books, TV shows, and movies</p>
 
-      <div id="goodreads-container" style="margin-bottom: 24px; display: none;">
-        <a id="goodreads-btn" href="#" target="_blank" rel="noopener" class="btn">View my Goodreads Profile</a>
+      <div id="goodreads-container" style="margin-bottom: 32px; display: none;">
+        <style>
+          .gr_custom_container_1785899138 {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            background: rgba(13, 21, 38, 0.4);
+            color: #92a8c3;
+            width: 100%;
+            box-sizing: border-box;
+          }
+
+          .gr_custom_header_1785899138 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: left;
+            border-bottom: none;
+          }
+
+          .gr_custom_header_1785899138 a {
+            font-size: 1.3rem;
+            color: #e6f6ff !important;
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none !important;
+          }
+
+          .gr_custom_container_1785899138 a {
+            color: #5fd0f5;
+            text-decoration: none;
+          }
+
+          .gr_custom_container_1785899138 a:hover {
+            text-decoration: underline;
+          }
+
+          .gr_custom_each_container_1785899138 {
+            clear: both;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+          }
+
+          .gr_custom_each_container_1785899138:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          .gr_custom_book_container_1785899138 {
+            float: left;
+            margin-right: 16px;
+            height: auto;
+            width: auto;
+            overflow: visible;
+          }
+
+          .gr_custom_book_container_1785899138 img {
+            width: 55px;
+            height: auto;
+            border-radius: 4px;
+          }
+
+          .gr_custom_title_1785899138,
+          .gr_custom_author_1785899138,
+          .gr_custom_review_1785899138 {
+            margin-left: 71px;
+          }
+
+          .gr_custom_title_1785899138 {
+            margin-bottom: 2px;
+          }
+
+          .gr_custom_title_1785899138 a {
+            color: #e6f6ff !important;
+            font-weight: 500;
+            font-size: 1.05rem;
+          }
+
+          .gr_custom_author_1785899138 {
+            font-size: 0.9rem;
+            color: #6a82a0;
+            margin-bottom: 8px;
+          }
+
+          .gr_custom_review_1785899138 {
+            font-size: 0.95rem;
+            color: #92a8c3;
+            line-height: 1.5;
+            margin-top: 6px;
+          }
+
+          .gr_custom_rating_1785899138 {
+            float: right;
+            margin-left: 12px;
+          }
+        </style>
+        <div id="gr_custom_widget_1785899138">
+          <div class="gr_custom_container_1785899138">
+            <h2 class="gr_custom_header_1785899138">
+              <a style="text-decoration: none;" rel="nofollow"
+                href="https://www.goodreads.com/user/show/192239713-joseph-moskovitz" target="_blank"
+                rel="noopener">Recent Reads</a>
+            </h2>
+            <div class="gr_custom_each_container_1785899138">
+              <!-- Populated by Goodreads -->
+            </div>
+            <noscript>
+              Share <a rel="nofollow" href="https://www.goodreads.com/">book reviews</a> and ratings with Joseph
+              Moskovitz, and even join a <a rel="nofollow" href="https://www.goodreads.com/group">book club</a> on
+              Goodreads.
+            </noscript>
+            <div
+              style="text-align: center; margin-top: 12px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+              <a href="https://www.goodreads.com/user/show/192239713-joseph-moskovitz" target="_blank" rel="noopener"
+                class="btn"
+                style="padding: 8px 24px; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);">View
+                my full Goodreads Profile</a>
+            </div>
+          </div>
+        </div>
+        <script
+          src="https://www.goodreads.com/review/custom_widget/192239713.Joseph%20Moskovitz's%20bookshelf:%20read?cover_position=left&cover_size=small&num_books=3&order=d&shelf=read&show_author=1&show_cover=1&show_rating=1&show_review=1&show_tags=1&show_title=1&sort=date_read&widget_bg_color=FFFFFF&widget_bg_transparent=&widget_border_width=1&widget_id=1785899138&widget_text_color=000000&widget_title_size=medium&widget_width=medium&v=1"
+          type="text/javascript" charset="utf-8"></script>
+        <script>
+          // Goodreads truncates reviews on their server, so we inject a link to read the full review
+          // We also force all links to open in a new tab
+          const checkGr = setInterval(() => {
+            const containers = document.querySelectorAll('.gr_custom_each_container_1785899138');
+            if (containers.length > 0) {
+              clearInterval(checkGr);
+              
+              // Force all widget links to open in a new tab
+              document.querySelectorAll('#gr_custom_widget_1785899138 a').forEach(link => {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener');
+              });
+
+              // Override the injected header title and link
+              const headerLink = document.querySelector('.gr_custom_header_1785899138 a');
+              if (headerLink) {
+                headerLink.innerHTML = "Recent Reads";
+                headerLink.href = "https://www.goodreads.com/user/show/192239713-joseph-moskovitz";
+              }
+
+              containers.forEach(container => {
+                const review = container.querySelector('.gr_custom_review_1785899138');
+                const titleLink = container.querySelector('.gr_custom_title_1785899138 a');
+                if (review && titleLink && review.innerHTML.includes('...')) {
+                  const readMore = document.createElement('a');
+                  readMore.href = titleLink.href;
+                  readMore.target = '_blank';
+                  readMore.rel = 'noopener';
+                  readMore.style.color = '#5fd0f5';
+                  readMore.style.textDecoration = 'none';
+                  readMore.style.marginLeft = '6px';
+                  readMore.style.fontWeight = '500';
+                  readMore.style.whiteSpace = 'nowrap';
+                  readMore.innerHTML = 'Read full review ➔';
+                  readMore.onmouseover = () => readMore.style.textDecoration = 'underline';
+                  readMore.onmouseout = () => readMore.style.textDecoration = 'none';
+                  review.appendChild(readMore);
+                }
+              });
+            }
+          }, 300);
+        </script>
       </div>
 
       <div class="media-category" id="books-category" style="display: none;">
-        <h3>Books</h3>
+        <h3>Favorite Books</h3>
         <div class="media-carousel-container" data-speed="-0.2">
           <button class="carousel-btn prev-btn">‹</button>
           <div class="media-carousel-track" id="books-track"></div>
@@ -82,7 +247,7 @@
       </div>
 
       <div class="media-category" id="tv-category" style="display: none;">
-        <h3>TV Shows</h3>
+        <h3>Favorite TV Shows</h3>
         <div class="media-carousel-container" data-speed="0.2">
           <button class="carousel-btn prev-btn">‹</button>
           <div class="media-carousel-track" id="tv-track"></div>
@@ -91,7 +256,7 @@
       </div>
 
       <div class="media-category" id="movies-category" style="display: none;">
-        <h3>Movies</h3>
+        <h3>Favorite Movies</h3>
         <div class="media-carousel-container" data-speed="-0.2">
           <button class="carousel-btn prev-btn">‹</button>
           <div class="media-carousel-track" id="movies-track"></div>
@@ -101,7 +266,7 @@
 
       <div class="culture-section podcasts-section">
         <h2>Podcasts</h2>
-        <p>Conversations that make me think from</p>
+        <p>Conversations that make me think from intellectuals I respect</p>
         <div class="spotify-grid">
           <div class="podcast-item">
             <div class="spotify-embed">
@@ -171,12 +336,10 @@
     </div>
   </div>
 
-  <script src="data/culture.js"></script>
+  <script src="data/culture.js?v=2"></script>
   <script>
     // Populate Media (Books, TV, Movies)
     if (typeof GOODREADS_URL !== 'undefined' && GOODREADS_URL && GOODREADS_URL !== "https://www.goodreads.com/user/show/YOUR_USER_ID_HERE") {
-      const grBtn = document.getElementById('goodreads-btn');
-      grBtn.href = GOODREADS_URL;
       document.getElementById('goodreads-container').style.display = 'block';
     }
 

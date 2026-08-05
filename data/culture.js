@@ -96,13 +96,13 @@ const RESTAURANTS = [
     location: "Marina District, San Francisco",
     mapUrl: "https://maps.google.com/maps?q=Zushi+Puzzle+San+Francisco&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/zushi-puzzle.jpg",
-    url: "http://zushi-puzzle.com/"
+    url: "http://zushipuzzle.com/"
   },
   {
     name: "JachnunBar",
     location: "Mahane Yehuda, Jerusalem",
     mapUrl: "https://maps.google.com/maps?q=Jachnun+Bar+Jerusalem&t=&z=15&ie=UTF8&iwloc=&output=embed",
     img: "assets/culture/restaurants/jachnunbar.jpg",
-    url: "https://www.instagram.com/jachnun_bar_jerusalem/"
+    url: "https://www.facebook.com/jahnoonbarj/"
   }
 ];

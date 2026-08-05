@@ -163,7 +163,7 @@ const SKI = [
   { name: "Alta", area: "Utah", country: "🇺🇸", summit_m: 3216, lat: 40.59, lon: -111.64, url: "https://www.alta.com/" },
   { name: "Brighton", area: "Utah", country: "🇺🇸", summit_m: 3200, lat: 40.60, lon: -111.58, url: "https://www.brightonresort.com/" },
   { name: "Solitude", area: "Utah", country: "🇺🇸", summit_m: 3197, lat: 40.62, lon: -111.59, url: "https://www.solitudemountain.com/" },
-  { name: "Heavenly", area: "Lake Tahoe, California / Nevada", country: "🇺🇸", summit_m: 3060, lat: 38.94, lon: -119.94, url: "https://www.skiheavenly.com/" },
+  { name: "Heavenly", area: "California", country: "🇺🇸", summit_m: 3060, lat: 38.94, lon: -119.94, url: "https://www.skiheavenly.com/" },
   { name: "Park City", area: "Utah", country: "🇺🇸", summit_m: 3049, lat: 40.65, lon: -111.51, url: "https://www.parkcitymountain.com/" },
   { name: "Snowbasin", area: "Utah", country: "🇺🇸", summit_m: 2850, lat: 41.22, lon: -111.86, url: "https://www.snowbasin.com/" },
   { name: "Beech + Sugar Mountain", area: "North Carolina", country: "🇺🇸", summit_m: 1686, lat: 36.20, lon: -81.87, url: "FLAG: https://www.beechmountainresort.com/" },

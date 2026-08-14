@@ -24,6 +24,16 @@
 const WORKS = [
   {
     category: "Publication",
+    title: "Study of Machine Learning Techniques for Performance Prediction in Low-Power Hall Effect Thruster Operating on Monoatomic and Molecular Propellants",
+    meta: "Preprint · Under Review at Journal of Electric Propulsion (August 2026)",
+    desc: "Co-authored preprint benchmarking ten machine learning regression algorithms to predict critical performance metrics of low-power Hall effect thrusters operating on monoatomic and molecular propellants.",
+    preview: "assets/previews/rs-preprint.svg",
+    links: [
+      { label: "Read Preprint", url: "https://www.researchsquare.com/article/rs-10583210/v1" }
+    ]
+  },
+  {
+    category: "Publication",
     title: "Performance comparison and analysis of low-power hall thruster operation on atomic and molecular propellants",
     meta: "Journal of Electric Propulsion (2026) 5:32",
     desc: "First-author journal article characterizing the Simplified CAMILA low-power Hall-effect thruster across Xe, Kr, Ar, CO₂, and N₂. Building on our earlier conference paper, this published manuscript shows significant improvements in analysis.",

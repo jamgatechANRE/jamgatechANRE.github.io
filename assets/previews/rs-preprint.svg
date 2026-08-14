@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 750" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <!-- Background behind the page -->
+  <rect width="1000" height="750" fill="#f4f1ea"/>
+  
+  <!-- Paper page -->
+  <rect x="150" y="30" width="700" height="906" fill="#ffffff" stroke="#d8d4c8" stroke-width="1"/>
+  
+  <!-- Top Header -->
+  <!-- Research Square Logo text -->
+  <text x="210" y="90" fill="#112a46" font-size="24" font-weight="bold">Research Square</text>
+  <!-- Research Square Logo icon (approximation) -->
+  <path d="M 175 75 L 195 85 L 175 95 L 155 85 Z" fill="#00b092"/>
+  <path d="M 175 60 L 195 70 L 175 80 L 155 70 Z" fill="#2b5e8e"/>
+  <path d="M 190 67 L 205 75 L 190 82 L 175 75 Z" fill="#93c242"/>
+
+  <!-- Red warning text -->
+  <g fill="#d9534f" font-size="10" font-family="Arial, sans-serif">
+    <text x="430" y="70">Preprints are preliminary reports that have not undergone peer review.</text>
+    <text x="430" y="84">They should not be considered conclusive, used to inform clinical practice,</text>
+    <text x="430" y="98">or referenced by the media as validated information.</text>
+  </g>
+
+  <!-- Title -->
+  <g text-anchor="start" fill="#333333" font-size="26" font-weight="bold">
+    <text x="190" y="150">Study of Machine Learning Techniques for</text>
+    <text x="190" y="185">Performance Prediction in Low-Power Hall Effect</text>
+    <text x="190" y="220">Thruster Operating on Monoatomic and Molecular</text>
+    <text x="190" y="255">Propellants</text>
+  </g>
+
+  <!-- Authors List -->
+  <g fill="#333333" font-size="14">
+    <text x="190" y="310" font-weight="bold">Shantanusinh Parmar</text>
+    <text x="190" y="330" font-family="monospace" font-weight="bold">sp2733@cornell.edu</text>
+    
+    <text x="200" y="360" fill="#666666">Cornell University</text>
+
+    <text x="190" y="390" font-weight="bold">Joseph A. Moskovitz</text>
+    <text x="200" y="410" fill="#666666">Georgia Institute of Technology</text>
+
+    <text x="190" y="440" font-weight="bold">Dan Lev</text>
+    <text x="200" y="460" fill="#666666">Georgia Institute of Technology</text>
+
+    <text x="190" y="490" font-weight="bold">Mitchell L. R. Walker</text>
+    <text x="200" y="510" fill="#666666">Georgia Institute of Technology</text>
+  </g>
+
+  <!-- Separator Line -->
+  <line x1="190" y1="540" x2="810" y2="540" stroke="#dddddd" stroke-width="1.5"/>
+
+  <!-- Lower Meta Text -->
+  <g fill="#333333" font-size="14">
+    <text x="190" y="575" font-weight="bold">Research Article</text>
+    
+    <text x="190" y="615"><tspan font-weight="bold">Keywords:</tspan> Machine Learning, Performance Modeling, Molecular Propellants, Hall Effect Thrusters</text>
+    
+    <text x="190" y="655"><tspan font-weight="bold">Posted Date:</tspan> August 13th, 2026</text>
+  </g>
+
+</svg>

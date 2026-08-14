@@ -27,9 +27,9 @@ const COURSES = [
   { sem: "Pre-College Credit", ord: 0, subj: "PHYS", num: "2211", title: "Intro Physics I", cr: 4, grade: "T" },
   { sem: "Pre-College Credit", ord: 0, subj: "PHYS", num: "2212", title: "Intro Physics II", cr: 4, grade: "T" },
   { sem: "Pre-College Credit", ord: 0, subj: "PHYS", num: "2XXX", title: "Physics Elective", cr: 3, grade: "T" },
-  { sem: "Pre-College Credit", ord: 0, subj: "SPAN", num: "2001", title: "Intermediate Spanish I", cr: 3, grade: "T" },
-  { sem: "Pre-College Credit", ord: 0, subj: "SPAN", num: "2002", title: "Intermediate Spanish II", cr: 3, grade: "T" },
-  { sem: "Pre-College Credit", ord: 0, subj: "SPAN", num: "3XXX", title: "Spanish Elective", cr: 3, grade: "T" },
+  { sem: "Pre-College Credit", ord: 0, subj: "SPAN", num: "2001", title: `Intermediate Spanish I ${flag}`, cr: 3, grade: "T" },
+  { sem: "Pre-College Credit", ord: 0, subj: "SPAN", num: "2002", title: `Intermediate Spanish II ${flag}`, cr: 3, grade: "T" },
+  { sem: "Pre-College Credit", ord: 0, subj: "SPAN", num: "3XXX", title: `Spanish Elective ${flag}`, cr: 3, grade: "T" },
 
   // ---- Fall 2022 (Faculty Honors) ----
   { sem: "Fall 2022", ord: 1, subj: "AE", num: "1601", title: "Introduction to AE", cr: 1, grade: "A", syl: "https://ae.gatech.edu/sites/default/files/file/2022/12/AE%201601%20Syllabus-Introduction%20to%20Aerospace%20Engineering.pdf" },
@@ -91,12 +91,19 @@ const COURSES = [
   { sem: "Fall 2025", ord: 7, subj: "NRE", num: "3208", title: "Nuclear Reactor Phys I", cr: 3, grade: "A", syl: "https://syllabus.gatech.edu/sites/default/files/2026-04/NRE3208%20syllabus.pdf" },
 
   // ---- Spring 2026 (Faculty Honors) ----
-  { sem: "Spring 2026", ord: 8, subj: "AE", num: "4132", title: "Finite Element Analysis", cr: 3, grade: "A", syl: "https://ae.gatech.edu/sites/default/files/file/2022/11/ae-4132-finite_element_analysis.pdf" },
+  { sem: "Spring 2026", ord: 8, subj: "AE", num: "4132", title: "Finite Element Analysis", cr: 3, grade: "A", deg: "both", syl: "https://ae.gatech.edu/sites/default/files/file/2022/11/ae-4132-finite_element_analysis.pdf" },
   { sem: "Spring 2026", ord: 8, subj: "AE", num: "4322", title: "Space System Design II", cr: 3, grade: "A", syl: "https://ae.gatech.edu/sites/default/files/file/2023/04/AE%204322%20-%20Syllabus%20Space%20II.pdf" },
   { sem: "Spring 2026", ord: 8, subj: "AE", num: "4532", title: "Spacecraft Flight Dynam", cr: 3, grade: "A", syl: "https://ae.gatech.edu/sites/default/files/file/2022/12/AE%204532%20Syllabus-Spacecraft%20Flight%20Dynamics.pdf" },
   { sem: "Spring 2026", ord: 8, subj: "AE", num: "4610", title: "Dynamics & Control Lab", cr: 2, grade: "A", syl: "https://ae.gatech.edu/sites/default/files/file/2022/12/AE%204610%20Syllabus-Dynamics%20and%20Control%20Laboratory.pdf" },
   { sem: "Spring 2026", ord: 8, subj: "AE", num: "4699", title: "Undergraduate Research", cr: 2, grade: "A" },
-  { sem: "Spring 2026", ord: 8, subj: "AE", num: "4803", title: "Special Topics: Scientific Machine Learning", cr: 3, grade: "A", syl: "https://ae.gatech.edu/sites/default/files/file/2025/08/ae4803aim_course-proposal-syllabus.pdf" }
+  { sem: "Spring 2026", ord: 8, subj: "AE", num: "4803", title: "Special Topics: Scientific Machine Learning", cr: 3, grade: "A", deg: "both", syl: "https://ae.gatech.edu/sites/default/files/file/2025/08/ae4803aim_course-proposal-syllabus.pdf" },
+
+  // ---- Fall 2026 ----
+  { sem: "Fall 2026", ord: 9, subj: "NRE", num: "6502", title: "Nuclear Materials", cr: 3, grade: "IP", deg: "MS", syl: "https://syllabus.gatech.edu/sites/default/files/2026-04/Fall-2026-94381-Deo-NRE-6502.pdf" },
+  { sem: "Fall 2026", ord: 9, subj: "MATH", num: "4782", title: "Quantum Information & Quantum Computing", cr: 3, grade: "IP", deg: "MS", syl: "https://syllabus.gatech.edu/sites/default/files/2026-04/Syllabus_4782.pdf" },
+  { sem: "Fall 2026", ord: 9, subj: "NRE", num: "6101", title: "Transport Fundamentals", cr: 3, grade: "IP", deg: "MS", syl: "https://syllabus.gatech.edu/sites/default/files/2026-04/NRE%206101%20Syllabus.pdf" },
+  { sem: "Fall 2026", ord: 9, subj: "ME", num: "6300", title: "Intermediate Heat Transfer", cr: 3, grade: "IP", deg: "MS", syl: "https://syllabus.gatech.edu/sites/default/files/2026-04/ME%206300%20Syllabus%20Section%20A.pdf" },
+  { sem: "Fall 2026", ord: 9, subj: "AE", num: "8002", title: "AE Graduate Seminar", cr: 3, grade: "IP", deg: "MS", syl: "https://syllabus.gatech.edu/sites/default/files/2026-04/AE%208002%20Syllabus%20.pdf" }
 ];
 
 // ============================================================

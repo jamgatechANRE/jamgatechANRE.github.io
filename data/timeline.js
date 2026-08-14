@@ -122,7 +122,7 @@ const TL_POSTS = [
 
 const TL_SPANS = [
   // ---- professional ----
-  { name: "Realta Fusion", role: "Fusion Intern, Realta Fusion", start: "2026-05", end: null, cat: "industry", group: "professional", logo: TL_LOGO.realta, url: "https://realtafusion.com/" },
+  { name: "Realta Fusion", role: "Fusion Intern, Realta Fusion", start: "2026-05", end: "2026-08", cat: "industry", group: "professional", logo: TL_LOGO.realta, url: "https://realtafusion.com/" },
   { name: "GT M.S. AE", role: "M.S. Aerospace Engineering, Georgia Tech", start: "2026-06", end: null, endFuture: "2027-05", cat: "education", group: "professional", logo: TL_LOGO.gt, url: "https://ae.gatech.edu/" },
   { name: "HPEPL", role: "Undergraduate Researcher, High-Power Electric Propulsion Lab", start: "2024-01", end: "2026-05", cat: "research", group: "professional", logo: TL_LOGO.gt, url: "https://hpepl.ae.gatech.edu/" },
   { name: "Allen & Co.", role: "Investment Banking Summer Analyst, Allen & Company", start: "2025-06", end: "2025-07", cat: "industry", group: "professional", logo: TL_LOGO.allen, url: "https://www.linkedin.com/company/allen-&-company" },

@@ -63,14 +63,18 @@
 
     <!-- ---------------- Coursework tab ---------------- -->
     <section id="courses-pane" class="tab-pane">
-      <p class="page-sub" style="margin-top:24px">Every course from my Georgia Tech undergraduate record — B.S.
-        Aerospace Engineering, Highest Honor, <strong style="color:var(--gold)">4.00/4.00</strong>. Search, filter, or
-        click a column header to sort. Course numbers link to the official syllabus where available, otherwise to the
-        OSCAR catalog entry.</p>
+      <p class="page-sub" style="margin-top:24px">B.S. Aerospace Engineering | Highest Honors | GPA <strong
+          style="color:var(--gold)">4.00</strong><br>
+        M.S. Aerospace Engineering | GPA <strong style="color:var(--gold)">In Progress</strong></p>
 
       <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:18px;">
         <div class="course-stats" id="course-stats" style="margin-bottom:0;"></div>
-        <div class="seg-toggle" id="lang-toggle" title="Filter courses by instruction language" style="margin-left:auto;">
+        <div class="seg-toggle" id="deg-toggle" title="Filter courses by degree" style="margin-left:auto;">
+          <button class="seg-btn active" data-deg="all">All</button>
+          <button class="seg-btn" data-deg="bs">BS</button>
+          <button class="seg-btn" data-deg="ms">MS</button>
+        </div>
+        <div class="seg-toggle" id="lang-toggle" title="Filter courses by instruction language">
           <button class="seg-btn active" data-lang="all">All</button>
           <button class="seg-btn" data-lang="en">🇺🇸 EN</button>
           <button class="seg-btn" data-lang="es">🇪🇸 ES</button>
@@ -115,8 +119,9 @@
         <span class="sat-detail">800 Reading &amp; Writing · 760 Math · December 2021</span>
       </div>
 
-      <p class="muted" style="font-size:0.85rem; margin:18px 0 64px">
-        Grades: <strong>A</strong> letter grade · <strong>T</strong> AP/transfer credit · <strong>GT</strong>
+      <p class="muted" id="course-desc" style="font-size:0.85rem; margin:18px 0 64px">
+        Grades: <strong>A</strong> letter grade · <strong>IP</strong> in progress · <strong>T</strong> AP/transfer
+        credit · <strong>GT</strong>
         GT-approved transfer credit (exam or study abroad at UC3M Madrid) · Courses marked with 🇪🇸 were taken in
         Spanish · <strong>V</strong> no grade (recitation). The <em>transfer</em> toggle shows the AP exams and
         scores behind the pre-college credit, as well as the UC3M study abroad courses, plus standardized testing.
@@ -153,7 +158,7 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="data/courses.js"></script>
+  <script src="data/courses.js?v=6"></script>
   <script>
     // ---------- CV: render PDF pages in-page with pdf.js ----------
     (function () {
@@ -228,9 +233,9 @@
     const semSel = document.getElementById("sem-filter");
     const stats = document.getElementById("course-stats");
     const satStrip = document.getElementById("sat-strip");
-    let sortKey = "ord", sortDir = 1, transferMode = false, langMode = "all";
+    let sortKey = "ord", sortDir = 1, transferMode = false, langMode = "all", degMode = "all";
 
-    const gtCourses = COURSES.filter(c => c.sem !== "Fall 2024 (UC3M)");
+    const gtCourses = COURSES;
 
     // Transfer view: AP Exams + UC3M
     const TRANSFER_ROWS = [
@@ -270,6 +275,11 @@
     }
 
     function render() {
+      // Manage visibility of toggles and description for MS view without shifting layout
+      document.getElementById("lang-toggle").style.visibility = degMode === "ms" ? "hidden" : "visible";
+      document.getElementById("ap-toggle").style.visibility = degMode === "ms" ? "hidden" : "visible";
+      document.getElementById("course-desc").style.visibility = degMode === "ms" ? "hidden" : "visible";
+
       const q = search.value.trim().toLowerCase();
       let rows = (transferMode ? TRANSFER_ROWS : gtCourses).filter(c => {
         const titleStr = c.title || "";
@@ -277,9 +287,13 @@
         if (langMode === "en" && isSpanish) return false;
         if (langMode === "es" && !isSpanish) return false;
 
+        const cDeg = c.deg || "BS";
+        if (degMode === "bs" && cDeg !== "BS" && cDeg !== "both") return false;
+        if (degMode === "ms" && cDeg !== "MS" && cDeg !== "both") return false;
+
         return (transferMode || !deptSel.value || c.subj === deptSel.value) &&
-               (transferMode || !semSel.value || c.sem === semSel.value) &&
-               (!q || `${c.subj} ${c.num} ${c.title} ${c.equiv || ""} ${c.sem} ${c.grade}`.toLowerCase().includes(q));
+          (transferMode || !semSel.value || c.sem === semSel.value) &&
+          (!q || `${c.subj} ${c.num} ${c.title} ${c.equiv || ""} ${c.sem} ${c.grade}`.toLowerCase().includes(q));
       });
       rows.sort((a, b) => {
         const va = a[sortKey], vb = b[sortKey];
@@ -331,6 +345,14 @@
       btn.addEventListener("click", () => {
         langMode = btn.dataset.lang;
         document.querySelectorAll("#lang-toggle .seg-btn").forEach(b => b.classList.toggle("active", b === btn));
+        render();
+      }));
+
+    // Degree toggle
+    document.querySelectorAll("#deg-toggle .seg-btn").forEach(btn =>
+      btn.addEventListener("click", () => {
+        degMode = btn.dataset.deg;
+        document.querySelectorAll("#deg-toggle .seg-btn").forEach(b => b.classList.toggle("active", b === btn));
         render();
       }));
 

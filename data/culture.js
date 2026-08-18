@@ -20,7 +20,8 @@ const TV_SHOWS = [
   { title: "Moon Knight", creator: "Jeremy Slater", img: "assets/culture/media/moon-knight.jpg" },
   { title: "Severance", creator: "Dan Erickson", img: "assets/culture/media/severance.jpg" },
   { title: "Heroes", creator: "Tim Kring", img: "assets/culture/media/heroes.jpg" },
-  { title: "Andor", creator: "Tony Gilroy", img: "assets/culture/media/andor.jpg" }
+  { title: "Andor", creator: "Tony Gilroy", img: "assets/culture/media/andor.jpg" },
+  { title: "Silo", creator: "Graham Yost", img: "assets/culture/media/silo.png" }
 ];
 
 const MOVIES = [

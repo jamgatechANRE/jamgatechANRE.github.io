@@ -13,6 +13,37 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
+  <script>
+    (function () {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:") {
+        function fix(h) {
+          if (!h) return h;
+          if (h === "/") return location.protocol === "file:" ? "index.html" : "/index.html";
+          if (h.startsWith("/") && !h.includes(".") && !h.startsWith("//")) {
+            return location.protocol === "file:" ? h.slice(1) + ".html" : h + ".html";
+          }
+          return h;
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+          document.querySelectorAll(".site-nav a").forEach(function (a) {
+            var h = a.getAttribute("href");
+            var f = fix(h);
+            if (f !== h) a.setAttribute("href", f);
+          });
+        });
+        window.addEventListener("click", function (e) {
+          var a = e.target.closest("a");
+          if (!a) return;
+          var h = a.getAttribute("href");
+          var f = fix(h);
+          if (f !== h) {
+            e.preventDefault();
+            location.href = f;
+          }
+        }, true);
+      }
+    })();
+  </script>
 </head>
 
 <body class="culture-page">
@@ -38,7 +69,7 @@
     <h1 class="page-heading">Culture</h1>
     <section class="culture-section spotify-section">
       <h2 style="margin-top: 24px;">Music</h2>
-      <p style="margin-bottom: 24px;">Some of my favorite playlists currently as well as my most popular songs last year
+      <p style="margin-bottom: 24px;">Some of my favorite playlists currently
       </p>
     </section>
     <section class="culture-section spotify-section" style="margin-top: 0;">
@@ -199,7 +230,7 @@
             const containers = document.querySelectorAll('.gr_custom_each_container_1785899138');
             if (containers.length > 0) {
               clearInterval(checkGr);
-              
+
               // Force all widget links to open in a new tab
               document.querySelectorAll('#gr_custom_widget_1785899138 a').forEach(link => {
                 link.setAttribute('target', '_blank');
@@ -563,7 +594,7 @@
       });
     }
   </script>
-  <script src="assets/site.js"></script>
+  <script src="assets/site.js?v=3"></script>
 </body>
 
 </html>

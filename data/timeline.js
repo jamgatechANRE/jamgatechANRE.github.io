@@ -47,6 +47,14 @@ const TL_LOGO = {
 
 const TL_POSTS = [
   {
+    date: "2026-11-05",
+    urn: "urn:li:activity:7523963102346915840",
+    img: "assets/posts/aps-dpp-2026.jpg",
+    title: "APS-DPP 2026, Chicago",
+    cat: "research",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7523963102346915840/"
+  },
+  {
     date: "2026-07-10",
     urn: "urn:li:share:7481472276220243968",
     img: "assets/posts/jep-paper.jpg",
@@ -123,7 +131,7 @@ const TL_POSTS = [
 const TL_SPANS = [
   // ---- professional ----
   { name: "Realta Fusion", role: "Fusion Intern, Realta Fusion", start: "2026-05", end: "2026-08", cat: "industry", group: "professional", logo: TL_LOGO.realta, url: "https://realtafusion.com/" },
-  { name: "GT M.S. AE", role: "M.S. Aerospace Engineering, Georgia Tech", start: "2026-06", end: null, endFuture: "2027-05", cat: "education", group: "professional", logo: TL_LOGO.gt, url: "https://ae.gatech.edu/" },
+  { name: "GT M.S. AE", role: "M.S. Aerospace Engineering, Georgia Tech", start: "2026-08", end: null, endFuture: "2027-05", cat: "education", group: "professional", logo: TL_LOGO.gt, url: "https://ae.gatech.edu/" },
   { name: "HPEPL", role: "Undergraduate Researcher, High-Power Electric Propulsion Lab", start: "2024-01", end: "2026-05", cat: "research", group: "professional", logo: TL_LOGO.gt, url: "https://hpepl.ae.gatech.edu/" },
   { name: "Allen & Co.", role: "Investment Banking Summer Analyst, Allen & Company", start: "2025-06", end: "2025-07", cat: "industry", group: "professional", logo: TL_LOGO.allen, url: "https://www.linkedin.com/company/allen-&-company" },
   { name: "UC3M · EP²", role: "Study abroad + research, Equipo de Propulsión Espacial y Plasmas", start: "2024-09", end: "2025-01", cat: "research", col: "industry", group: "professional", logo: TL_LOGO.uc3m, url: "https://ep2.uc3m.es/", chip: true },

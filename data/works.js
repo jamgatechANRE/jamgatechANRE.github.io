@@ -23,6 +23,17 @@
 
 const WORKS = [
   {
+    category: "Conference Poster",
+    title: "Beam-Divergence Spectroscopy on the WHAM Neutral Beam Injector using a Voltage-History Deconvolution Framework",
+    meta: "APS Division of Plasma Physics Annual Meeting · Realta Fusion · Chicago, IL · November 2026",
+    desc: "Presented research conducted with Realta Fusion on Doppler-shift spectroscopy (DSS) beam divergence measurements for the WHAM neutral beam injector. Developed a forward-convolution framework using time-resolved voltage history to deconvolve power supply ripple and droop, cross-validating results with secondary electron emission (SEE) detector arrays.",
+    preview: "assets/previews/aps-dpp-poster.png",
+    links: [
+      { label: "View poster (PDF)", url: "files/JAM_Realta_NBI_APSDPP_Poster_4by3.pdf" },
+      { label: "LinkedIn Post", url: "https://www.linkedin.com/feed/update/urn:li:activity:7523963102346915840/" }
+    ]
+  },
+  {
     category: "Publication",
     title: "Study of Machine Learning Techniques for Performance Prediction in Low-Power Hall Effect Thruster Operating on Monoatomic and Molecular Propellants",
     meta: "Preprint · Under Review at Journal of Electric Propulsion (August 2026)",

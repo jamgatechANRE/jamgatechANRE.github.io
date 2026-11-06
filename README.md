@@ -217,5 +217,6 @@ serve the site; jamgatechANRE.github.io keeps working and redirects.
 
 ## Previewing locally
 
-Open `index.html` in a browser, or run `python -m http.server` in this
-folder and visit http://localhost:8000.
+Run `python server.py` (or `python -m http.server`) in this folder and visit
+http://localhost:8000. `server.py` enables clean URLs locally so `/work`, `/cv`,
+etc. load directly without 404 errors.

@@ -35,7 +35,7 @@ const VISITED = [
   // Europe
   "ESP", "DEU", "FRA", "NLD", "BEL", "GBR", "CHE", "ITA", "AUT", "HUN", "CYP", "GRC",
   // Asia
-  "ISR", "JPN",
+  "ISR", "JPN", "CHN", "HKG", "MAC",
   // Africa
   "ZAF",
   // South America

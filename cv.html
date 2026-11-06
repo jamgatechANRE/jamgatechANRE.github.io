@@ -15,6 +15,37 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
+  <script>
+    (function () {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:") {
+        function fix(h) {
+          if (!h) return h;
+          if (h === "/") return location.protocol === "file:" ? "index.html" : "/index.html";
+          if (h.startsWith("/") && !h.includes(".") && !h.startsWith("//")) {
+            return location.protocol === "file:" ? h.slice(1) + ".html" : h + ".html";
+          }
+          return h;
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+          document.querySelectorAll(".site-nav a").forEach(function (a) {
+            var h = a.getAttribute("href");
+            var f = fix(h);
+            if (f !== h) a.setAttribute("href", f);
+          });
+        });
+        window.addEventListener("click", function (e) {
+          var a = e.target.closest("a");
+          if (!a) return;
+          var h = a.getAttribute("href");
+          var f = fix(h);
+          if (f !== h) {
+            e.preventDefault();
+            location.href = f;
+          }
+        }, true);
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -169,7 +200,7 @@
         status.innerHTML = location.protocol === "file:"
           ? `The preview can't load when the site is opened as a local file
              (browsers block it) — it works on the live site, or locally via
-             <code>python -m http.server</code>. Meanwhile, <a href="${PDF_URL}"
+             <code>python server.py</code>. Meanwhile, <a href="${PDF_URL}"
              target="_blank" rel="noopener">open the CV (PDF) directly</a>.`
           : `Couldn't render the preview here — <a href="${PDF_URL}" target="_blank"
              rel="noopener">open the CV (PDF) directly</a>.`;
@@ -361,7 +392,7 @@
     semSel.addEventListener("change", render);
     render();
   </script>
-  <script src="assets/site.js"></script>
+  <script src="assets/site.js?v=3"></script>
 </body>
 
 </html>

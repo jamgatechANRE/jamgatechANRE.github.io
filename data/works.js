@@ -9,6 +9,7 @@
 // To REMOVE an item: delete its block (and its files).
 //
 // Fields:
+//   type     — "publication" | "conference" | "project"
 //   category — small chip shown above the title
 //   title    — card title
 //   meta     — course / venue / date line
@@ -23,6 +24,7 @@
 
 const WORKS = [
   {
+    type: "conference",
     category: "Conference Poster",
     title: "Beam-Divergence Spectroscopy on the WHAM Neutral Beam Injector using a Voltage-History Deconvolution Framework",
     meta: "APS Division of Plasma Physics Annual Meeting · Realta Fusion · Chicago, IL · November 2026",
@@ -34,6 +36,7 @@ const WORKS = [
     ]
   },
   {
+    type: "publication",
     category: "Publication",
     title: "Study of Machine Learning Techniques for Performance Prediction in Low-Power Hall Effect Thruster Operating on Monoatomic and Molecular Propellants",
     meta: "Preprint · Under Review at Journal of Electric Propulsion (August 2026)",
@@ -44,6 +47,7 @@ const WORKS = [
     ]
   },
   {
+    type: "publication",
     category: "Publication",
     title: "Performance comparison and analysis of low-power hall thruster operation on atomic and molecular propellants",
     meta: "Journal of Electric Propulsion (2026) 5:32",
@@ -55,6 +59,7 @@ const WORKS = [
     ]
   },
   {
+    type: "project",
     category: "Capstone Project",
     title: "SCRAP — Satellite Control and Retrograde Acceleration Program",
     meta: "AE 4322 Space System Design II · Georgia Tech · Spring 2026",
@@ -67,6 +72,7 @@ const WORKS = [
     ]
   },
   {
+    type: "project",
     category: "Design & Build",
     title: "1-D Satellite Reaction Wheel",
     meta: "AE 4610 Dynamics & Control Laboratory · Georgia Tech · Spring 2026",
@@ -77,6 +83,7 @@ const WORKS = [
     ]
   },
   {
+    type: "project",
     category: "Space Policy",
     title: "Golden Dome for America",
     meta: "INTA 3043 Space Policy · Georgia Tech · Fall 2025",
@@ -88,6 +95,7 @@ const WORKS = [
     ]
   },
   {
+    type: "conference",
     category: "Publication",
     title: "Low Power Hall Thruster Operation on Inert and Molecular Propellants",
     meta: "39th International Electric Propulsion Conference (IEPC-2025-559) · London, UK · September 2025",
@@ -98,6 +106,7 @@ const WORKS = [
     ]
   },
   {
+    type: "project",
     category: "Nuclear Engineering",
     title: "Neutron Diffusion: Eigenfunction Expansion Methods",
     meta: "NRE 3208 Nuclear Reactor Physics I · Georgia Tech · Fall 2025",

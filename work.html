@@ -14,7 +14,15 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v=4">
+  <style>
+    .work-controls {
+      display: flex;
+      align-items: center;
+      margin: -14px 0 42px;
+      max-width: 100%;
+    }
+  </style>
   <script>
     (function () {
       if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:") {
@@ -70,6 +78,16 @@
     <canvas class="page-anim" data-anim="orbit" width="260" height="130" aria-hidden="true"></canvas>
     <h1 class="page-heading">Selected work</h1>
     <p class="page-sub">Publications, design projects, and coursework</p>
+
+    <div class="work-controls">
+      <div class="seg-toggle" id="work-filter" role="group" aria-label="Filter works by category">
+        <button class="seg-btn active" data-filter="all" title="All selected work">all</button>
+        <button class="seg-btn" data-filter="publication" title="Journal articles & preprints (ML Preprint & JEP)">journal publications</button>
+        <button class="seg-btn" data-filter="conference" title="Conference papers & posters (APS DPP & IEPC)">conference proceedings</button>
+        <button class="seg-btn" data-filter="project" title="Engineering, laboratory & policy projects">projects</button>
+      </div>
+    </div>
+
     <ul class="card-grid" id="work-list"></ul>
   </main>
 
@@ -107,6 +125,7 @@
     for (const w of WORKS) {
       const li = document.createElement("li");
       li.className = "card reveal";
+      li.dataset.type = w.type || "";
       const mainLink = (w.links && w.links[0]) ? w.links[0].url : "#";
       const links = (w.links || []).map(l =>
         `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`
@@ -131,6 +150,37 @@
         </div>`;
       list.appendChild(li);
     }
+
+    // Filter controls for work cards
+    const filterBtns = document.querySelectorAll("#work-filter .seg-btn");
+    const cards = list.querySelectorAll(".card");
+
+    function applyFilter(filter) {
+      filterBtns.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.filter === filter);
+      });
+      cards.forEach(card => {
+        const match = (filter === "all" || card.dataset.type === filter);
+        if (match) {
+          card.style.display = "";
+          card.classList.add("visible");
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        applyFilter(btn.dataset.filter);
+      });
+    });
+
+    // Optional URL hash support (e.g. #publications, #conferences, #projects)
+    const hash = (location.hash || "").replace("#", "").toLowerCase();
+    if (["publication", "publications", "journal", "journals"].includes(hash)) applyFilter("publication");
+    else if (["conference", "conferences", "proceedings"].includes(hash)) applyFilter("conference");
+    else if (["project", "projects"].includes(hash)) applyFilter("project");
 
     // Click-to-play YouTube embeds — nothing loads or plays until clicked.
     // Uses YouTube's official embed params; note embeds require an http(s)
